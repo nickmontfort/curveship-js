@@ -1,8 +1,10 @@
-// Curveship-js version 0.2.0
-//  Copyright 2020 Nick Montfort
+// Curveship-js version 0.2.01
+//  Copyright 2019-2020 Nick Montfort
 //
-// licensed under the GNU General Public License v3.0. See the file LICENSE
-// for complete terms.
+// Copying and distribution of this file, with or without modification,
+// are permitted in any medium without royalty provided the copyright
+// notice and this notice are preserved. This file is offered as-is,
+// without any warranty.
 //
 // Curveship-js is a partial implementation of Curveship, released in 2011.
 // This JavaScript (ES6) Curveship is not intended to ever have a parser or an
@@ -211,6 +213,7 @@ class Event {
     clock += 10;
     this.duration = 5;
     this.sense = null;
+    this.alterations = [];
     eventSeq.push(this);
   }
   setTemplate(custom = null) {
@@ -276,6 +279,14 @@ class Event {
   changeState(ex, spatial_1, parent_1, spatial_2, parent_2) {
     // Does nothing now. Will later be used for minimal world simulation, so
     // that focalization can be implemented.
+  }
+  reconfigures(ex, property, val_1, val_2) {
+    var alteration = new Object();
+    alteration.existent = ex;
+    alteration.property = property;
+    alteration.before = val_1;
+    alteration.after = val_2;
+    this.alterations.push(alteration);
   }
   realize(spin, fix = true) {
     var currentTemplate = this.template, subjectExp, objectExp,
@@ -364,6 +375,21 @@ function narrate(metadata, spin, world) {
   element.appendChild(div);
   for (var i of telling) {
     event = world.event[i];
+    // Each time we narrate an event, all the "after" alterations of
+    // chronologically earlier events must be applied, *and* the prior
+    // "before" state of all chronologially later must be applied.
+    // That's becasue we could be narrating this event in any order.
+    for (var e of world.event) {
+      if (e.start < event.start) {
+        for (var a of e.alterations) {
+          a.existent[a.property] = a.after;
+        }
+      } else {
+        for (var a of e.alterations) {
+          a.existent[a.property] = a.before;
+        }
+      }
+    }
     div = document.createElement("div");
     sentence = "";
     if (spin.expression_numbers) {
