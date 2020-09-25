@@ -1,5 +1,5 @@
 // The Simulated Bank Robbery - an example Curveship-js story, 2019-11-08
-//  Copyright 2019 Nick Montfort
+//  Copyright 2019-2020 Nick Montfort
 //
 // Copying and distribution of this file, with or without modification,
 // are permitted in any medium without royalty provided the copyright
@@ -7,7 +7,7 @@
 // without any warranty.
 //
 // This is a non-interactive narrative from the original Curveship,
-// Curveshippy 0.5, also available in the Python 3 version, Curveshippy 0.6.
+// Curveship-py 0.5, also available in the Python 3 version, Curveship-py 0.6.
 
 var metadata = { title: "The Simulated Bank Robbery", author: "Nick Montfort", date: "2007",
 instructions: "Click below or add your own parameters to the URL to change the “spin” and to create variation in the narrative discourse. You have to use the official names of “actors” for narrator and narratee, which can be found by looking at the code. Examples:",
@@ -37,6 +37,7 @@ thing.bag = new Thing("a", "black bag", spatial.in, place.vestibule);
 thing.mask = new Thing("a", "Dora the Explorer mask", spatial.of, actor.robber);
 thing.fake_gun = new Thing("a", "gun-shaped object", spatial.of, actor.robber);
 thing.pistol = new Thing("a", "pistol", spatial.of, actor.guard);
+thing.pistol.owner = actor.guard;
 
 // Finally, EVENTS
 var READ = new Event(actor.teller, "read", thing.slip);
@@ -72,7 +73,11 @@ var SHOOT_2 = new Event(actor.guard, "shoot", actor.robber);
 SHOOT_2.setTemplate("[agent/s] [shoot/v] [object/o] in the chest");
 var FALL = new Event(actor.robber, "fall");
 var DIE = new Event(actor.robber, "die");
+var SHOOT_2 = new Event(actor.guard, "shoot", actor.robber);
+var DROP_GUN = new Event(actor.guard, "drop", thing.pistol);
+DROP_GUN.reconfigures(thing.pistol, "owner", actor.guard, null);
 var CRY = new Event(actor.teller, "weep");
+var STARE = new Event(actor.guard, "stare at", thing.pistol);
 
 var world = new World(place, actor, thing, eventSeq);
 
