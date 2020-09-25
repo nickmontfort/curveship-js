@@ -7,6 +7,8 @@ This system has an underlying representation of a storyworld (with actors, thing
 
 The system was originally developed with advanced users, such as researchers and author/programmers, in mind. While Curveship-js is now a much more preliminary implementation, it can be used for creative work and for teaching and learning about narrative theory. Programming a Curveship-js story file requires that an author follow some formal rules, but does not demand detailed knowledge of JavaScript.
 
+While the project overall is licensed via the GPL 3.0, the short example story files are also provided under an all-permissive license.
+
 For now, see the Curveship site for more information and documentation:
 
 https://nickm.com/curveship/
