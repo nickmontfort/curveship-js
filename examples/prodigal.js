@@ -1,5 +1,5 @@
-// The Prodigal Son - an example Curveship-js story, 2019-11-08
-//  Copyright 2019 Nick Montfort
+// The Prodigal Son - an example Curveship-js story
+//  Copyright 2020 Nick Montfort
 //
 // Copying and distribution of this file, with or without modification,
 // are permitted in any medium without royalty provided the copyright

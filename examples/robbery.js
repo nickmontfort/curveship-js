@@ -1,4 +1,4 @@
-// The Simulated Bank Robbery - an example Curveship-js story, 2019-11-08
+// The Simulated Bank Robbery - an example Curveship-js story
 //  Copyright 2019-2020 Nick Montfort
 //
 // Copying and distribution of this file, with or without modification,
@@ -6,8 +6,7 @@
 // notice and this notice are preserved. This file is offered as-is,
 // without any warranty.
 //
-// This is a non-interactive narrative from the original Curveship,
-// Curveship-py 0.5, also available in the Python 3 version, Curveship-py 0.6.
+// This is adapted from the original Curveship, now called Curveship-py 0.6.
 
 var metadata = { title: "The Simulated Bank Robbery", author: "Nick Montfort", date: "2007",
 instructions: "Click below or add your own parameters to the URL to change the “spin” and to create variation in the narrative discourse. You have to use the official names of “actors” for narrator and narratee, which can be found by looking at the code. Examples:",
@@ -80,8 +79,4 @@ var CRY = new Event(actor.teller, "weep");
 var STARE = new Event(actor.guard, "stare at", thing.pistol);
 
 var world = new World(place, actor, thing, eventSeq);
-
-function run() {
-    var spin = getParameters(world.actor);
-    narrate(metadata, spin, world);
-};
+function run() { narrate(metadata, {}, world); }

@@ -1,5 +1,5 @@
-// The Story of an Hour - an example Curveship-js story, 2019-11-08
-//  Copyright 2019 Nick Montfort
+// The Story of an Hour - an example Curveship-js story
+//  Copyright 2020 Nick Montfort
 //
 // Copying and distribution of this file, with or without modification,
 // are permitted in any medium without royalty provided the copyright
@@ -9,8 +9,9 @@
 // This story was selected for Curveship-js adaptation because it seemed to
 // present little explicit and important action and a great deal of
 // representation of a character’s emotional state. Does it still work with
-// with system? This selection also means that a narrative initially presented
-// as a short story is represented among the examples.
+// with system, which is strongly focused on the representation of action?
+// This selection also means that a narrative initially presented as a short
+// story is represented among the examples.
 
 var metadata = { title: "The Story of an Hour", author: "Kate Chopin", date: "1894",
 instructions: "Click below or add your own parameters to the URL to change the “spin” and to create variation in the narrative discourse. You have to use the official names of “actors” for narrator and narratee, which can be found by looking at the code. Examples:",

@@ -1,5 +1,5 @@
-// I’m Waiting for the Man - an example Curveship-js story, 2019-11-08
-//  Copyright 2019 Nick Montfort
+// I’m Waiting for the Man - an example Curveship-js story
+//  Copyright 2020 Nick Montfort
 //
 // Copying and distribution of this file, with or without modification,
 // are permitted in any medium without royalty provided the copyright
@@ -7,11 +7,9 @@
 // without any warranty.
 //
 // This story was selected for Curveship-js adaptation in part because the
-// narrator (the “I” of the story, the drug purchaser) shifts to become the
-// narratee (the “you”). While this mid-narrative shift cannot be accomplished
-// in Curveship-js 0.2, it will be interesting to try to implement it. This
-// selection also means that a narrative from a popular song is represented
-// among the examples.
+// narrator (the “I” of the story, the drug purchaser) shifts during the
+// narration to become the narratee (the “you”). This selection also means
+// that a narrative from a popular song is represented among the examples.
 
 var metadata = { title: "I’m Waiting for the Man", author: "Lou Reed", date: "1967",
 instructions: "Click below or add your own parameters to the URL to change the “spin” and to create variation in the narrative discourse. You have to use the official names of “actors” for narrator and narratee, which can be found by looking at the code. Examples:",
