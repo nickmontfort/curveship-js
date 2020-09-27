@@ -10,10 +10,12 @@
 // Curveship-py 0.5, also available in the Python 3 version, Curveship-py 0.6.
 
 var metadata = { title: "The Simulated Bank Robbery", author: "Nick Montfort", date: "2007",
-instructions: "Click below or add your own parameters to the URL to change the “spin” and to create variation in the narrative discourse. You have to use the official names of “actors” for narrator and narratee, which can be found by looking at the code. Examples:",
+instructions: "Click below or add your own parameters to the URL to change the “spin” and to create variation in the narrative discourse. You have to use the official names of “actors” for narrator and narratee, which can be found by looking at the code.\nThe anachrony field takes in three colon-separated parameters: the numbers for the start and end events of the segment to place out of order, and the number of the event before which this segment should be inserted. Anachrony overrides the order parameter. Examples:",
 examples: [ "narrator=teller",
 "order=retrograde,narratee=robber,narrator=guard,event_numbers",
-"speaking=after,narrator=teller,order=random,event_numbers,expression_numbers" ] };
+"speaking=after,narrator=teller,order=random,event_numbers,expression_numbers",
+"anachrony=16:18:0,event_numbers",
+"anachrony=7:9:21,narrator=teller,speaking=after,event_numbers"] };
 
 // PLACES first
 place.vestibule = new Place("the", "vestibule");
@@ -28,7 +30,7 @@ place.guardPost.addView(place.lobby, "through the one-way mirror");
 // ACTORS next
 actor.teller = new Actor("a", "bank teller", spatial.in, place.vestibule, pronoun.feminine);
 actor.robber = new Actor("a", "twitchy man", spatial.in, place.street, pronoun.masculine);
-actor.guard = new Actor("a", "burly guard", spatial.in, place.guard_post, pronoun.masculine);
+actor.guard = new Actor("a", "burly guard", spatial.in, place.guardPost, pronoun.masculine);
 
 // THINGS next
 thing.slip = new Thing("a", "deposit slip", spatial.in, place.vestibule);

@@ -340,6 +340,27 @@ class World {
   }
 }
 
+function orderEvents(spin) {
+  var telling = [];
+
+  if (spin.anachrony) {
+    var out_of_order_events = [], before_flash_events = [], after_flash_events = [];
+    for (var i = 0; i < world.event.length; i++) {
+      if (spin.anachrony[0] <= i && i <= spin.anachrony[1]) { out_of_order_events.push(i); }
+      else if (i < spin.anachrony[2]) { before_flash_events.push(i); }
+      else { after_flash_events.push(i); }
+    }
+    telling = [...before_flash_events, ...out_of_order_events, ...after_flash_events];
+  } else {
+    telling = [...Array(world.event.length).keys()];
+  }
+
+  if (spin.order === "retrograde") { telling.reverse(); }
+  if (spin.order === "random") { shuffle(telling); }
+
+  return telling;
+}
+
 function narrate(metadata, spin, world) {
   var element = document.getElementById("narrative"), div,
     h1 = document.createElement("h1"),
@@ -349,9 +370,9 @@ function narrate(metadata, spin, world) {
     examples = document.createElement("ul"),
     hr = document.createElement("hr"),
     telling = [], sentence, fix,
-    oldReferring, i = 0, exp = 0, leftPart;
-  for (var i = 0 ; i < world.event.length ; i++) { telling.push(i); }
+    oldReferring, oldSpeaking, i = 0, exp = 0, leftPart;
   spin = getParameters(world.actor);
+  telling = orderEvents(spin);
   h1.innerHTML = metadata.title;
   element.appendChild(h1);
   h2.innerHTML = metadata.author;
@@ -369,8 +390,6 @@ function narrate(metadata, spin, world) {
   }
   element.appendChild(examples);
   element.appendChild(hr);
-  if (spin.order === "retrograde") { telling.reverse(); }
-  if (spin.order === "random") { shuffle(telling); }
   div = document.createElement("div");
   element.appendChild(div);
   for (var i of telling) {
@@ -399,6 +418,15 @@ function narrate(metadata, spin, world) {
     if (spin.event_numbers) {
       sentence += "<span style='color:red'><b>[Ev " + i + "]</b></span> ";
     }
+    if (spin.anachrony && spin.anachrony[0] === i) {
+      var defaultSpeaking = spin.speaking;
+      var defaultReferring = spin.referring;
+      spin = adjustSpeakingAndReferring(spin, spin.anachrony[3]);
+    }
+    if (spin.anachrony && spin.anachrony[2] === i) {
+      spin.speaking = defaultSpeaking;
+      spin.referring = defaultReferring;
+    }
     if (typeof lastNarratedEvent !== "undefined" && event.start < lastNarratedEvent.start) {
       if (spin.time_markers) {
         sentence += choice(["Before that, ", "Previously, ", "Earlier, ", "Beforehand, "]);
@@ -408,12 +436,9 @@ function narrate(metadata, spin, world) {
       }
       oldSpeaking = spin.speaking;
       oldReferring = spin.referring;
-      if (spin.speaking === "after") {
-        if (spin.referring === "posterior") { spin.referring = "simple"; }
-        else if (spin.referring === "simple") { spin.referring = "anterior"; }
+      if (!spin.anachrony || (spin.anachrony[0] !== i && spin.anachrony[2] !== i)) {
+        spin = adjustSpeakingAndReferring(spin,"back");
       }
-      if (spin.speaking === "during") { spin.speaking = "after"; }
-      if (spin.speaking === "before") { spin.speaking = "during"; }
       sentence += event.realize(spin, fix);
       if (!fix) { sentence += event.realize(spin).slice(-1); }
       spin.speaking = oldSpeaking;
@@ -477,6 +502,36 @@ var givens = new Set();
 
 // ### UTILITY ###
 
+function adjustSpeakingAndReferring(spin, type) {
+  if (type === "back") {
+    if (spin.speaking === "after") {
+      if (spin.referring === "posterior") { spin.referring = "simple"; }
+      else if (spin.referring === "simple") { spin.referring = "anterior"; }
+    }
+    else if (spin.speaking === "during") { spin.speaking = "after"; }
+    else if (spin.speaking === "before") { spin.speaking = "during"; }
+  } else if (type === "forward") {
+    if (spin.speaking === "after") { spin.speaking = "during"; }
+    else if (spin.speaking === "during") { spin.speaking = "before"; }
+  }
+  return spin;
+}
+
+function parseAnachronySettings(anachrony_config) {
+  var start_event = 0, end_event = 0, add_before = 0, type = "neutral";
+  if (anachrony_config.length === 1) {
+    start_event = parseInt(anachrony_config[0]);
+    end_event = start_event;
+  } else if (anachrony_config.length > 1) {
+    start_event = parseInt(anachrony_config[0]);
+    end_event = parseInt(anachrony_config[1]);
+  }
+  if (anachrony_config.length > 2) { add_before = parseInt(anachrony_config[2]); }
+  if (add_before < start_event) { type = "forward"; }
+  else if (add_before > end_event) { type = "back"; }
+  return [start_event, end_event, add_before, type];
+}
+
 function getParameters(actor) {
   var params = window.location.search, spin = {}, pair;
   if (params.substring(0, 1) === "?") {
@@ -488,9 +543,11 @@ function getParameters(actor) {
       else if (pair[0] === "time_markers") { spin.time_markers = true; }
       else if (pair[0] === "event_numbers") { spin.event_numbers = true; }
       else if (pair[0] === "expression_numbers") { spin.expression_numbers = true; }
+      else if (pair[0] === "anachrony") { spin.anachrony = parseAnachronySettings(pair[1].split(":")); }
       else { spin[pair[0]] = pair[1]; }
     }
   }
+  if (spin.anachrony) { delete spin["order"]; }
   if (!spin["speaking"]) { spin.speaking = "during"; }
   if (!spin["referring"]) { spin.referring = "simple"; }
   return spin;
