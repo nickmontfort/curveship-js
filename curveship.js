@@ -1,22 +1,22 @@
-// Curveship-js version 0.2.01
-//  Copyright 2019-2020 Nick Montfort
+// Curveship-js version 0.3
+//  Copyright 2020 Nick Montfort
 //
-// Copying and distribution of this file, with or without modification,
-// are permitted in any medium without royalty provided the copyright
-// notice and this notice are preserved. This file is offered as-is,
-// without any warranty.
+// licensed under the GNU General Public License v3.0. See the file LICENSE
+// for complete terms.
 //
-// Curveship-js is a partial implementation of Curveship, released in 2011.
-// This JavaScript (ES6) Curveship is not intended to ever have a parser or an
-// *interactive* world simulation. Narrative variation, the main point of the
-// original system, is however enabled by this system.
+// Curveship-js is an implementation of the core ideas of Curveship in ES6.
+// It enables narrative variation, the main point of the original (2011) system.
 //
-// Version 0.2 is a "Micro Curveship" does not even fully implement the
-// narrative variation of Curveship-py; for instance focalization and many
-// changes in order for flashback and flashforward are not in place. If
+// A note for those familiar with the original Python project, now called
+// Curveship-py: This Curveship-js is not intended to ever have a parser or an
+// *interactive* world simulation. It is just for telling the same underlying
+// story/plot/content in different narrative discourses/expressions/styles.
+//
+// Version 0.3 is a the GitHub-hosted "Micro Curveship" still in development;
+// it lacks some narrative variation in Curveship-py, for instance focalization
+// and many changes in order, such as  for flashback and flashforward. If
 // development continues, progress will be toward Curveship-js 0.6, which
-// will have all the narrative variation capabilities (but no interactive
-// simulation or parser capabilities) of Curveship-py 0.6.
+// will have all the narrative variation capabilities of Curveship-py 0.6.
 //
 // Web pages need to source this file, verb.js, and the story file to function.
 //
@@ -175,7 +175,7 @@ class Place extends Existent {
 var place = {};
 
 class Thing extends Existent {
-  constructor(article, name, spatialRelation, parent, prominence = .5) {
+  constructor(article, name, spatialRelation, parent, prominence = 0.5) {
   // "prominence" does nothing now. It is used in Curveship.py, which has a
   // complex model of what things can be seen from what places. There, .5
   // means a thing is of average prominence.
@@ -281,11 +281,12 @@ class Event {
     // that focalization can be implemented.
   }
   reconfigures(ex, property, val_1, val_2) {
-    var alteration = new Object();
-    alteration.existent = ex;
-    alteration.property = property;
-    alteration.before = val_1;
-    alteration.after = val_2;
+    var alteration = {
+      existent: ex,
+      property: property,
+      before: val_1,
+      after: val_2
+    };
     this.alterations.push(alteration);
   }
   realize(spin, fix = true) {
@@ -349,8 +350,8 @@ function narrate(metadata, spin, world) {
     examples = document.createElement("ul"),
     hr = document.createElement("hr"),
     telling = [], sentence, fix,
-    oldReferring, i = 0, exp = 0, leftPart;
-  for (var i = 0 ; i < world.event.length ; i++) { telling.push(i); }
+    oldReferring, exp = 0, i, leftPart;
+  for (i = 0 ; i < world.event.length ; i++) { telling.push(i); }
   spin = getParameters(world.actor);
   h1.innerHTML = metadata.title;
   element.appendChild(h1);
@@ -363,8 +364,8 @@ function narrate(metadata, spin, world) {
   element.appendChild(h3);
   instructions.innerHTML = metadata.instructions;
   element.appendChild(instructions);
-  for (args of metadata.examples) {
-    leftPart = window.location.href.split('?')[0]
+  for (var args of metadata.examples) {
+    leftPart = window.location.href.split('?')[0];
     examples.innerHTML += '<li><a href="' + leftPart + '?' + args + '">?' + args + '</li>';
   }
   element.appendChild(examples);
@@ -373,20 +374,21 @@ function narrate(metadata, spin, world) {
   if (spin.order === "random") { shuffle(telling); }
   div = document.createElement("div");
   element.appendChild(div);
-  for (var i of telling) {
+  for (i of telling) {
+    var e, alt;
     event = world.event[i];
     // Each time we narrate an event, all the "after" alterations of
     // chronologically earlier events must be applied, *and* the prior
     // "before" state of all chronologially later must be applied.
     // That's becasue we could be narrating this event in any order.
-    for (var e of world.event) {
+    for (e of world.event) {
       if (e.start < event.start) {
-        for (var a of e.alterations) {
-          a.existent[a.property] = a.after;
+        for (alt of e.alterations) {
+          alt.existent[alt.property] = alt.after;
         }
       } else {
-        for (var a of e.alterations) {
-          a.existent[a.property] = a.before;
+        for (alt of e.alterations) {
+          alt.existent[alt.property] = alt.before;
         }
       }
     }
@@ -491,7 +493,7 @@ function getParameters(actor) {
       else { spin[pair[0]] = pair[1]; }
     }
   }
-  if (!spin["speaking"]) { spin.speaking = "during"; }
-  if (!spin["referring"]) { spin.referring = "simple"; }
+  if (!spin.speaking) { spin.speaking = "during"; }
+  if (!spin.referring) { spin.referring = "simple"; }
   return spin;
 }
