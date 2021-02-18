@@ -1,5 +1,5 @@
 // I’m Waiting for the Man - an example Curveship-js story
-//  Copyright 2020 Nick Montfort
+//  Copyright 2021 Nick Montfort
 //
 // Copying and distribution of this file, with or without modification,
 // are permitted in any medium without royalty provided the copyright
@@ -12,10 +12,10 @@
 // that a narrative from a popular song is represented among the examples.
 
 var metadata = { title: "I’m Waiting for the Man", author: "Lou Reed", date: "1967",
-instructions: "Click below or add your own parameters to the URL to change the “spin” and to create variation in the narrative discourse. You have to use the official names of “actors” for narrator and narratee, which can be found by looking at the code. Examples:",
-examples: [ "narrator=buyer,speaking=after",
-"narrator=buyer,narratee=man",
-"order=random,narratee=man,time_markers,expression_numbers,event_numbers" ] };
+instructions: "Click below or add your own parameters to the URL to change the “spin” and to create variation in the narrative discourse. You have to use the official names of “actors” for i (narrator) and you (narratee). These can be found by looking at the code. Examples:",
+examples: [ "i=buyer,speaking=after",
+"i=buyer,you=man",
+"order=random,you=man,time_markers,expression_numbers,event_numbers" ] };
 
 // PLACES first
 place.intersection = new Place("the", "intersection of Lexington and 125th");

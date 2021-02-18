@@ -1,7 +1,7 @@
 // Curveship-js version 0.3
-//  Copyright 2020 Nick Montfort
+//  Copyright 2020-2021 Nick Montfort
 //
-// licensed under the GNU General Public License v3.0. See the file LICENSE
+// Licensed under the GNU General Public License v3.0. See the file LICENSE
 // for complete terms.
 //
 // Curveship-js is an implementation of the core ideas of Curveship in ES6.
@@ -12,15 +12,15 @@
 // *interactive* world simulation. It is just for telling the same underlying
 // story/plot/content in different narrative discourses/expressions/styles.
 //
-// Version 0.3 is a the GitHub-hosted "Micro Curveship" still in development;
+// Version 0.3 is the GitHub-hosted "Micro Curveship" still in development;
 // it lacks some narrative variation in Curveship-py, for instance focalization
-// and many changes in order, such as  for flashback and flashforward. If
-// development continues, progress will be toward Curveship-js 0.6, which
-// will have all the narrative variation capabilities of Curveship-py 0.6.
+// and many changes in order, such as  for flashback and flashforward. Any
+// progress will be toward Curveship-js 0.6, which will have all the narrative
+// variation capabilities of Curveship-py 0.6.
 //
 // Web pages need to source this file, verb.js, and the story file to function.
 //
-// Some documentation is at http://nickm.com/curveship/js
+// Some documentation is at https://nickm.com/curveship/#js
 
 var clock = 0;
 
@@ -47,24 +47,25 @@ class Existent {
     this.name = name;
   }
   getNounPhrase(role, spin, ev) {
-  // If person and number have non-null values, and spin applies, returns a pronoun
+  // If person & number are non-null, and spin applies, returns a pronoun
     var phrase = "";
-    if (spin.narrator === this) {
+    if (spin.i === this) { // The "I" of the narrative, or narrator
       switch (role) {
       case "subject": { phrase = this.pronoun.getSubject(1, this.number); break; }
       case "object": { phrase = this.pronoun.getObject(1, this.number); }
       }
-    } else if (spin.narratee === this) {
+    } else if (spin.you === this) { // The "you" of the narrative, or narratee
       switch (role) {
       case "subject": { phrase = this.pronoun.getSubject(2, this.number); break; }
       case "object": { phrase = this.pronoun.getObject(2, this.number); }
       }
     } else if (this.owner) {
-      phrase = this.owner.getPossessive(spin, ev) + " " + this.name;
-    } else if (givens.has(this) && lastNarratedEvent.hasParticipant(this)) {
+      phrase = this.owner.getPossessiveAdj(spin, ev) + " " + this.name;
+    } else if (givens.has(this) && typeof lastNarratedEvent !== "undefined" && lastNarratedEvent.hasParticipant(this)) {
       switch (role) {
       case "subject": { phrase = this.pronoun.getSubject(3, this.number); break; }
       case "object": { phrase = this.pronoun.getObject(3, this.number); }
+      // FIXME: Use reflexive pronoun if the current event has the same sub & obj
       }
     } else if (!this.article) {
       phrase = this.name;
@@ -78,13 +79,13 @@ class Existent {
   }
   getSubject(spin, ev) { return this.getNounPhrase("subject", spin, ev); }
   getObject(spin, ev) { return this.getNounPhrase("object", spin, ev); }
-  getPossessive(spin, ev) {
-    if (spin.narrator === this) { return this.pronoun.getPossessive(1, this.number, ev); }
-    if (spin.narratee === this) { return this.pronoun.getPossessive(2, this.number, ev); }
+  getPossessiveAdj(spin, ev) {
+    if (spin.i === this) { return this.pronoun.getPossessiveAdj(1, this.number, ev); }
+    if (spin.you === this) { return this.pronoun.getPossessiveAdj(2, this.number, ev); }
     if (givens.has(this)) {
       if (ev.agent == this ||
           (typeof lastNarratedEvent.hasParticipant(this))) {
-        return this.pronoun.getPossessive(3, this.number, ev);
+        return this.pronoun.getPossessiveAdj(3, this.number, ev);
       }
     }
     switch (this.number) {
@@ -122,9 +123,12 @@ class PronounSet {
   constructor(thirdPersonSingular) {
     this.pronoun = [];
     this.pronoun.push([ [], [], [] ]); // There is no 0th person or number
-    this.pronoun.push([ [], ["I", "me", "my"], ["we", "us", "our"] ]);
-    this.pronoun.push([ [], ["you", "you", "your"], ["you", "you", "your"] ]);
-    this.pronoun.push([ [], thirdPersonSingular, ["they", "them", "their"] ]);
+    this.pronoun.push([ [], ["I", "me", "my", "mine", "myself"],
+                      ["we", "us", "our", "ours", "ourselves"] ]);
+    this.pronoun.push([ [], ["you", "you", "your", "yours", "yourself"],
+                      ["you", "you", "your", "yours", "yourselves"] ]);
+    this.pronoun.push([ [], thirdPersonSingular,
+                      ["they", "them", "their", "theirs", "themselves"] ]);
   }
   getSubject(person, number = 1) {
     return this.pronoun[person][number][0];
@@ -132,17 +136,23 @@ class PronounSet {
   getObject(person, number = 1) {
     return this.pronoun[person][number][1];
   }
-  getPossessive(person, number = 1) {
+  getPossessiveAdj(person, number = 1) {
     return this.pronoun[person][number][2];
+  }
+  getPossessivePronoun(person, number = 1) {
+    return this.pronoun[person][number][3];
+  }
+  getReflexive(person, number = 1) {
+    return this.pronoun[person][number][4];
   }
 }
 
 var pronoun = {};
-pronoun.feminine = new PronounSet(["she", "her", "her"]);
-pronoun.masculine = new PronounSet(["he", "him", "his"]);
-pronoun.neuter = new PronounSet(["it", "it", "its"]);
-pronoun.unknownBinary = new PronounSet(["she or he", "her or him", "her or his"]);
-pronoun.nonBinary = new PronounSet(["they", "them", "their"]);
+pronoun.feminine = new PronounSet(["she", "her", "her", "hers", "herself"]);
+pronoun.masculine = new PronounSet(["he", "him", "his", "his", "himself"]);
+pronoun.neuter = new PronounSet(["it", "it", "its", "its", "itself"]);
+pronoun.unknownBinary = new PronounSet(["she or he", "her or him", "her or his", "hers or his", "herself or himself"]);
+pronoun.nonBinary = new PronounSet(["they", "them", "their", "theirs", "themself"]); // If you prefer, you can make the last entry "themselves"
 
 
 class Actor extends Existent {
@@ -246,8 +256,8 @@ class Event {
     var person = 3, number, slotExp = /\[([a-z]+)\/v\]/,
       base = slotExp.exec(currentTemplate)[1],
       verb = new Verb(base), tenseER, phrase;
-    if (spin.narrator === agent) { person = 1; }
-    if (spin.narratee === agent) { person = 2; }
+    if (spin.i === agent) { person = 1; }
+    if (spin.you === agent) { person = 2; }
     switch(spin.speaking) {
     case "after": { tenseER = "past"; break; }
     case "during": { tenseER = "present"; break; }
@@ -305,16 +315,16 @@ class Event {
         } else if (typeof this[existent] === "string") {
           subjectNP = objectNP = this[existent];
         } else if (Array.isArray(this[existent])) { // Only 2 elements are supported for now!
-          // FIXME doesn't get pronouns in the right order: "You and I"
+          // FIXME: doesn't get pronouns in the right order: "You and I"
           subjectNP = this[existent][0].getSubject(spin, this) + " and " + this[existent][1].getSubject(spin, this);
           objectNP = this[existent][0].getObject(spin, this) + " and " + this[existent][1].getObject(spin, this);
-          possessivePhrase = this[existent][0].getSubject(spin, this) + " and " + this[existent][1].getPossessive(spin, this);
+          possessivePhrase = this[existent][0].getSubject(spin, this) + " and " + this[existent][1].getPossessiveAdj(spin, this);
           givens.add(this[existent][0]);
           givens.add(this[existent][1]);
         } else {
           subjectNP = this[existent].getSubject(spin, this);
           objectNP = this[existent].getObject(spin, this);
-          possessivePhrase = this[existent].getPossessive(spin, this);
+          possessivePhrase = this[existent].getPossessiveAdj(spin, this);
           givens.add(this[existent]);
         }
       }
@@ -486,7 +496,7 @@ function getParameters(actor) {
     params = params.split(",");
     for (var p of params) {
       pair = p.split("=");
-      if (pair[0] === "narrator" || pair[0] === "narratee") { spin[pair[0]] = actor[pair[1]]; }
+      if (pair[0] === "i" || pair[0] === "you") { spin[pair[0]] = actor[pair[1]]; }
       else if (pair[0] === "time_markers") { spin.time_markers = true; }
       else if (pair[0] === "event_numbers") { spin.event_numbers = true; }
       else if (pair[0] === "expression_numbers") { spin.expression_numbers = true; }

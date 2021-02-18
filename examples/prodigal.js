@@ -1,5 +1,5 @@
 // The Prodigal Son - an example Curveship-js story
-//  Copyright 2020 Nick Montfort
+//  Copyright 2021 Nick Montfort
 //
 // Copying and distribution of this file, with or without modification,
 // are permitted in any medium without royalty provided the copyright
@@ -11,8 +11,8 @@
 // types, including the parable.
 
 var metadata = { title: "The Prodigal Son", author: "Luke the Physician (traditionally attributed)", date: "1st or 2nd Century CE",
-instructions: "Click below or add your own parameters to the URL to change the “spin” and to create variation in the narrative discourse. You have to use the official names of “actors” for narrator and narratee, which can be found by looking at the code. Examples:",
-examples: [ "narrator=younger,narratee=father,speaking=after,event_numbers",
+instructions: "Click below or add your own parameters to the URL to change the “spin” and to create variation in the narrative discourse. You have to use the official names of “actors” for i (narrator) and you (narratee). These can be found by looking at the code. Examples:",
+examples: [ "i=younger,you=father,speaking=after,event_numbers",
 "order=retrograde,time_markers" ] };
 
 // PLACES first

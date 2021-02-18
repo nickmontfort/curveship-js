@@ -1,5 +1,5 @@
 // The Story of an Hour - an example Curveship-js story
-//  Copyright 2020 Nick Montfort
+//  Copyright 2021 Nick Montfort
 //
 // Copying and distribution of this file, with or without modification,
 // are permitted in any medium without royalty provided the copyright
@@ -14,10 +14,10 @@
 // story is represented among the examples.
 
 var metadata = { title: "The Story of an Hour", author: "Kate Chopin", date: "1894",
-instructions: "Click below or add your own parameters to the URL to change the “spin” and to create variation in the narrative discourse. You have to use the official names of “actors” for narrator and narratee, which can be found by looking at the code. Examples:",
-examples: [ "narrator=josephine,narratee=brently",
+instructions: "Click below or add your own parameters to the URL to change the “spin” and to create variation in the narrative discourse. You have to use the official names of “actors” for i (narrator) and you (narratee). These can be found by looking at the code. Examples:",
+examples: [ "i=josephine,you=brently",
 "order=retrograde,event_numbers,expression_numbers",
-"speaking=before,narratee=louise" ] };
+"speaking=before,you=louise" ] };
 
 // PLACES first
 place.downstairs = new Place("", "the Mallard house");

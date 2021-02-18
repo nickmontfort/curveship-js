@@ -1,5 +1,5 @@
 // The Simulated Bank Robbery - an example Curveship-js story
-//  Copyright 2019-2020 Nick Montfort
+//  Copyright 2021 Nick Montfort
 //
 // Copying and distribution of this file, with or without modification,
 // are permitted in any medium without royalty provided the copyright
@@ -9,10 +9,10 @@
 // This is adapted from the original Curveship, now called Curveship-py 0.6.
 
 var metadata = { title: "The Simulated Bank Robbery", author: "Nick Montfort", date: "2007",
-instructions: "Click below or add your own parameters to the URL to change the “spin” and to create variation in the narrative discourse. You have to use the official names of “actors” for narrator and narratee, which can be found by looking at the code. Examples:",
-examples: [ "narrator=teller",
-"order=retrograde,narratee=robber,narrator=guard,event_numbers",
-"speaking=after,narrator=teller,order=random,event_numbers,expression_numbers" ] };
+instructions: "Click below or add your own parameters to the URL to change the “spin” and to create variation in the narrative discourse. You have to use the official names of “actors” for i (narrator) and you (narratee). These can be found by looking at the code. Examples:",
+examples: [ "i=teller",
+"order=retrograde,you=robber,i=guard,event_numbers",
+"speaking=after,i=teller,order=random,event_numbers,expression_numbers" ] };
 
 // PLACES first
 place.vestibule = new Place("the", "vestibule");
