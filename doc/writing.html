@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-type" content="text/html;charset=utf-8" />
+    <title>Writing for Curveship-js</title>
+<link rel="StyleSheet" href="../curve.css"/>
+
+</head>
+<body>
+<div style="text-align:right"><a href="../index.html#py"><img src="../small_logotype.png" alt="Curveship" style="border-style: none" /></a></div>
+
+<div class="links">
+<ul>
+<li><a href="../thanks.html">Thanks</a></li>
+<li><a href="../publications.html">Publications</a></li>
+<li><a href="reference.html">JS Reference</a></li>
+<li>JS Writing</li>
+<li><a href="https://github.com/nickmontfort/curveship-js">JS GitHub</a></li>
+</ul>
+</div>
+
+<div id="main">
+
+<h2>Writing for Curveship-<span style="color:black">js</span></h2>
+
+<p>To write a Curveship-js story file ending in ".js" one needs only define some <b>metadata,</b> provide sequences of <b>Places, Actors, Things,</b> and <b>Events,</b> and then conclude with a final, standard two lines.</p>
+
+<p>The easy things, such as defining a story that is like a folk tale, with straightforward story elements and little underlying complexity, are meant to be easy to implement in Curveship-js. See <a href="examples/robbery.js" target="_blank">robbery.js</a> for one reasonably simple example, with only a few special nuances; even simpler is <a href="examples/waiting.js" target="_blank">waiting.js.</a> The harder things are meant to be possible, even if they may take some effort. See <a href="examples/hour.js" target="_blank">hour.js</a> and <a href="examples/prodigal.js" target="_blank">prodigal.js</a></p>
+
+<p>The <b>metadata</b> is an associative array with your own <i>title, author, date, instructions,</i> and <i>examples,</i> several of which are optional. See the beginning of any story file for an example.</p>
+
+<p><b>Places</b> in the most simple case are defined like so:</p>
+
+<pre>
+  place.stairs = new Place("the", "stairs");
+  place.outside = new Place("", "outside the Mallard house");
+  place.rail = new Place("a", "rail line");
+</pre>
+
+<p>This declares that there are three Places. They each have a unique tag (stairs, outside, rail) which is used to refer to them elsewhere in the code. Each time the Place class is instantiated, it is given two arguments, and generally needs at least these two arguments. They correspond the the <i>initial article</i> and the <i>noun phrase.</i> Whenever “rail line” is first mentioned in the story, it will be called “a rail line.” If it is mentioned again, it will be called “the rail line.” But “the stairs” are a part of the house that is taken for granted, so they are called “the stairs” initially. While there are other optional arguments in defining Places, and it’s possible to learn about them though the examples, these are the only ones required.</p>
+
+<p><b>Actors</b> are defined like so:</p>
+
+<pre>
+  actor.louise = new Actor("", "Mrs. Mallard", spatial.in, place.downstairs,
+                           pronoun.feminine);
+  actor.doctors = new Actor("the", "doctors", spatial.of, actor.cosmos,
+                           pronoun.masculine, 2);
+</pre>
+
+<p>In the first line, an Actor (“louise”) is defined without an article (she will never be referred to as “a Mrs. Mallard” or “the Mrs. Mallard”) and with the noun phrase “Mrs. Mallard.” She is initially located in the place with the tag “downstairs.” She is referred to using feminine pronouns.</p>
+
+<p>In the second line, an Actor (“doctors”) is defined without the article “the” (they will be called “the doctors” from the start) and with the noun phrase “doctors.” They are initially located offstage, possessed by the Cosmos but not in any place. Masculine pronouns are set for them. The “2” at the end indicates they are plural. Because the doctors are plural, it doesn’t matter which of the several pronoun options are chosen, as plural pronouns are the same for all of them. But all Items do need to have a PronounSet defined.</p>
+
+<p><b>Things</b> are then defined, e.g.:</p>
+
+<pre>
+  thing.chair = new Thing("a", "comfortable chair", spatial.in, place.room);
+  thing.trees = new Thing("some", "trees", spatial.in, place.outside);
+</pre>
+
+<p>As with other Existents, these two things get their own tags (“chair” and “trees”), have their articles set, and are situated in places. It is not necessary to explicitly declare that these use neuter pronouns, because things use such pronouns by default. It is also not necessary to explicitly declare that the trees are plural, because Curveship-js figures that out based on the article “some,” a plural article.</p>
+
+<p><b>Events</b> come after this, each one assigned to a variable. As the events are read in, they will be added to eventSeq, putting them in chronological order. Here is the simplest case of an event definition:</p>
+
+<pre>
+  var SOB = new Event(actor.louise, "sob");
+</pre>
+
+<p>This defines an event in which the Actor with the tag “louise” undertakes an (intransitive) action, sobbing or crying. The events that occur earlier in the file will be read in and made chronologically earlier; then this one will be read; and finally, the events after this one, which will made chronologically later.</p>
+
+<p>There are many more complex possibilities. In Curveship-js, an Event can itself be the argument to another event, so for instance an actor can see or realize something that has previously happened. Again, checking the examples provides the best introduction to the complexities of events. For now, to elaborate slightly further, here is a transitive Event and one with an indirect direct object:</p>
+
+<pre>
+  var ASK_TO_ENTER = new Event(actor.josephine, "ask to enter", place.room);
+  ...
+  var OPEN_FRONT = new Event(actor.brently, "open +ing", "the front door",
+      temporal.with, "a latchkey");
+</pre>
+
+<p>In the first case, “ask to enter” can be used as the verb phrase and “ask” will be conjugated, as in <i>asked to enter, asks to enter,</i> etc. Adding “+ing” to the string defining the verb forces it to always be realized in the progressive, as in <i>was opening, is opening,</i> etc. If the verb is negated, one can simply prepend “not” as in “not open” to have the realization be <i>did not open, does not open,</i> etc. Note that the front door and the latchkey are not implemented as actual Existents in this example. They could have been, but since they are only mentioned as part of this Event, and these phrases never need to be realized in any different way, it’s possible to take this shortcut and simply use the appropriate strings.</p>
+
+<p>In a standard story file, the final two lines are:</p>
+
+<pre>
+  var world = new World(place, actor, thing, eventSeq);
+  function run() { narrate(metadata, {}, world); }
+</pre>
+
+<p>A corresponding HTML page is also needed, which is in a standard format.</p>
+
+<p>Any “spin” (narrative discourse specification) can be applied to any story file, as long as the correct actors are referenced when setting the narrator and narratee. The examples show how this is done.</p>
+
+<p>The source files of the <a href="examples/index.html">interactive examples</a> offered online are currently the best guide to writing for Curveship-js:</p>
+
+<ul>
+  <li><a href="examples/hour.html" target="_blank"><i>The Story of an Hour,</i></a> see <a href="examples/hour.js" target="_blank">hour.js</a></li>
+  <li><a href="examples/prodigal.html" target="_blank"><i>The Prodigal Son,</i></a> see <a href="examples/prodigal.js" target="_blank">prodigal.js</a></li>
+  <li><a href="examples/robbery.html" target="_blank"><i>The Simulated Bank Robbery,</i></a> see <a href="examples/robbery.js" target="_blank">robbery.js</a></li>
+  <li><a href="examples/waiting.html" target="_blank"><i>I’m Waiting for The Man,</i></a> see <a href="examples/waiting.js" target="_blank">waiting.js</a></li>
+</ul>
+
+<p>As of the 0.2.0 release, the recommended way to write a new Curveship-js story file and the corresponding HTML page is by modifying existing files.</p>
+
+<div class="homeward" style="text-align:center">
+<a href="../index.html#js">Main Curveship Page</a>
+</div>
+
+</div>
+</body>
+</html>
