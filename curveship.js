@@ -49,6 +49,13 @@ class Existent {
   getNounPhrase(role, spin, ev) {
   // If person & number are non-null, and spin applies, returns a pronoun
     var phrase = "";
+    var reflexive = ev["agent"] === this || (Array.isArray(ev["agent"]) && ev["agent"].includes(this)) ? 1 : 0;
+    var person = 3;
+    if (spin.i === this) person = 1;
+    if (spin.you === this) person = 2;
+    if (reflexive && role === "object") {
+      return this.pronoun.getObject(person, this.number, reflexive); 
+    }
     if (spin.i === this) { // The "I" of the narrative, or narrator
       switch (role) {
       case "subject": { phrase = this.pronoun.getSubject(1, this.number); break; }
@@ -133,8 +140,8 @@ class PronounSet {
   getSubject(person, number = 1) {
     return this.pronoun[person][number][0];
   }
-  getObject(person, number = 1) {
-    return this.pronoun[person][number][1];
+  getObject(person, number = 1, reflexive = 0) {
+    return this.pronoun[person][number][1 + 3 * reflexive];
   }
   getPossessiveAdj(person, number = 1) {
     return this.pronoun[person][number][2];
