@@ -46,8 +46,11 @@ class Existent {
     if (article) { this.article = article; }
     this.name = name;
   }
+  thirdPersonPronominalization(spin) {
+    if (spin.i === this || spin.you === this || this.owner) return false;
+    return givens.has(this) && typeof lastNarratedEvent !== "undefined" && lastNarratedEvent.hasParticipant(this);
+  }
   getNounPhrase(role, spin, ev) {
-  // If person & number are non-null, and spin applies, returns a pronoun
     var phrase = "";
     var reflexive = ev["agent"] === this || (Array.isArray(ev["agent"]) && ev["agent"].includes(this)) ? 1 : 0;
     var person = 3;
@@ -56,6 +59,7 @@ class Existent {
     if (reflexive && role === "object") {
       return this.pronoun.getObject(person, this.number, reflexive); 
     }
+    // If person & number are non-null, and spin applies, returns a pronoun
     if (spin.i === this) { // The "I" of the narrative, or narrator
       switch (role) {
       case "subject": { phrase = this.pronoun.getSubject(1, this.number); break; }
@@ -270,7 +274,7 @@ class Event {
     case "during": { tenseER = "present"; break; }
     case "before": { tenseER = "future"; break; }
     }
-    if (Array.isArray(agent)) {
+    if (Array.isArray(agent) || (agent.pronoun == pronoun.nonBinary && agent.thirdPersonPronominalization(spin))) {
       number = 2;
     } else {
       number = agent.number;
