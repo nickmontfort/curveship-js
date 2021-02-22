@@ -47,15 +47,18 @@ class Existent {
     this.name = name;
   }
   thirdPersonPronominalization(spin) {
+    // given a spin, will this existent be pronominalized in the third person (used for they/them)
     if (spin.i === this || spin.you === this || this.owner) return false;
     return givens.has(this) && typeof lastNarratedEvent !== "undefined" && lastNarratedEvent.hasParticipant(this);
   }
   getNounPhrase(role, spin, ev) {
     var phrase = "";
+    // if an agent includes the existent
     var reflexive = ev["agent"] === this || (Array.isArray(ev["agent"]) && ev["agent"].includes(this)) ? 1 : 0;
     var person = 3;
     if (spin.i === this) person = 1;
     if (spin.you === this) person = 2;
+    // and the existent is the object, it should be reflexive
     if (reflexive && role === "object") {
       return this.pronoun.getObject(person, this.number, reflexive); 
     }
@@ -76,7 +79,6 @@ class Existent {
       switch (role) {
       case "subject": { phrase = this.pronoun.getSubject(3, this.number); break; }
       case "object": { phrase = this.pronoun.getObject(3, this.number); }
-      // FIXME: Use reflexive pronoun if the current event has the same sub & obj
       }
     } else if (!this.article) {
       phrase = this.name;
@@ -274,6 +276,7 @@ class Event {
     case "during": { tenseER = "present"; break; }
     case "before": { tenseER = "future"; break; }
     }
+    // if we have two agents, or one, non-binary, pronminalized agent, pluralize
     if (Array.isArray(agent) || (agent.pronoun == pronoun.nonBinary && agent.thirdPersonPronominalization(spin))) {
       number = 2;
     } else {
