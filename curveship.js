@@ -46,49 +46,40 @@ class Existent {
     if (article) { this.article = article; }
     this.name = name;
   }
-  thirdPersonPronominalization(spin) {
-    // given a spin, will this existent be pronominalized in the third person (used for they/them)
-    if (spin.i === this || spin.you === this || this.owner) return false;
-    return givens.has(this) && typeof lastNarratedEvent !== "undefined" && lastNarratedEvent.hasParticipant(this);
-  }
-  getNounPhrase(role, spin, ev) {
-    var phrase = "";
-    // if an agent includes the existent
-    var reflexive = ev["agent"] === this || (Array.isArray(ev["agent"]) && ev["agent"].includes(this)) ? 1 : 0;
+  pronominalization(role, spin, ev) {
     var person = 3;
     if (spin.i === this) person = 1;
     if (spin.you === this) person = 2;
-    // and the existent is the object, it should be reflexive
-    if (reflexive && role === "object") {
-      return this.pronoun.getObject(person, this.number, reflexive); 
+    if (ev["agent"] === this || (Array.isArray(ev["agent"]) && ev["agent"].includes(this))){
+      if (role === "object") return ["reflexive", person];
     }
-    // If person & number are non-null, and spin applies, returns a pronoun
-    if (spin.i === this) { // The "I" of the narrative, or narrator
-      switch (role) {
-      case "subject": { phrase = this.pronoun.getSubject(1, this.number); break; }
-      case "object": { phrase = this.pronoun.getObject(1, this.number); }
+    if (person != 3) return [role, person];
+    if (this.owner) return false;
+    if (givens.has(this) && typeof lastNarratedEvent !== "undefined" && lastNarratedEvent.hasParticipant(this)){
+      return [role, 3]
+    }
+    return false;
+  }
+  getNounPhrase(role, spin, ev) {
+    var pronominalize = this.pronominalization(role, spin, ev);
+    if(pronominalize){
+      switch(pronominalize[0]){
+        case "subject": { return this.pronoun.getSubject(pronominalize[1], this.number);}
+        case "object": { return this.pronoun.getObject(pronominalize[1], this.number);}
+        case "reflexive": { return this.pronoun.getReflexive(pronominalize[1], this.number);}
       }
-    } else if (spin.you === this) { // The "you" of the narrative, or narratee
-      switch (role) {
-      case "subject": { phrase = this.pronoun.getSubject(2, this.number); break; }
-      case "object": { phrase = this.pronoun.getObject(2, this.number); }
-      }
-    } else if (this.owner) {
-      phrase = this.owner.getPossessiveAdj(spin, ev) + " " + this.name;
-    } else if (givens.has(this) && typeof lastNarratedEvent !== "undefined" && lastNarratedEvent.hasParticipant(this)) {
-      switch (role) {
-      case "subject": { phrase = this.pronoun.getSubject(3, this.number); break; }
-      case "object": { phrase = this.pronoun.getObject(3, this.number); }
-      }
-    } else if (!this.article) {
-      phrase = this.name;
-    } else if (givens.has(this) &&
+    }
+    if (this.owner) {
+      return this.owner.getPossessiveAdj(spin, ev) + " " + this.name;
+    } 
+    if (!this.article) {
+      return this.name;
+    }
+    if (givens.has(this) &&
       ["a", "an", "one", "several", "some"].includes(this.article)) {
-      phrase = "the " + this.name;
-    } else {
-      phrase = this.article + " " + this.name;
+      return "the " + this.name;
     }
-    return phrase;
+    return this.article + " " + this.name;
   }
   getSubject(spin, ev) { return this.getNounPhrase("subject", spin, ev); }
   getObject(spin, ev) { return this.getNounPhrase("object", spin, ev); }
@@ -146,8 +137,8 @@ class PronounSet {
   getSubject(person, number = 1) {
     return this.pronoun[person][number][0];
   }
-  getObject(person, number = 1, reflexive = 0) {
-    return this.pronoun[person][number][1 + 3 * reflexive];
+  getObject(person, number = 1) {
+    return this.pronoun[person][number][1];
   }
   getPossessiveAdj(person, number = 1) {
     return this.pronoun[person][number][2];
@@ -277,7 +268,8 @@ class Event {
     case "before": { tenseER = "future"; break; }
     }
     // if we have two agents, or one, non-binary, pronminalized agent, pluralize
-    if (Array.isArray(agent) || (agent.pronoun == pronoun.nonBinary && agent.thirdPersonPronominalization(spin))) {
+    var pronominalized = agent.pronominalization("agent", spin, {'agent': agent});
+    if (Array.isArray(agent) || (agent.pronoun == pronoun.nonBinary && pronominalized && pronominalized[1] === 3)) {
       number = 2;
     } else {
       number = agent.number;
