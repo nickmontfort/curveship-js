@@ -40,6 +40,26 @@ function shuffle(array) {
   return array;
 }
 
+function process_time(telling, order) {
+  var order_list = order.split(";");
+  var indices = []
+  var new_telling = []
+  for (var i of order_list) {
+    if (i.includes("-")) {
+      for (var j = i[0]; j <= i[2]; j++) {
+        indices.push(j);
+      }
+    }
+    else {
+      indices.push(i);
+    }
+  }
+  for (var i of indices) {
+    new_telling.push(telling[i]);
+  }
+  return new_telling;
+}
+
 class Existent {
   constructor(article, name) {
     if (new.target === Existent) { throw new TypeError("Can't directly instantiate Existent"); }
@@ -363,6 +383,7 @@ function narrate(metadata, spin, world) {
     oldReferring, exp = 0, i, leftPart;
   for (i = 0 ; i < world.event.length ; i++) { telling.push(i); }
   spin = getParameters(world.actor);
+  print(spin)
   h1.innerHTML = metadata.title;
   element.appendChild(h1);
   h2.innerHTML = metadata.author;
@@ -380,6 +401,8 @@ function narrate(metadata, spin, world) {
   }
   element.appendChild(examples);
   element.appendChild(hr);
+  if (spin.main) {
+    telling = process_time(telling, spin.main);}
   if (spin.order === "retrograde") { telling.reverse(); }
   if (spin.order === "random") { shuffle(telling); }
   div = document.createElement("div");
