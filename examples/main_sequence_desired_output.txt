@@ -1,14 +1,14 @@
 DEFAULT (no parameters)
 
-0 A girl putters around her home.
-1 She leaves her home.
-2 She enters the park.
-3 A man whistles loudly.
-4 He looks knowingly at the girl.
-5 She smiles at him.
-6 He approaches her.
-7 They chat.
-8 A streetlamp flickers off.
+A girl putters around her home.
+She leaves her home.
+She enters the park.
+A man whistles loudly.
+He looks knowingly at the girl.
+She smiles at him.
+He approaches her.
+They chat.
+A streetlamp flickers off.
 The end.
 
 ?main=0;3;6;8

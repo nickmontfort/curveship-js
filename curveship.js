@@ -383,7 +383,6 @@ function narrate(metadata, spin, world) {
     oldReferring, exp = 0, i, leftPart;
   for (i = 0 ; i < world.event.length ; i++) { telling.push(i); }
   spin = getParameters(world.actor);
-  print(spin)
   h1.innerHTML = metadata.title;
   element.appendChild(h1);
   h2.innerHTML = metadata.author;
