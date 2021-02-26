@@ -46,36 +46,40 @@ class Existent {
     if (article) { this.article = article; }
     this.name = name;
   }
-  getNounPhrase(role, spin, ev) {
-  // If person & number are non-null, and spin applies, returns a pronoun
-    var phrase = "";
-    if (spin.i === this) { // The "I" of the narrative, or narrator
-      switch (role) {
-      case "subject": { phrase = this.pronoun.getSubject(1, this.number); break; }
-      case "object": { phrase = this.pronoun.getObject(1, this.number); }
-      }
-    } else if (spin.you === this) { // The "you" of the narrative, or narratee
-      switch (role) {
-      case "subject": { phrase = this.pronoun.getSubject(2, this.number); break; }
-      case "object": { phrase = this.pronoun.getObject(2, this.number); }
-      }
-    } else if (this.owner) {
-      phrase = this.owner.getPossessiveAdj(spin, ev) + " " + this.name;
-    } else if (givens.has(this) && typeof lastNarratedEvent !== "undefined" && lastNarratedEvent.hasParticipant(this)) {
-      switch (role) {
-      case "subject": { phrase = this.pronoun.getSubject(3, this.number); break; }
-      case "object": { phrase = this.pronoun.getObject(3, this.number); }
-      // FIXME: Use reflexive pronoun if the current event has the same sub & obj
-      }
-    } else if (!this.article) {
-      phrase = this.name;
-    } else if (givens.has(this) &&
-      ["a", "an", "one", "several", "some"].includes(this.article)) {
-      phrase = "the " + this.name;
-    } else {
-      phrase = this.article + " " + this.name;
+  pronominalization(role, spin, ev) {
+    var person = 3;
+    if (spin.i === this) person = 1;
+    if (spin.you === this) person = 2;
+    if (ev["agent"] === this || (Array.isArray(ev["agent"]) && ev["agent"].includes(this))){
+      if (role === "object") return ["reflexive", person];
     }
-    return phrase;
+    if (person != 3) return [role, person];
+    if (this.owner) return false;
+    if (givens.has(this) && typeof lastNarratedEvent !== "undefined" && lastNarratedEvent.hasParticipant(this)){
+      return [role, 3]
+    }
+    return false;
+  }
+  getNounPhrase(role, spin, ev) {
+    var pronominalize = this.pronominalization(role, spin, ev);
+    if(pronominalize){
+      switch(pronominalize[0]){
+        case "subject": { return this.pronoun.getSubject(pronominalize[1], this.number);}
+        case "object": { return this.pronoun.getObject(pronominalize[1], this.number);}
+        case "reflexive": { return this.pronoun.getReflexive(pronominalize[1], this.number);}
+      }
+    }
+    if (this.owner) {
+      return this.owner.getPossessiveAdj(spin, ev) + " " + this.name;
+    } 
+    if (!this.article) {
+      return this.name;
+    }
+    if (givens.has(this) &&
+      ["a", "an", "one", "several", "some"].includes(this.article)) {
+      return "the " + this.name;
+    }
+    return this.article + " " + this.name;
   }
   getSubject(spin, ev) { return this.getNounPhrase("subject", spin, ev); }
   getObject(spin, ev) { return this.getNounPhrase("object", spin, ev); }
@@ -263,7 +267,9 @@ class Event {
     case "during": { tenseER = "present"; break; }
     case "before": { tenseER = "future"; break; }
     }
-    if (Array.isArray(agent)) {
+    // if we have two agents, or one, non-binary, pronminalized agent, pluralize
+    var pronominalized = agent.pronominalization("agent", spin, {'agent': agent});
+    if (Array.isArray(agent) || (agent.pronoun == pronoun.nonBinary && pronominalized && pronominalized[1] === 3)) {
       number = 2;
     } else {
       number = agent.number;

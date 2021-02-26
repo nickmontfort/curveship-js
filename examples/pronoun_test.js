@@ -23,8 +23,8 @@ thing.backpack3.owner = actor.sam;
 var LOOK1 = new Event(actor.sam, "examine", actor.john);
 var LOOK2 = new Event(actor.john, "examine", actor.john);
 var LOOK3 = new Event(actor.mary, "examine", actor.mary);
-var LOOK4 = new Event(actor.sam, "examine", actor.sam);
-var LOOK5 = new Event(actor.sam, "examine", actor.john);
+var LOOK4 = new Event(actor.sam, "is examining", actor.sam);
+var LOOK5 = new Event(actor.sam, "is examining", actor.john);
 
 // This is for the next step, dealing with possessive pronouns
 //var GET1 = new Event(actor.john, "take", thing.backpack1);
