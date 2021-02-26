@@ -50,8 +50,7 @@ function select_main(telling, order) {
       for (var j = i[0]; j <= i[2]; j++) {
         indices.push(j);
       }
-    }
-    else {
+    } else {
       indices.push(i);
     }
   }
@@ -489,9 +488,14 @@ function narrate(metadata, spin, world) {
   }
   element.appendChild(examples);
   element.appendChild(hr);
-  if (spin.main) { telling = select_main(telling, spin.main); }
-  if (spin.order === "retrograde") { telling.reverse(); }
-  else if (spin.order === "random") { shuffle(telling); }
+  if (spin.main) {
+    telling = select_main(telling, spin.main);
+  }
+  if (spin.order === "retrograde") {
+    telling.reverse();
+  } else if (spin.order === "random") {
+    shuffle(telling);
+  }
   div = document.createElement("div");
   element.appendChild(div);
   for (i of telling) {
