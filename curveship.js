@@ -41,6 +41,26 @@ function shuffle(array) {
   return array;
 }
 
+function select_main(telling, order) {
+  var order_list = order.split(";");
+  var indices = []
+  var new_telling = []
+  for (var i of order_list) {
+    if (i.includes("-")) {
+      for (var j = i[0]; j <= i[2]; j++) {
+        indices.push(j);
+      }
+    }
+    else {
+      indices.push(i);
+    }
+  }
+  for (var i of indices) {
+    new_telling.push(telling[i]);
+  }
+  return new_telling;
+}
+
 class Existent {
   constructor(article, name) {
     if (new.target === Existent) {
@@ -469,12 +489,9 @@ function narrate(metadata, spin, world) {
   }
   element.appendChild(examples);
   element.appendChild(hr);
-  if (spin.order === "retrograde") {
-    telling.reverse();
-  }
-  if (spin.order === "random") {
-    shuffle(telling);
-  }
+  if (spin.main) { telling = select_main(telling, spin.main); }
+  if (spin.order === "retrograde") { telling.reverse(); }
+  else if (spin.order === "random") { shuffle(telling); }
   div = document.createElement("div");
   element.appendChild(div);
   for (i of telling) {
