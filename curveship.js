@@ -29,7 +29,8 @@ function choice(array) {
 }
 
 function shuffle(array) {
-  var i = array.length, r, swap;
+  var i = array.length,
+    r, swap;
   while (i > 0) {
     r = Math.floor(Math.random() * i);
     i = i - 1;
@@ -40,7 +41,7 @@ function shuffle(array) {
   return array;
 }
 
-function process_time(telling, order) {
+function select_main(telling, order) {
   var order_list = order.split(";");
   var indices = []
   var new_telling = []
@@ -62,55 +63,80 @@ function process_time(telling, order) {
 
 class Existent {
   constructor(article, name) {
-    if (new.target === Existent) { throw new TypeError("Can't directly instantiate Existent"); }
-    if (article) { this.article = article; }
+    if (new.target === Existent) {
+      throw new TypeError("Can't directly instantiate Existent");
+    }
+    if (article) {
+      this.article = article;
+    }
     this.name = name;
   }
-  getNounPhrase(role, spin, ev) {
-  // If person & number are non-null, and spin applies, returns a pronoun
-    var phrase = "";
-    if (spin.i === this) { // The "I" of the narrative, or narrator
-      switch (role) {
-      case "subject": { phrase = this.pronoun.getSubject(1, this.number); break; }
-      case "object": { phrase = this.pronoun.getObject(1, this.number); }
-      }
-    } else if (spin.you === this) { // The "you" of the narrative, or narratee
-      switch (role) {
-      case "subject": { phrase = this.pronoun.getSubject(2, this.number); break; }
-      case "object": { phrase = this.pronoun.getObject(2, this.number); }
-      }
-    } else if (this.owner) {
-      phrase = this.owner.getPossessiveAdj(spin, ev) + " " + this.name;
-    } else if (givens.has(this) && typeof lastNarratedEvent !== "undefined" && lastNarratedEvent.hasParticipant(this)) {
-      switch (role) {
-      case "subject": { phrase = this.pronoun.getSubject(3, this.number); break; }
-      case "object": { phrase = this.pronoun.getObject(3, this.number); }
-      // FIXME: Use reflexive pronoun if the current event has the same sub & obj
-      }
-    } else if (!this.article) {
-      phrase = this.name;
-    } else if (givens.has(this) &&
-      ["a", "an", "one", "several", "some"].includes(this.article)) {
-      phrase = "the " + this.name;
-    } else {
-      phrase = this.article + " " + this.name;
+  pronominalization(role, spin, ev) {
+    var person = 3;
+    if (spin.i === this) person = 1;
+    if (spin.you === this) person = 2;
+    if (ev["agent"] === this || (Array.isArray(ev["agent"]) && ev["agent"].includes(this))) {
+      if (role === "object") return ["reflexive", person];
     }
-    return phrase;
+    if (person != 3) return [role, person];
+    if (this.owner) return false;
+    if (givens.has(this) && typeof lastNarratedEvent !== "undefined" && lastNarratedEvent.hasParticipant(this)) {
+      return [role, 3]
+    }
+    return false;
   }
-  getSubject(spin, ev) { return this.getNounPhrase("subject", spin, ev); }
-  getObject(spin, ev) { return this.getNounPhrase("object", spin, ev); }
+  getNounPhrase(role, spin, ev) {
+    var pronominalize = this.pronominalization(role, spin, ev);
+    if (pronominalize) {
+      switch (pronominalize[0]) {
+        case "subject": {
+          return this.pronoun.getSubject(pronominalize[1], this.number);
+        }
+        case "object": {
+          return this.pronoun.getObject(pronominalize[1], this.number);
+        }
+        case "reflexive": {
+          return this.pronoun.getReflexive(pronominalize[1], this.number);
+        }
+      }
+    }
+    if (this.owner) {
+      return this.owner.getPossessiveAdj(spin, ev) + " " + this.name;
+    }
+    if (!this.article) {
+      return this.name;
+    }
+    if (givens.has(this) && ["a", "an", "one", "several", "some"].includes(this.article)) {
+      return "the " + this.name;
+    }
+    return this.article + " " + this.name;
+  }
+  getSubject(spin, ev) {
+    return this.getNounPhrase("subject", spin, ev);
+  }
+  getObject(spin, ev) {
+    return this.getNounPhrase("object", spin, ev);
+  }
   getPossessiveAdj(spin, ev) {
-    if (spin.i === this) { return this.pronoun.getPossessiveAdj(1, this.number, ev); }
-    if (spin.you === this) { return this.pronoun.getPossessiveAdj(2, this.number, ev); }
+    if (spin.i === this) {
+      return this.pronoun.getPossessiveAdj(1, this.number, ev);
+    }
+    if (spin.you === this) {
+      return this.pronoun.getPossessiveAdj(2, this.number, ev);
+    }
     if (givens.has(this)) {
       if (ev.agent == this ||
-          (typeof lastNarratedEvent.hasParticipant(this))) {
+        (typeof lastNarratedEvent.hasParticipant(this))) {
         return this.pronoun.getPossessiveAdj(3, this.number, ev);
       }
     }
     switch (this.number) {
-    case 1: { return this.getSubject(spin, ev) + "’s"; }
-    case 2: { return this.getSubject(spin, ev) + "’"; }
+      case 1: {
+        return this.getSubject(spin, ev) + "’s";
+      }
+      case 2: {
+        return this.getSubject(spin, ev) + "’";
+      }
     }
   }
   configuredAs(spatialRelation, parent) {
@@ -125,10 +151,10 @@ class Existent {
     } else if (pluralArticles.includes(this.article)) {
       this.number = 2;
     } else { // The article is "the" or something more unusual. Can't use
-         // it to determine whether this is singular or plural.
+      // it to determine whether this is singular or plural.
       if (name[-1] === "s") { // This is a guess; Plurals need not end
-        this.number = 2;  // in -s. Number should be set manually for
-      }             // other plurals.
+        this.number = 2; // in -s. Number should be set manually for
+      } // other plurals.
       else {
         this.number = 1;
       }
@@ -142,13 +168,25 @@ class Existent {
 class PronounSet {
   constructor(thirdPersonSingular) {
     this.pronoun = [];
-    this.pronoun.push([ [], [], [] ]); // There is no 0th person or number
-    this.pronoun.push([ [], ["I", "me", "my", "mine", "myself"],
-                      ["we", "us", "our", "ours", "ourselves"] ]);
-    this.pronoun.push([ [], ["you", "you", "your", "yours", "yourself"],
-                      ["you", "you", "your", "yours", "yourselves"] ]);
-    this.pronoun.push([ [], thirdPersonSingular,
-                      ["they", "them", "their", "theirs", "themselves"] ]);
+    this.pronoun.push([
+      [],
+      [],
+      []
+    ]); // There is no 0th person or number
+    this.pronoun.push([
+      [],
+      ["I", "me", "my", "mine", "myself"],
+      ["we", "us", "our", "ours", "ourselves"]
+    ]);
+    this.pronoun.push([
+      [],
+      ["you", "you", "your", "yours", "yourself"],
+      ["you", "you", "your", "yours", "yourselves"]
+    ]);
+    this.pronoun.push([
+      [], thirdPersonSingular,
+      ["they", "them", "their", "theirs", "themselves"]
+    ]);
   }
   getSubject(person, number = 1) {
     return this.pronoun[person][number][0];
@@ -185,7 +223,9 @@ class Actor extends Existent {
   }
 }
 
-var actor = { cosmos: new Actor(null, "it") };
+var actor = {
+  cosmos: new Actor(null, "it")
+};
 
 class Place extends Existent {
   constructor(article, name) {
@@ -196,9 +236,12 @@ class Place extends Existent {
     this.setNumberBasedOnArticle();
   }
   addView(place, text, visibility = 1) { // "visibility" does nothing now.
-  // It is used in Curveship.py, which has a complex model of what things
-  // can be seen from what places. There, 1 means things are fully visible.
-    this.visiblePlaces[place] = { text: text, visibility: visibility };
+    // It is used in Curveship.py, which has a complex model of what things
+    // can be seen from what places. There, 1 means things are fully visible.
+    this.visiblePlaces[place] = {
+      text: text,
+      visibility: visibility
+    };
   }
 }
 
@@ -206,9 +249,9 @@ var place = {};
 
 class Thing extends Existent {
   constructor(article, name, spatialRelation, parent, prominence = 0.5) {
-  // "prominence" does nothing now. It is used in Curveship.py, which has a
-  // complex model of what things can be seen from what places. There, .5
-  // means a thing is of average prominence.
+    // "prominence" does nothing now. It is used in Curveship.py, which has a
+    // complex model of what things can be seen from what places. There, .5
+    // means a thing is of average prominence.
     super(article, name);
     this.spatial = spatialRelation;
     this.parent = parent;
@@ -234,9 +277,15 @@ class Event {
       actionString = actionString.slice(0, -5);
     }
     this.action = actionString;
-    if (object) { this.object = object; }
-    if (temporalRelation) { this.temporal = temporalRelation; }
-    if (extra) { this.extra = extra; }
+    if (object) {
+      this.object = object;
+    }
+    if (temporalRelation) {
+      this.temporal = temporalRelation;
+    }
+    if (extra) {
+      this.extra = extra;
+    }
     this.manner = manner;
     this.setTemplate();
     this.start = clock;
@@ -248,21 +297,32 @@ class Event {
   }
   setTemplate(custom = null) {
     var actionArray;
-    if (custom != null ) {
+    if (custom != null) {
       this.template = custom;
     } else {
       this.template = "";
       this.template += "[agent/s]";
-      if (this.manner) { this.template += " " + this.manner; }
+      if (this.manner) {
+        this.template += " " + this.manner;
+      }
       actionArray = this.action.split(" ");
       this.template += " [" + actionArray[0] + "/v]";
-      if (actionArray.length > 1) { this.template += " " + actionArray.slice(1).join(" "); }
-      if (this.object) {
-        if (typeof this.object === "string") { this.template += " " + this.object; }
-        else { this.template += " [object/o]"; }
+      if (actionArray.length > 1) {
+        this.template += " " + actionArray.slice(1).join(" ");
       }
-      if (this.temporal) { this.template += " " + this.temporal; }
-      if (this.extra) { this.template += " [extra/o]"; }
+      if (this.object) {
+        if (typeof this.object === "string") {
+          this.template += " " + this.object;
+        } else {
+          this.template += " [object/o]";
+        }
+      }
+      if (this.temporal) {
+        this.template += " " + this.temporal;
+      }
+      if (this.extra) {
+        this.template += " [extra/o]";
+      }
     }
   }
   setSense(modality) {
@@ -273,17 +333,36 @@ class Event {
     actorOrThing.parent = parent;
   }
   placeVerbPhrase(currentTemplate, spin, agent) {
-    var person = 3, number, slotExp = /\[([a-z]+)\/v\]/,
+    var person = 3,
+      number, slotExp = /\[([a-z]+)\/v\]/,
       base = slotExp.exec(currentTemplate)[1],
-      verb = new Verb(base), tenseER, phrase;
-    if (spin.i === agent) { person = 1; }
-    if (spin.you === agent) { person = 2; }
-    switch(spin.speaking) {
-    case "after": { tenseER = "past"; break; }
-    case "during": { tenseER = "present"; break; }
-    case "before": { tenseER = "future"; break; }
+      verb = new Verb(base),
+      tenseER, phrase;
+    if (spin.i === agent) {
+      person = 1;
     }
-    if (Array.isArray(agent)) {
+    if (spin.you === agent) {
+      person = 2;
+    }
+    switch (spin.speaking) {
+      case "after": {
+        tenseER = "past";
+        break;
+      }
+      case "during": {
+        tenseER = "present";
+        break;
+      }
+      case "before": {
+        tenseER = "future";
+        break;
+      }
+    }
+    // if we have two agents, or one, non-binary, pronminalized agent, pluralize
+    var pronominalized = agent.pronominalization("agent", spin, {
+      'agent': agent
+    });
+    if (Array.isArray(agent) || (agent.pronoun == pronoun.nonBinary && pronominalized && pronominalized[1] === 3)) {
       number = 2;
     } else {
       number = agent.number;
@@ -297,11 +376,11 @@ class Event {
       sentence += ".";
     }
     if ("\"'’”".includes(sentence.slice(-1))) {
-      if (!".!?".includes(sentence.slice(-2,-1))) {
-        sentence = sentence.slice(0,-1) + "." + sentence.slice(-1);
+      if (!".!?".includes(sentence.slice(-2, -1))) {
+        sentence = sentence.slice(0, -1) + "." + sentence.slice(-1);
       }
     }
-    return sentence.slice(0,1).toUpperCase() + sentence.slice(1);
+    return sentence.slice(0, 1).toUpperCase() + sentence.slice(1);
   }
   hasParticipant(actor) {
     return ((this.agent === actor) || (this.object === actor) || (this.extra === actor));
@@ -320,8 +399,10 @@ class Event {
     this.alterations.push(alteration);
   }
   realize(spin, fix = true) {
-    var currentTemplate = this.template, subjectExp, objectExp,
-      possessiveExp, subjectNP, objectNP, possessivePhrase = "", oldSpeaking;
+    var currentTemplate = this.template,
+      subjectExp, objectExp,
+      possessiveExp, subjectNP, objectNP, possessivePhrase = "",
+      oldSpeaking;
     // Realize the verb phrase ...
     currentTemplate = this.placeVerbPhrase(currentTemplate, spin, this.agent);
     // Realize the noun phrases ...
@@ -330,7 +411,7 @@ class Event {
         if (this[existent] instanceof Event) {
           oldSpeaking = spin.speaking;
           spin.speaking = "after";
-          subjectNP = objectNP =  "that " + this[existent].realize(spin, false);
+          subjectNP = objectNP = "that " + this[existent].realize(spin, false);
           spin.speaking = oldSpeaking;
         } else if (typeof this[existent] === "string") {
           subjectNP = objectNP = this[existent];
@@ -355,12 +436,15 @@ class Event {
       currentTemplate = currentTemplate.replace(objectExp, objectNP);
       currentTemplate = currentTemplate.replace(possessiveExp, possessivePhrase);
     }
-    if (fix) { currentTemplate = this.fixOrthography(currentTemplate); }
+    if (fix) {
+      currentTemplate = this.fixOrthography(currentTemplate);
+    }
     return currentTemplate;
   }
 }
 
-var eventSeq = [], lastNarratedEvent;
+var eventSeq = [],
+  lastNarratedEvent;
 
 class World {
   constructor(places, actors, items, eventSequence) {
@@ -372,16 +456,21 @@ class World {
 }
 
 function narrate(metadata, spin, world) {
-  var element = document.getElementById("narrative"), div,
+  var element = document.getElementById("narrative"),
+    div,
     h1 = document.createElement("h1"),
     h2 = document.createElement("h2"),
     h3 = document.createElement("h3"),
     instructions = document.createElement("div"),
     examples = document.createElement("ul"),
     hr = document.createElement("hr"),
-    telling = [], sentence, fix,
-    oldReferring, exp = 0, i, leftPart;
-  for (i = 0 ; i < world.event.length ; i++) { telling.push(i); }
+    telling = [],
+    sentence, fix,
+    oldReferring, exp = 0,
+    i, leftPart;
+  for (i = 0; i < world.event.length; i++) {
+    telling.push(i);
+  }
   spin = getParameters(world.actor);
   h1.innerHTML = metadata.title;
   element.appendChild(h1);
@@ -400,10 +489,9 @@ function narrate(metadata, spin, world) {
   }
   element.appendChild(examples);
   element.appendChild(hr);
-  if (spin.main) {
-    telling = process_time(telling, spin.main);}
+  if (spin.main) { telling = select_main(telling, spin.main); }
   if (spin.order === "retrograde") { telling.reverse(); }
-  if (spin.order === "random") { shuffle(telling); }
+  else if (spin.order === "random") { shuffle(telling); }
   div = document.createElement("div");
   element.appendChild(div);
   for (i of telling) {
@@ -443,13 +531,22 @@ function narrate(metadata, spin, world) {
       oldSpeaking = spin.speaking;
       oldReferring = spin.referring;
       if (spin.speaking === "after") {
-        if (spin.referring === "posterior") { spin.referring = "simple"; }
-        else if (spin.referring === "simple") { spin.referring = "anterior"; }
+        if (spin.referring === "posterior") {
+          spin.referring = "simple";
+        } else if (spin.referring === "simple") {
+          spin.referring = "anterior";
+        }
       }
-      if (spin.speaking === "during") { spin.speaking = "after"; }
-      if (spin.speaking === "before") { spin.speaking = "during"; }
+      if (spin.speaking === "during") {
+        spin.speaking = "after";
+      }
+      if (spin.speaking === "before") {
+        spin.speaking = "during";
+      }
       sentence += event.realize(spin, fix);
-      if (!fix) { sentence += event.realize(spin).slice(-1); }
+      if (!fix) {
+        sentence += event.realize(spin).slice(-1);
+      }
       spin.speaking = oldSpeaking;
       spin.referring = oldReferring;
     } else {
@@ -480,7 +577,7 @@ var spatial = {
   partOf: "a part of",
   featureOf: "a feature of",
   far: "far from", // These would be used when the *only* relevant thing
-  near: "near to"  // is mentioning an actor is far from/near to a place
+  near: "near to" // is mentioning an actor is far from/near to a place
 };
 
 var temporal = {
@@ -512,20 +609,32 @@ var givens = new Set();
 // ### UTILITY ###
 
 function getParameters(actor) {
-  var params = window.location.search, spin = {}, pair;
+  var params = window.location.search,
+    spin = {},
+    pair;
   if (params.substring(0, 1) === "?") {
     params = params.slice(1);
     params = params.split(",");
     for (var p of params) {
       pair = p.split("=");
-      if (pair[0] === "i" || pair[0] === "you") { spin[pair[0]] = actor[pair[1]]; }
-      else if (pair[0] === "time_markers") { spin.time_markers = true; }
-      else if (pair[0] === "event_numbers") { spin.event_numbers = true; }
-      else if (pair[0] === "expression_numbers") { spin.expression_numbers = true; }
-      else { spin[pair[0]] = pair[1]; }
+      if (pair[0] === "i" || pair[0] === "you") {
+        spin[pair[0]] = actor[pair[1]];
+      } else if (pair[0] === "time_markers") {
+        spin.time_markers = true;
+      } else if (pair[0] === "event_numbers") {
+        spin.event_numbers = true;
+      } else if (pair[0] === "expression_numbers") {
+        spin.expression_numbers = true;
+      } else {
+        spin[pair[0]] = pair[1];
+      }
     }
   }
-  if (!spin.speaking) { spin.speaking = "during"; }
-  if (!spin.referring) { spin.referring = "simple"; }
+  if (!spin.speaking) {
+    spin.speaking = "during";
+  }
+  if (!spin.referring) {
+    spin.referring = "simple";
+  }
   return spin;
 }
