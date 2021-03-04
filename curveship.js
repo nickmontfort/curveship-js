@@ -47,7 +47,8 @@ function select_main(telling, order) {
   var new_telling = []
   for (var i of order_list) {
     if (i.includes("-")) {
-      for (var j = i[0]; j <= i[2]; j++) {
+      ends = i.split("-");
+      for (var j = parseInt(ends[0]); j <= parseInt(ends[1]); j++) {
         indices.push(j);
       }
     } else {
