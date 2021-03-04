@@ -43,8 +43,8 @@ function shuffle(array) {
 
 function select_main(telling, order) {
   var order_list = order.split(";");
-  var indices = []
-  var new_telling = []
+  var indices = [];
+  var new_telling = [];
   for (var i of order_list) {
     if (i.includes("-")) {
       for (var j = i[0]; j <= i[2]; j++) {
@@ -54,7 +54,7 @@ function select_main(telling, order) {
       indices.push(i);
     }
   }
-  for (var i of indices) {
+  for (i of indices) {
     new_telling.push(telling[i]);
   }
   return new_telling;
@@ -74,13 +74,13 @@ class Existent {
     var person = 3;
     if (spin.i === this) person = 1;
     if (spin.you === this) person = 2;
-    if (ev["agent"] === this || (Array.isArray(ev["agent"]) && ev["agent"].includes(this))) {
+    if (ev.agent === this || (Array.isArray(ev.agent) && ev.agent.includes(this))) {
       if (role === "object") return ["reflexive", person];
     }
     if (person != 3) return [role, person];
     if (this.owner) return false;
     if (givens.has(this) && typeof lastNarratedEvent !== "undefined" && lastNarratedEvent.hasParticipant(this)) {
-      return [role, 3]
+      return [role, 3];
     }
     return false;
   }
@@ -336,7 +336,7 @@ class Event {
       number, slotExp = /\[([a-z]+)\/v\]/,
       base = slotExp.exec(currentTemplate)[1],
       verb = new Verb(base),
-      tenseER, phrase;
+      tenseER, phrase, pronominalized;
     if (spin.i === agent) {
       person = 1;
     }
@@ -344,23 +344,29 @@ class Event {
       person = 2;
     }
     switch (spin.speaking) {
-      case "after": {
-        tenseER = "past";
+      case 'after': {
+        tenseER = 'past';
         break;
       }
-      case "during": {
-        tenseER = "present";
+      case 'during': {
+        tenseER = 'present';
         break;
       }
-      case "before": {
-        tenseER = "future";
+      case 'before': {
+        tenseER = 'future';
         break;
       }
     }
     // if we have two agents, or one, non-binary, pronminalized agent, pluralize
-    var pronominalized = agent.pronominalization("agent", spin, {
-      'agent': agent
-    });
+    if (Array.isArray(agent)) {
+      pronominalized = false; // FIXME at least one known problem:
+                              // produces 'I and you' when the first element
+                              // in the array is the I, the second is the you
+    } else {
+      pronominalized = agent.pronominalization('agent', spin, {
+        'agent': agent
+      });
+    }
     if (Array.isArray(agent) || (agent.pronoun == pronoun.nonBinary && pronominalized && pronominalized[1] === 3)) {
       number = 2;
     } else {
