@@ -18,12 +18,17 @@ If you are on windows, you would open up the command line (type 'cmd in the star
 <br>`copy example.js redcarpet.js`
 <br>`copy example.html redcarpet.html`
 
-## Edit the wrapper file to point to your new story file.
+## Edit the HTML wrapper file to point to your new story file.
  On line 9 of redcarpet.html, change the curveship source file to your new curvship javascript file. <br>
  From<br>
 `<script src="example.js"></script>`
 to<br>
 `<script src="redcarpet.js"></script>`
+
+Also, change the title to reflect the story name.<br>
+`<title>Red Carpet</title>`
+
+Save and close the html file. 
 
 ## Edit the curveship descriptor file with your story elements.
 Open redcarpet.js and change the descriptive fields within the quote marks. 
@@ -103,3 +108,10 @@ In line 4, change the example properties to reflect the existents in the file.
 `"speaking=after,i=actor,order=random" ] };`<br>
 
 THe narrations will now use the `reporter` and `actress` in this world. For more information about the different types of narration curveship can perform, please refer to the source for spin.order in [curveship.js](../curveship.js)
+
+Save and close the js file.
+
+## Now, run  curveship. Open your curveship html file. If there are no errors, you will see the title of your story and a few narration choices. Clicking on each of these options will run the narrations. In our example, we have three narrations. 
+* "i=reporter" is the story told from the reporter's first person point of view.
+* "order=retrograde,you=actress,i=actress,event_numbers" displays the events told in backwards order, told from the actress point of view to herself, and displaying the original number order.
+* "speaking=after,i=reporter,order=random"  displays a random-ordered retelling in past-tense, told from the point of view of the reporter.
