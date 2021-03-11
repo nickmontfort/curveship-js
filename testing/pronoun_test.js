@@ -20,20 +20,22 @@ thing.backpack3 = new Thing("a", "backpack", spatial.in, place.room);
 thing.backpack3.owner = actor.sam;
 
 // Finally, EVENTS
+
+// Reflexive pronouns
 var LOOK1 = new Event(actor.sam, "examine", actor.john);
 var LOOK2 = new Event(actor.john, "examine", actor.john);
 var LOOK3 = new Event(actor.mary, "examine", actor.mary);
-var LOOK4 = new Event(actor.sam, "is examining", actor.sam);
-var LOOK5 = new Event(actor.sam, "is examining", actor.john);
+var LOOK4 = new Event(actor.sam, "examine", actor.sam);
+var LOOK5 = new Event(actor.sam, "examine", actor.john);
 
-// This is for the next step, dealing with possessive pronouns
-//var GET1 = new Event(actor.john, "take", thing.backpack1);
-//var GET2 = new Event(actor.mary, "take", thing.backpack2);
-//var GET3 = new Event(actor.sam, "take", thing.backpack3);
-//var DROP1 = new Event(actor.john, "drop", thing.backpack1);
-//var LOOK5 = new Event(actor.mary, "look", actor.mary);
-//var DROP2 = new Event(actor.mary, "drop", thing.backpack2);
-//var DROP3 = new Event(actor.sam, "drop", thing.backpack3);
+// Possessive pronouns
+var GET1 = new Event(actor.john, "take", thing.backpack1);
+var GET2 = new Event(actor.mary, "take", thing.backpack2);
+var GET3 = new Event(actor.sam, "take", thing.backpack3);
+var DROP1 = new Event(actor.john, "drop", thing.backpack1);
+var LOOK5 = new Event(actor.mary, "look at", actor.mary);
+var DROP2 = new Event(actor.mary, "drop", thing.backpack2);
+var DROP3 = new Event(actor.sam, "drop", thing.backpack3);
 
 var world = new World(place, actor, thing, eventSeq);
 function run() { narrate(metadata, {}, world); }
