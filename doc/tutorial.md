@@ -10,16 +10,16 @@ A curvship project, at minimum, exists as two files:
 
 ## Start with example files and rename them
 The easiest way to begin writing in curveship is to edit a copy of a sample javascript story file and corresponding html file wrapper. 
-Ensure the files have  coordinating names (e.g. newtitle.js and newtitle.html). 
-<br>`cp example.js newtitle.js`
-<br>`cp example.html newtitle.html`
+Ensure the files have  coordinating names (e.g. redcarpet.js and redcarpet.html). 
+<br>`cp example.js redcarpet.js`
+<br>`cp example.html redcarpet.html`
 
 ## Edit the wrapper file to point to your new story file.
- On line 9 of newtitle.html, change the curveship source file to your new curvship javascript file. <br>
+ On line 9 of redcarpet.html, change the curveship source file to your new curvship javascript file. <br>
  From<br>
 `<script src="example.js"></script>`
 to<br>
-`<script src="newtitle.js"></script>`
+`<script src="redcarpet.js"></script>`
 
 ## Edit the curveship descriptor file with your story elements.
 
@@ -29,12 +29,23 @@ Change the title field to your new title. Make sure to keep your fields encased 
 Change the author and date.
 Leave the example section until you are almost finished.
 
-### Edit the PLACES first
-### Edit the ACTORS next
-### Edit the THINGS next
-### Edit the EVENTS last
+### Edit the STORY objects (a.k.a. EXISTENTS)
+Each element of a curveship story uses `objectName`.`propertyName` syntax. there are four basic existents:
+* places
+* actors
+* things
+* events.
+
+Each propertyName that follows is a unique variable that identifies a particular place.
+
+#### Edit the PLACES first
+Each place object begins with the `place` objectname. 
+#### Edit the ACTORS next
+#### Edit the THINGS next
+#### Edit the EVENTS last
 
 ### Leave the last two lines of the file intact.
-`<var world = new World(place, actor, thing, eventSeq);
-function run() { narrate(metadata, {}, world); }`
+
+`<var world = new World(place, actor, thing, eventSeq);`<br>
+`function run() { narrate(metadata, {}, world); }`
 
