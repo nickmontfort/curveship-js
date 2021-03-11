@@ -102,7 +102,7 @@ Now that there is actors, objects, and places, it is time to add the events that
 `var MOVE = new Event(actor.reporter, "interview",actor.actress)`<br>
 
 ### Leave the last two lines of the file intact.
-Once all the existents are declared, the last two lines are used by curveship to set up the narration and must not be changed.
+Once all the existents are declared, the last two lines are used by curveship to set up the narration and must not be changed.<br>
 `<var world = new World(place, actor, thing, eventSeq);`<br>
 `function run() { narrate(metadata, {}, world); }`
 
