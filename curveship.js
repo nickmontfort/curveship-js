@@ -71,11 +71,17 @@ class Existent {
     }
     this.name = name;
   }
+  includes(obj) {
+    return obj === this;
+  }
+  addToGivens() {
+    givens.add(this);
+  }
   pronominalization(role, spin, ev) {
     var person = 3;
     if (spin.i === this) person = 1;
     if (spin.you === this) person = 2;
-    if (ev.agent === this || (Array.isArray(ev.agent) && ev.agent.includes(this))) {
+    if (ev.agent.includes(this)) {
       if (role === "object") return ["reflexive", person];
     }
     if (person != 3) return [role, person];
@@ -232,6 +238,44 @@ pronoun.unknownBinary = new PronounSet(["she or he", "her or him", "her or his",
 pronoun.nonBinary = new PronounSet(["they", "them", "their", "theirs", "themself"]); // If you prefer, you can make the last entry "themselves"
 
 
+class ExistentGroup extends Existent{
+  constructor(existentArray) {
+    super(null, null);
+    this.existentArray = existentArray;
+    this.number = existentArray.length;
+  }
+  pronominalization(role, spin, ev) {
+    return false;
+  }
+  includes(obj) {
+    return this.existentArray.includes(obj);
+  }
+  addToGivens(){
+    this.existentArray.forEach(item => givens.add(item));
+  }
+  getNounPhrase(role, spin, ev) {
+    // FIXME at least one known problem:
+                              // produces 'I and you' when the first element
+                              // in the array is the I, the second is the you
+    if(this.existentArray.length == 2) return this.existentArray[0].getNounPhrase(role, spin, ev) + " and " + this.existentArray[1].getNounPhrase(role, spin, ev);
+    var phrase = "";
+    for(var i = 0; i < this.existentArray.length - 1; i++){
+      phrase += this.existentArray[i].getNounPhrase(role, spin, ev) + ", ";
+    }
+    phrase += "and " + this.existentArray[this.existentArray.length - 1].getNounPhrase(role, spin, ev);
+    return phrase;
+  }
+  getPossessiveAdj(spin, ev) {
+    if(this.existentArray.length == 2) return this.existentArray[0].getPossessiveAdj(spin, ev) + " and " + this.existentArray[1].getPossessiveAdj(spin, ev);
+    var phrase = "";
+    for(var i = 0; i < this.existentArray.length - 1; i++){
+      phrase += this.existentArray[i].getPossessiveAdj(spin, ev) + ", ";
+    }
+    phrase += "and " + this.existentArray[this.existentArray.length - 1].getPossessiveAdj(spin, ev);
+    return phrase;
+  }
+}
+
 class Actor extends Existent {
   constructor(article, name, spatialRelation, parent, pronounSet = pronoun.neuter, number = 1) {
     super(article, name);
@@ -284,7 +328,7 @@ var thing = {};
 
 class Event {
   constructor(agent, actionString, object, temporalRelation, extra, manner) {
-    this.agent = agent;
+    this.agent = Array.isArray(agent) ? new ExistentGroup(agent) : agent;
     this.negated = false;
     if (actionString.slice(0, 4) === "not ") {
       this.negated = true;
@@ -297,13 +341,13 @@ class Event {
     }
     this.action = actionString;
     if (object) {
-      this.object = object;
+      this.object = Array.isArray(object) ? new ExistentGroup(object) : object;
     }
     if (temporalRelation) {
       this.temporal = temporalRelation;
     }
     if (extra) {
-      this.extra = extra;
+      this.extra = Array.isArray(extra) ? new ExistentGroup(extra) : extra;
     }
     this.manner = manner;
     this.setTemplate();
@@ -377,17 +421,10 @@ class Event {
         break;
       }
     }
-    // if we have two agents, or one, non-binary, pronminalized agent, pluralize
-    if (Array.isArray(agent)) {
-      pronominalized = false; // FIXME at least one known problem:
-                              // produces 'I and you' when the first element
-                              // in the array is the I, the second is the you
-    } else {
-      pronominalized = agent.pronominalization('agent', spin, {
-        'agent': agent
-      });
-    }
-    if (Array.isArray(agent) || (agent.pronoun == pronoun.nonBinary && pronominalized && pronominalized[1] === 3)) {
+    pronominalized = agent.pronominalization('agent', spin, {
+      'agent': agent
+    });
+    if (agent.pronoun == pronoun.nonBinary && pronominalized && pronominalized[1] === 3) {
       number = 2;
     } else {
       number = agent.number;
@@ -445,18 +482,11 @@ class Event {
           spin.speaking = oldSpeaking;
         } else if (typeof this[existent] === "string") {
           subjectNP = objectNP = this[existent];
-        } else if (Array.isArray(this[existent])) { // Only 2 elements are supported for now!
-          // FIXME: doesn't get pronouns in the right order: "You and I"
-          subjectNP = this[existent][0].getSubject(spin, this) + " and " + this[existent][1].getSubject(spin, this);
-          objectNP = this[existent][0].getObject(spin, this) + " and " + this[existent][1].getObject(spin, this);
-          possessivePhrase = this[existent][0].getSubject(spin, this) + " and " + this[existent][1].getPossessiveAdj(spin, this);
-          givens.add(this[existent][0]);
-          givens.add(this[existent][1]);
         } else {
           subjectNP = this[existent].getSubject(spin, this);
           objectNP = this[existent].getObject(spin, this);
           possessivePhrase = this[existent].getPossessiveAdj(spin, this);
-          givens.add(this[existent]);
+          this[existent].addToGivens();
         }
       }
       subjectExp = new RegExp("\\[" + existent + "\\/s\\]", "g");
