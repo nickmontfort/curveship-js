@@ -80,8 +80,7 @@ Here we create a female actress, who is on the redcarpet. We also create a male 
 `actor.actress = new Actor("an", "actress", spatial.in, place.redcarpet, pronoun.feminine);`<br>
 `actor.reporter = new Actor("a", "reporter", spatial.in, place.pressroom, pronoun.masculine);`<br>
 
-#### Edit the 
-INGS next
+#### Edit the THINGS next
 We next add some things for the actors to interact with. 
 Each unique thing object begins with the `thing` objectname. The relationship between the thing and the actors are defined.
 
