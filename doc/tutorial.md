@@ -1,25 +1,31 @@
 # Curveship.js Tutorial
 
 ## Getting Started
-Start with downloading the directory containing the curveship source files ([curveship.js](../curveship.js), [verb.js](../verb.js),  and the [examples](../examples/) subdirectory). Make sure the file examples.css is in the example directory.
-The base directory files are: curveship.js, verb.js. Ensure that a copy of examples.css in the examples subdirectory.
+You will need a text editor that displays line numbers, such as SublimeText, Notepad++, or Github's file edit window.
+
+Start with downloading the directory containing the curveship source files ([curveship.js](../curveship.js), [verb.js](../verb.js),  and the [examples](../examples/) subdirectory). Make sure the file examples.css is in the example directory. You can also fork the curveship project into your own repository.
+The necessary files are: curveship.js and verb.js in the base directory. Also, ensure that a copy of examples.css in the examples subdirectory.
 
 A curvship project, at minimum, exists as two files:
 *  a javascript (.js) descriptor file that lists the actors, events, and objects for narration
 *  a html wrapper (.html) that presents different narrative selections and the story output
 
+## Get familiar with curveship examples.
+Open the different html files in the examples directory and click on the options to get a feel for the way curveship retells each story.
+
 ## Start with example files and rename them
-The easiest way to begin writing in curveship is to edit a copy of a sample javascript story file and corresponding html file wrapper. 
-Ensure the files have coordinating names (e.g. redcarpet.js and redcarpet.html).  In a terminal window on linux or macOs, you would type:
-<br>`cp example.js redcarpet.js`
-<br>`cp example.html redcarpet.html`
+If you look in the examples directory, you see that the files are paired. Each story javascript file  (ending with .js) corresponds to a hypertext file (ending with .html) The easiest way to begin writing in curveship is to edit a copy of a sample javascript story file and corresponding html file wrapper.  Pick an example (for example, prodigal.js and prodigal.html) and use that as a reference.
+
+Copy a file pair consisting of a javascript and html file (e.g. redcarpet.js and redcarpet.html).  In a terminal window on linux or macOs, you would type:
+<br>`cp prodigal.js redcarpet.js`
+<br>`cp prodigal.html redcarpet.html`
 
 If you are on windows, you would open up the command line (type 'cmd in the start menu and press enter). Then you type the following:
-<br>`copy example.js redcarpet.js`
-<br>`copy example.html redcarpet.html`
+<br>`copy prodigal.js redcarpet.js`
+<br>`copy prodigal.html redcarpet.html`
 
 ## Edit the HTML wrapper file to point to your new story file.
- On line 9 of redcarpet.html, change the curveship source file to your new curvship javascript file. <br>
+We will edit our new story files. On line 9 of redcarpet.html, change the curveship source file to your new curvship javascript file. <br>
  From<br>
 `<script src="example.js"></script>`
 to<br>
@@ -28,7 +34,7 @@ to<br>
 Also, change the title to reflect the story name.<br>
 `<title>Red Carpet</title>`
 
-Save and close the html file. 
+Save and close the redcarpet.html file. 
 
 ## Edit the curveship descriptor file with your story elements.
 Open redcarpet.js and change the descriptive fields within the quote marks. 
@@ -51,7 +57,7 @@ Each element of a curveship story uses `objectName`.`propertyName` syntax. there
 * things
 * events.
 
-Each propertyName that follows the objectName is a unique variable that identifies a particular place.
+Each propertyName that follows the objectName is a unique variable that identifies a particular place. See the [reference](reference.html) for more information on the existents.
 
 #### Edit the PLACES first
 Each unique place object begins with the `place` objectname.  There are two places in this story, a red carpet and a press room.
@@ -101,17 +107,23 @@ Once all the existents are declared, the last two lines are used by curveship to
 `function run() { narrate(metadata, {}, world); }`
 
 ### Edit the examples to be narrated.
-Once the story elements are in place, the various narrations can be viewed by setting the parameters in the "examples" field at the top of the file.
-In line 4, change the example properties to reflect the existents in the file.
+Once the story elements are in place, set the narratrion parameters in the "examples" assignment field at the top of the js file.
+In line 4, change the example properties to reflect the existents in the file. All the comma-separated fields after the assignment colon (`:`) describe different types of narrations that curveship will perform.
+
 `examples: [ "i=reporter",`<br>
 `"order=retrograde,you=actress,i=actress,event_numbers",`<br>
 `"speaking=after,i=actor,order=random" ] };`<br>
 
-THe narrations will now use the `reporter` and `actress` in this world. For more information about the different types of narration curveship can perform, please refer to the source for spin.order in [curveship.js](../curveship.js)
+THe narrations will now use the `reporter` and `actress` in the retellings. For more information about the different narrative options curveship can process, please refer to the source for <b>spin.order</b> in [curveship.js](../curveship.js)
 
-Save and close the js file.
+Save and close the redcarpet.js file.
 
-## Now, run  curveship. Open your curveship html file. If there are no errors, you will see the title of your story and a few narration choices. Clicking on each of these options will run the narrations. In our example, we have three narrations. 
-* "i=reporter" is the story told from the reporter's first person point of view.
-* "order=retrograde,you=actress,i=actress,event_numbers" displays the events told in backwards order, told from the actress point of view to herself, and displaying the original number order.
-* "speaking=after,i=reporter,order=random"  displays a random-ordered retelling in past-tense, told from the point of view of the reporter.
+## Now, run  curveship. 
+Open your curveship html file in a browser (e.g. Chrome or Firefox). If there are no errors, you will see the title of your story and a list of bulleted narration choices. Clicking on each of these options will perform different narrations. In this example, we have three narrations:
+* `"i=reporter"` is the story told from the reporter's first person point of view.
+* `"order=retrograde,you=actress,i=actress,event_numbers"` displays the events told in backwards order, told from the actress point of view to herself, and displaying the original number order.
+* `"speaking=after,i=reporter,order=random"`  displays a random-ordered retelling in past-tense, told from the point of view of the reporter.
+
+You can add more narrations by creating additional comma-separated fields to the <b>examples</b> assignment in the story js file (<b>redcarpet.js</b>). Make sure to close the parenthesis correctly with a closing square bracket `]` followed by a curly bracket `}`. 
+
+That's it! 
