@@ -104,7 +104,7 @@ class Existent {
       if (typeof lastNarratedEvent !== "undefined" && lastNarratedEvent.hasObject(this)) {
         return this.owner.getPossessivePronoun(spin, ev);
       }
-      return this.owner.getPossessivePronoun(spin, ev) + " " + this.name;
+      return this.owner.getPossessiveAdj(spin, ev) + " " + this.name;
     }
     if (!this.article) {
       return this.name;
