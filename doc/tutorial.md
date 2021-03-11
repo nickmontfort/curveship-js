@@ -6,7 +6,7 @@ You will need a text editor that displays line numbers, such as SublimeText, Not
 Start with downloading the directory containing the curveship source files ([curveship.js](../curveship.js), [verb.js](../verb.js),  and the [examples](../examples/) subdirectory). Make sure the file examples.css is in the example directory. You can also fork the curveship project into your own repository.
 The necessary files are: curveship.js and verb.js in the base directory. Also, ensure that a copy of examples.css in the examples subdirectory.
 
-A curvship project, at minimum, exists as two files:
+A curveship project, at minimum, exists as two files:
 *  a javascript (.js) descriptor file that lists the actors, events, and objects for narration
 *  a html wrapper (.html) that presents different narrative selections and the story output
 
@@ -25,7 +25,7 @@ If you are on windows, you would open up the command line (type 'cmd in the star
 <br>`copy prodigal.html redcarpet.html`
 
 ## Edit the HTML wrapper file to point to your new story file.
-We will edit our new story files. On line 9 of redcarpet.html, change the curveship source file to your new curvship javascript file. <br>
+We will edit our new story files. On line 9 of redcarpet.html, change the curveship source file to your new curveship javascript file. <br>
  From<br>
 `<script src="example.js"></script>`
 to<br>
