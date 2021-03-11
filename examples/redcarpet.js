@@ -3,7 +3,7 @@ var metadata = { title: "Red Carpet", author: "anjchang", date: "2021",
 instructions: "Simple example with two actors",
 examples: [ "i=reporter",
 "order=retrograde,you=actress,i=actress,event_numbers",
-"speaking=after,i=actor,order=random" ] };
+"speaking=after,i=reporter,order=random" ] };
 
 // PLACES first
 place.redcarpet = new Place("on the", "red carpet");
