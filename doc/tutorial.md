@@ -120,9 +120,9 @@ Save and close the redcarpet.js file.
 
 ## Now, run  curveship. 
 Open your curveship html file in a browser (e.g. Chrome or Firefox). If there are no errors, you will see the title of your story and a list of bulleted narration choices. Clicking on each of these options will perform different narrations. In this example, we have three narrations:
-* `"i=reporter"` is the story told from the reporter's first person point of view.
-* `"order=retrograde,you=actress,i=actress,event_numbers"` displays the events told in backwards order, told from the actress point of view to herself, and displaying the original number order.
-* `"speaking=after,i=reporter,order=random"`  displays a random-ordered retelling in past-tense, told from the point of view of the reporter.
+* `"i=reporter"` is the story told from the reporter's first person point-of-view.
+* `"order=retrograde,you=actress,i=actress,event_numbers"` displays the events told in backwards order, told from the actress point-of-view to herself, and displaying the original number order.
+* `"speaking=after,i=reporter,order=random"`  displays a random-ordered retelling in past-tense, told from the point-of-view of the reporter.
 
 You can add more narrations by creating additional comma-separated fields to the <b>examples</b> assignment in the story js file (<b>redcarpet.js</b>). Make sure to close the parenthesis correctly with a closing square bracket `]` followed by a curly bracket `}`. 
 
