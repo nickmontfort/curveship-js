@@ -80,7 +80,8 @@ Here we create a female actress, who is on the redcarpet. We also create a male 
 `actor.actress = new Actor("an", "actress", spatial.in, place.redcarpet, pronoun.feminine);`<br>
 `actor.reporter = new Actor("a", "reporter", spatial.in, place.pressroom, pronoun.masculine);`<br>
 
-#### Edit the THINGS next
+#### Edit the 
+INGS next
 We next add some things for the actors to interact with. 
 Each unique thing object begins with the `thing` objectname. The relationship between the thing and the actors are defined.
 
@@ -114,7 +115,7 @@ In line 4, change the example properties to reflect the existents in the file. A
 `"order=retrograde,you=actress,i=actress,event_numbers",`<br>
 `"speaking=after,i=actor,order=random" ] };`<br>
 
-THe narrations will now use the `reporter` and `actress` in the retellings. For more information about the different narrative options curveship can process, please refer to the source for <b>spin.order</b> in [curveship.js](../curveship.js)
+The narrations will now use the `reporter` and `actress` in the retellings. For more information about the different narrative options curveship can process, please refer to the source for <b>spin.order</b> in [curveship.js](../curveship.js)
 
 Save and close the redcarpet.js file.
 
