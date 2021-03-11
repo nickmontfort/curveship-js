@@ -75,7 +75,7 @@ Now that we have a place (or places) where the story occurs, we can start to put
 Each unique actor object begins with the `actor` objectname.  There are two actors in this story, an actress and reporter.
 To create the actor, we need to specify the spatial relationship they have in a specific place. We also need to designate the pronoun to use.
 
-Here we create a female actress, who is on the redcarpet. We also create a male reporter in the press room.
+Here we create a female actress, who is on the redcarpet. We also create a male reporter in the press room.<br>
 `// ACTORS next`<br>
 `actor.actress = new Actor("an", "actress", spatial.in, place.redcarpet, pronoun.feminine);`<br>
 `actor.reporter = new Actor("a", "reporter", spatial.in, place.pressroom, pronoun.masculine);`<br>
@@ -84,7 +84,7 @@ Here we create a female actress, who is on the redcarpet. We also create a male 
 We next add some things for the actors to interact with. 
 Each unique thing object begins with the `thing` objectname. The relationship between the thing and the actors are defined.
 
-In this story, there is a camera owned by the reporter and a purse possessed by actress.
+In this story, there is a camera owned by the reporter and a purse possessed by actress.<br>
 `// THINGS next`<br>
 `thing.camera = new Thing("a", "camera", spatial.on, actor.reporter);`<br>
 `thing.camera.owner = actor.reporter;`<br>
@@ -95,7 +95,7 @@ In this story, there is a camera owned by the reporter and a purse possessed by 
 [curveship.js](../curveship.js)
 
 #### Edit the EVENTS last
-Now that there is actors, objects, and places, it is time to add the events that unfold. The story events are declared as a series of "Event" objects.  Each event consists of an actor performing an action at a place or on a thing. The order of these events will determine the event order in the story narration.
+Now that there is actors, objects, and places, it is time to add the events that unfold. The story events are declared as a series of "Event" objects.  Each event consists of an actor performing an action at a place or on a thing. The order of these events will determine the event order in the story narration.<br>
 `// Finally, EVENTS`<br>
 `var APPEAR = new Event(actor.actress, "appear", place.redcarpet);`<br>
 `var SHOOT = new Event(actor.reporter,"point", thing.camera);`<br>
@@ -108,7 +108,7 @@ Once all the existents are declared, the last two lines are used by curveship to
 
 ### Edit the examples to be narrated.
 Once the story elements are in place, set the narratrion parameters in the "examples" assignment field at the top of the js file.
-In line 4, change the example properties to reflect the existents in the file. All the comma-separated fields after the assignment colon (`:`) describe different types of narrations that curveship will perform.
+In line 4, change the example properties to reflect the existents in the file. All the comma-separated fields after the assignment colon (`:`) describe different types of narrations that curveship will perform.<br>
 
 `examples: [ "i=reporter",`<br>
 `"order=retrograde,you=actress,i=actress,event_numbers",`<br>
@@ -119,7 +119,7 @@ The narrations will now use the `reporter` and `actress` in the retellings. For 
 Save and close the redcarpet.js file.
 
 ## Now, run  curveship. 
-Open your curveship html file in a browser (e.g. Chrome or Firefox). If there are no errors, you will see the title of your story and a list of bulleted narration choices. Clicking on each of these options will perform different narrations. In this example, we have three narrations:
+Open your curveship html file in a browser (e.g. Chrome or Firefox). If there are no errors, you will see the title of your story and a list of bulleted narration choices. Clicking on each of these options will perform different narrations. In this example, we have three narrations:<br>
 * `"i=reporter"` is the story told from the reporter's first person point-of-view.
 * `"order=retrograde,you=actress,i=actress,event_numbers"` displays the events told in backwards order, told from the actress point-of-view to herself, and displaying the original number order.
 * `"speaking=after,i=reporter,order=random"`  displays a random-ordered retelling in past-tense, told from the point-of-view of the reporter.
