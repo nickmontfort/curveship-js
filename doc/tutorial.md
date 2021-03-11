@@ -18,15 +18,12 @@ If you are on windows, you would open up the command line (type 'cmd in the star
 <br>`copy example.js redcarpet.js`
 <br>`copy example.html redcarpet.html`
 
-
 ## Edit the wrapper file to point to your new story file.
  On line 9 of redcarpet.html, change the curveship source file to your new curvship javascript file. <br>
  From<br>
 `<script src="example.js"></script>`
 to<br>
 `<script src="redcarpet.js"></script>`
-
-
 
 ## Edit the curveship descriptor file with your story elements.
 Open redcarpet.js and change the descriptive fields within the quote marks. 
@@ -52,16 +49,57 @@ Each element of a curveship story uses `objectName`.`propertyName` syntax. there
 Each propertyName that follows the objectName is a unique variable that identifies a particular place.
 
 #### Edit the PLACES first
-Each place object begins with the `place` objectname. 
+Each unique place object begins with the `place` objectname.  There are two places in this story, a red carpet and a press room.
+
 `// PLACES first`<br>
 `place.redcarpet = new Place("on the", "red carpet");`<br>
 `place.pressroom = new Place("the", "press room");`<br>
+
+Each place has a view property, used to describe what the place looks like. The view specifies the place, and how it is described from a viewer's perspective.
+`place.redcarpet.addView(place.redcarpet, "On the red carpet");`<br>
+`place.pressroom.addView(place.pressroom, "From the press room");`<br>
+
 #### Edit the ACTORS next
+Now that we have a place (or places) where the story occurs, we can start to put actors in the scene.
+Each unique actor object begins with the `actor` objectname.  There are two actors in this story, an actress and reporter.
+To create the actor, we need to specify the spatial relationship they have in a specific place. We also need to designate the pronoun to use.
+
+Here we create a female actress, who is on the redcarpet. We also create a male reporter in the press room.
+`// ACTORS next`<br>
+`actor.actress = new Actor("an", "actress", spatial.in, place.redcarpet, pronoun.feminine);`<br>
+`actor.reporter = new Actor("a", "reporter", spatial.in, place.pressroom, pronoun.masculine);`<br>
+
 #### Edit the THINGS next
+We next add some things for the actors to interact with. 
+Each unique thing object begins with the `thing` objectname. The relationship between the thing and the actors are defined.
+
+In this story, there is a camera owned by the reporter and a purse possessed by actress.
+`// THINGS next`<br>
+`thing.camera = new Thing("a", "camera", spatial.on, actor.reporter);`<br>
+`thing.camera.owner = actor.reporter;`<br>
+`thing.purse = new Thing("a", "purse", spatial.on, actor.actress);`<br>
+`thing.purse.owner = actor.actress;`<br>
+
+ For more information about the different types of object relationships, please refer to the source for spatial prepositions in
+[curveship.js](../curveship.js)
+
 #### Edit the EVENTS last
+Now that there is actors, objects, and places, it is time to add the events that unfold. The story events are declared as a series of "Event" objects.  Each event consists of an actor performing an action at a place or on a thing. The order of these events will determine the event order in the story narration.
+`// Finally, EVENTS`<br>
+`var APPEAR = new Event(actor.actress, "appear", place.redcarpet);`<br>
+`var SHOOT = new Event(actor.reporter,"point", thing.camera);`<br>
+`var MOVE = new Event(actor.reporter, "interview",actor.actress)`<br>
 
 ### Leave the last two lines of the file intact.
-
+Once all the existents are declared, the last two lines are used by curveship to set up the narration and must not be changed.
 `<var world = new World(place, actor, thing, eventSeq);`<br>
 `function run() { narrate(metadata, {}, world); }`
 
+### Edit the examples to be narrated.
+Once the story elements are in place, the various narrations can be viewed by setting the parameters in the "examples" field at the top of the file.
+In line 4, change the example properties to reflect the existents in the file.
+`examples: [ "i=reporter",`<br>
+`"order=retrograde,you=actress,i=actress,event_numbers",`<br>
+`"speaking=after,i=actor,order=random" ] };`<br>
+
+THe narrations will now use the `reporter` and `actress` in this world. For more information about the different types of narration curveship can perform, please refer to the source for spin.order in [curveship.js](../curveship.js)
