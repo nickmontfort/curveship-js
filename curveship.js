@@ -101,6 +101,9 @@ class Existent {
       }
     }
     if (this.owner) {
+      if (typeof lastNarratedEvent !== "undefined" && lastNarratedEvent.hasObject(this)) {
+        return this.owner.getPossessivePronoun(spin, ev);
+      }
       return this.owner.getPossessiveAdj(spin, ev) + " " + this.name;
     }
     if (!this.article) {
@@ -139,6 +142,22 @@ class Existent {
       }
     }
   }
+
+  getPossessivePronoun(spin, ev) {
+    if (spin.i === this) {
+      return this.pronoun.getPossessivePronoun(1, this.number, ev);
+    }
+    if (spin.you === this) {
+      return this.pronoun.getPossessivePronoun(2, this.number, ev);
+    }
+    if (givens.has(this)) {
+      if (ev.agent == this ||
+        (typeof lastNarratedEvent.hasParticipant(this))) {
+        return this.pronoun.getPossessivePronoun(3, this.number, ev);
+      }
+    }
+  }
+
   configuredAs(spatialRelation, parent) {
     this.spatial = spatialRelation;
     this.parent = parent;
@@ -171,7 +190,7 @@ class PronounSet {
     this.pronoun.push([
       [],
       [],
-      []
+      [],
     ]); // There is no 0th person or number
     this.pronoun.push([
       [],
@@ -391,6 +410,11 @@ class Event {
   hasParticipant(actor) {
     return ((this.agent === actor) || (this.object === actor) || (this.extra === actor));
   }
+
+  hasObject(object) {
+    return (this.object.name == object.name);
+  }
+  
   changeState(ex, spatial_1, parent_1, spatial_2, parent_2) {
     // Does nothing now. Will later be used for minimal world simulation, so
     // that focalization can be implemented.
