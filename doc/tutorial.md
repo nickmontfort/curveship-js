@@ -6,7 +6,7 @@ A curvship project, at minimum, exists as two files:
 *  a javascript (.js) descriptor file that lists the actors, events, and objects for narration
 *  a html wrapper (.html) that presents different narrative selections and the story output
 
-## Start with an example files and rename them
+## Start with example files and rename them
 The easiest way to begin writing in curveship is to edit a copy of a sample javascript story file and corresponding html file wrapper. 
 Ensure the files have  coordinating names (e.g. newtitle.js and newtitle.html). 
 <br>`cp example.js newtitle.js`
