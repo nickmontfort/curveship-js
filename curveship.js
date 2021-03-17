@@ -234,11 +234,10 @@ var pronoun = {};
 pronoun.feminine = new PronounSet(["she", "her", "her", "hers", "herself"]);
 pronoun.masculine = new PronounSet(["he", "him", "his", "his", "himself"]);
 pronoun.neuter = new PronounSet(["it", "it", "its", "its", "itself"]);
-pronoun.unknownBinary = new PronounSet(["she or he", "her or him", "her or his", "hers or his", "herself or himself"]);
+pronoun.unknownBinary = new PronounSet(["he or she", "him or her", "his or her", "his or hers", "himself or herself"]);
 pronoun.nonBinary = new PronounSet(["they", "them", "their", "theirs", "themself"]); // If you prefer, you can make the last entry "themselves"
 
-
-class ExistentGroup extends Existent{
+class ExistentGroup extends Existent {
   constructor(existentArray) {
     super(null, null);
     this.existentArray = existentArray;
@@ -250,25 +249,43 @@ class ExistentGroup extends Existent{
   includes(obj) {
     return this.existentArray.includes(obj);
   }
-  addToGivens(){
+  addToGivens() {
     this.existentArray.forEach(item => givens.add(item));
   }
   getNounPhrase(role, spin, ev) {
-    // FIXME at least one known problem:
-                              // produces 'I and you' when the first element
-                              // in the array is the I, the second is the you
-    if(this.existentArray.length == 2) return this.existentArray[0].getNounPhrase(role, spin, ev) + " and " + this.existentArray[1].getNounPhrase(role, spin, ev);
-    var phrase = "";
-    for(var i = 0; i < this.existentArray.length - 1; i++){
-      phrase += this.existentArray[i].getNounPhrase(role, spin, ev) + ", ";
+    var phrase = "",
+      allParts = false,
+      partOf;
+
+    // FIXME need to go through and check all existents in the group,
+    // if there's a group. If the existents are all parts of the same
+    // existent, *and* the spin specifies grouping parts, a short
+    // phrase such as "the parts of the engine" or "the parts of shoe"
+    // will be realized instead of a list of existents.
+
+    if (this.existentArray.length == 2) {
+      var first = this.existentArray[0].getNounPhrase(role, spin, ev),
+        second = this.existentArray[1].getNounPhrase(role, spin, ev);
+      if (first === "I") {
+        [first, second] = [second, first];
+      }
+      phrase = first + " and " + second;
+    } else {
+      for (var i = 0; i < this.existentArray.length - 1; i++) {
+        phrase += this.existentArray[i].getNounPhrase(role, spin, ev) + ", ";
+      }
+      phrase += "and " + this.existentArray[this.existentArray.length - 1].getNounPhrase(role, spin, ev);
     }
-    phrase += "and " + this.existentArray[this.existentArray.length - 1].getNounPhrase(role, spin, ev);
     return phrase;
   }
   getPossessiveAdj(spin, ev) {
-    if(this.existentArray.length == 2) return this.existentArray[0].getPossessiveAdj(spin, ev) + " and " + this.existentArray[1].getPossessiveAdj(spin, ev);
     var phrase = "";
-    for(var i = 0; i < this.existentArray.length - 1; i++){
+    if (this.existentArray.length == 2) {
+      var first = this.existentArray[0].getPossessiveAdj(spin, ev),
+        second = this.existentArray[1].getPossessiveAdj(spin, ev);
+      phrase = first + " and " + second;
+    }
+    for (var i = 0; i < this.existentArray.length - 1; i++) {
       phrase += this.existentArray[i].getPossessiveAdj(spin, ev) + ", ";
     }
     phrase += "and " + this.existentArray[this.existentArray.length - 1].getPossessiveAdj(spin, ev);
@@ -447,11 +464,13 @@ class Event {
   hasParticipant(actor) {
     return ((this.agent === actor) || (this.object === actor) || (this.extra === actor));
   }
-
   hasObject(object) {
-    return (this.object.name == object.name);
+    if (this.hasOwnProperty(object)) {
+      return (this.object.name == object.name);
+    } else {
+      return false;
+    }
   }
-  
   changeState(ex, spatial_1, parent_1, spatial_2, parent_2) {
     // Does nothing now. Will later be used for minimal world simulation, so
     // that focalization can be implemented.
