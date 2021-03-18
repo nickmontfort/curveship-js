@@ -1,4 +1,4 @@
-DEFAULT (no parameters)
+DEFAULT
 
 A girl putters around her home.
 She leaves her home.

@@ -1,0 +1,13 @@
+DEFAULT
+
+John looks at Mary and Bill.
+He looks at the rock and himself.
+He looks at the chair, the table, and the window.
+The end.
+
+?speaking=after
+
+John looked at Mary and Bill.
+He looked at the rock and himself.
+He looked at the chair, the table, and the window.
+The end.

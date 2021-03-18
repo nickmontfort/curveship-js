@@ -1,4 +1,4 @@
-DEFAULT (no parameters)
+DEFAULT
 
 Sam examines John.
 John examines himself.
