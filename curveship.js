@@ -186,6 +186,50 @@ class Existent {
       }
     }
   }
+  conjugate(base, spin, ev) {
+    var person = 3,
+      verb = new Verb(base),
+      tenseER, pronominalized;
+    if (spin.i === this) {
+      person = 1;
+    }
+    if (spin.you === this) {
+      person = 2;
+    }
+    switch (spin.speaking) {
+      case 'after': {
+        tenseER = 'past';
+        break;
+      }
+      case 'during': {
+        tenseER = 'present';
+        break;
+      }
+      case 'before': {
+        tenseER = 'future';
+        break;
+      }
+    }
+    pronominalized = this.pronominalization('agent', spin, {
+      'agent': this
+    });
+    if (this.pronoun == pronoun.nonBinary && pronominalized && pronominalized[1] === 3) {
+      number = 2;
+    } else {
+      number = this.number;
+    }
+    return verb.conjugatedVP(person, number, tenseER, spin.referring, ev);
+  }
+  describe(spin){
+    var phrase = "There ";
+    phrase += this.conjugate("be", spin, { 'agent': actor.cosmos }) + " ";
+    phrase += this.getNounPhrase("object", spin, { 'agent': actor.cosmos }) + " ";
+    if(this.hasOwnProperty("spatial")) {
+      phrase += this.spatial;
+      phrase += " " + this.parent.getNounPhrase("extra", spin, { 'agent': actor.cosmos });
+    }
+    return phrase + ".";
+  }
 }
 
 // ### PRONOUNS ###
@@ -414,40 +458,10 @@ class Event {
     actorOrThing.parent = parent;
   }
   placeVerbPhrase(currentTemplate, spin, agent) {
-    var person = 3,
-      number, slotExp = /\[([a-z]+)\/v\]/,
+    var slotExp = /\[([a-z]+)\/v\]/,
       base = slotExp.exec(currentTemplate)[1],
-      verb = new Verb(base),
-      tenseER, phrase, pronominalized;
-    if (spin.i === agent) {
-      person = 1;
-    }
-    if (spin.you === agent) {
-      person = 2;
-    }
-    switch (spin.speaking) {
-      case 'after': {
-        tenseER = 'past';
-        break;
-      }
-      case 'during': {
-        tenseER = 'present';
-        break;
-      }
-      case 'before': {
-        tenseER = 'future';
-        break;
-      }
-    }
-    pronominalized = agent.pronominalization('agent', spin, {
-      'agent': agent
-    });
-    if (agent.pronoun == pronoun.nonBinary && pronominalized && pronominalized[1] === 3) {
-      number = 2;
-    } else {
-      number = agent.number;
-    }
-    phrase = verb.conjugatedVP(person, number, tenseER, spin.referring, this);
+      phrase;
+    phrase = agent.conjugate(base, spin, this);
     currentTemplate = currentTemplate.replace(slotExp, phrase);
     return currentTemplate;
   }
@@ -581,8 +595,7 @@ function narrate(metadata, spin, world) {
   if (spin.hasOwnProperty("describe")) {
     spin.describe.forEach(item => {
       div = document.createElement("div");
-      // FIXME probably still cheating, but less so
-      sentence = new Event(item, "be " + item.spatial, item.parent).realize(spin);
+      sentence = item.describe(spin);
       div.innerHTML = sentence;
       element.appendChild(div);
     });
