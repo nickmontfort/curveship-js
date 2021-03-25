@@ -1,0 +1,24 @@
+DEFAULT
+
+Jim enters the garage.
+He takes a look at his Volkswagon.
+He examines an engine.
+He inspects an air intake, an ignition coil, an intake manifold, a distributor, a fuel pump, a carburetor, a generator, a camshaft pulley, and a cooling fan.
+The end.
+
+?group=parts
+
+Jim enters the garage.
+He takes a look at his Volkswagon.
+He examines an engine.
+He inspects the parts of the engine.
+The end.
+
+?describe=car
+
+Jim’s Volkswagon is in the garage.
+He enters the garage.
+He takes a look at his Volkswagon.
+He examines an engine.
+He inspects an air intake, an ignition coil, an intake manifold, a distributor, a fuel pump, a carburetor, a generator, a camshaft pulley, and a cooling fan.
+The end.
