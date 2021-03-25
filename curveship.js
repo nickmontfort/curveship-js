@@ -107,6 +107,7 @@ class Existent {
       }
     }
     if (this.owner) {
+      // FIXME? "Jim's girlfriend sits on his bed" would likely be realized as "Jim's girlfriend sits on Jim's laptop"
       if (typeof lastNarratedEvent !== "undefined" && lastNarratedEvent.hasObject(this)) {
         return this.owner.getPossessivePronoun(spin, ev);
       }
@@ -550,7 +551,13 @@ function narrate(metadata, spin, world) {
   for (i = 0; i < world.event.length; i++) {
     telling.push(i);
   }
-  spin = getParameters(world.actor);
+  spin = getParameters(world.actor, world.item);
+  if(spin.hasOwnProperty("describe")) {
+    spin.describe.forEach(item => {
+      // FIXME is this cheating?
+      eventSeq.unshift(new Event(item, "be " + item.spatial, item.parent));
+    });
+  }
   h1.innerHTML = metadata.title;
   element.appendChild(h1);
   h2.innerHTML = metadata.author;
@@ -692,7 +699,7 @@ var givens = new Set();
 
 // ### UTILITY ###
 
-function getParameters(actor) {
+function getParameters(actor, thing) {
   var params = window.location.search,
     spin = {},
     pair;
@@ -703,7 +710,10 @@ function getParameters(actor) {
       pair = p.split("=");
       if (pair[0] === "i" || pair[0] === "you") {
         spin[pair[0]] = actor[pair[1]];
-      } else if (pair[0] === "time_markers") {
+      } if (pair[0] === "describe") {
+        // FIXME describes only things
+        spin[pair[0]] = pair[1].split(";").map(name => thing[name]);
+      }else if (pair[0] === "time_markers") {
         spin.time_markers = true;
       } else if (pair[0] === "event_numbers") {
         spin.event_numbers = true;

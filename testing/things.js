@@ -11,7 +11,7 @@
 
 var metadata = { title: "Things", author: "Nick Montfort", date: "2021",
 instructions: "Click below or add your own parameters to the URL to change the “spin” and to create variation in the narrative discourse. You have to use the official names of “actors” for i (narrator) and you (narratee). These can be found by looking at the code. Examples:",
-examples: [ "group=parts" ] };
+examples: [ "group=parts", "group=parts,order=retrograde", "describe=car" ] };
 
 // PLACES first
 place.garage = new Place("the", "garage");
