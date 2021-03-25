@@ -40,6 +40,8 @@ thing.carburetor = new Thing("a", "carburetor", spatial.partOf, thing.engine);
 thing.generator = new Thing("a", "generator", spatial.partOf, thing.engine);
 thing.pulley = new Thing("a", "camshaft pulley", spatial.partOf, thing.engine);
 thing.fan = new Thing("a", "cooling fan", spatial.partOf, thing.engine);
+thing.plant = new Thing("a", "plant")
+thing.leaf = new Thing("a", "leaf", spatial.partOf, thing.plant);
 
 // Finally, EVENTS
 var ENTER_GARAGE = new Event(actor.jim, "enter", place.garage);
@@ -47,6 +49,12 @@ var LOOK_AT_CAR = new Event(actor.jim, "take a look at", thing.car);
 var EXAMINE_ENGINE = new Event(actor.jim, "examine", thing.engine);
 var INSPECT_PARTS = new Event(actor.jim, "inspect",
 [thing.intake, thing.coil, thing.manifold, thing.distributor, thing.pump, thing.carburetor, thing.generator, thing.pulley, thing.fan]);
+var LOOK_AT_PLANT = new Event(actor.jim, "take a look at", thing.plant);
+var INSPECT_PARTS = new Event(actor.jim, "inspect",
+[thing.intake, thing.coil, thing.manifold, thing.distributor, thing.pump, thing.carburetor, thing.generator, thing.pulley, thing.fan]);
+var INSPECT_LEAF1 = new Event(actor.jim, "inspect", thing.leaf)
+var INSPECT_LEAF2 = new Event(actor.jim, "inspect", [thing.leaf])
+var INSPECT_COMBO = new Event(actor.jim, "inspect", [thing.coil, thing.pump, thing.leaf])
 
 var world = new World(place, actor, thing, eventSeq);
 function run() { narrate(metadata, {}, world); }

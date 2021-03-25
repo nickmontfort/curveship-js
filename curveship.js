@@ -253,15 +253,11 @@ class ExistentGroup extends Existent {
     this.existentArray.forEach(item => givens.add(item));
   }
   getNounPhrase(role, spin, ev) {
-    var phrase = "",
-      allParts = false,
-      partOf;
-
-    // FIXME need to go through and check all existents in the group,
-    // if there's a group. If the existents are all parts of the same
-    // existent, *and* the spin specifies grouping parts, a short
-    // phrase such as "the parts of the engine" or "the parts of shoe"
-    // will be realized instead of a list of existents.
+    var phrase = ""
+    var isGroup = (spin.group=="parts")
+    if (isGroup && this.existentArray.length >= 1 && this.checkGroupings()) {
+      return this.getGroupingPhrase(role, spin, ev)
+    }
 
     if (this.existentArray.length == 2) {
       var first = this.existentArray[0].getNounPhrase(role, spin, ev),
@@ -290,6 +286,27 @@ class ExistentGroup extends Existent {
     }
     phrase += "and " + this.existentArray[this.existentArray.length - 1].getPossessiveAdj(spin, ev);
     return phrase;
+  }
+  getGroupingPhrase(role, spin, ev) {
+    var partPhrase = (this.existentArray.length == 1)? "part" : "parts"
+    var group = `the ${partPhrase} of ${this.existentArray[0].parent.getNounPhrase(role, spin, ev)}`
+    return group
+  }
+  checkGroupings() {
+    for (var i = 0; i < this.existentArray.length; i++) { //check for nulls
+      var elem = this.existentArray[i]
+      if (elem.spatialRelation != spatial.partOf || elem.parent == null) {
+        return false
+      }
+    }
+    for (var i = 0; i < this.existentArray.length - 1; i++) { //check for nulls
+      var elem = this.existentArray[i]
+      var next = this.existentArray[i + 1]
+      if (elem.parent != next.parent) {
+        return false
+      }
+    }
+    return true
   }
 }
 
@@ -328,12 +345,12 @@ class Place extends Existent {
 var place = {};
 
 class Thing extends Existent {
-  constructor(article, name, spatialRelation, parent, prominence = 0.5) {
+  constructor(article, name, spatialRelation=null, parent=null, prominence = 0.5) {
     // "prominence" does nothing now. It is used in Curveship.py, which has a
     // complex model of what things can be seen from what places. There, .5
     // means a thing is of average prominence.
     super(article, name);
-    this.spatial = spatialRelation;
+    this.spatialRelation = spatialRelation;
     this.parent = parent;
     this.prominence = prominence;
     this.pronoun = pronoun.neuter;
