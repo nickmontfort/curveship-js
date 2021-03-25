@@ -136,7 +136,7 @@ class Existent {
     }
     if (givens.has(this)) {
       if (ev.agent == this ||
-        (typeof lastNarratedEvent.hasParticipant(this))) {
+        (typeof lastNarratedEvent !== "undefined" && lastNarratedEvent.hasParticipant(this))) {
         return this.pronoun.getPossessiveAdj(3, this.number, ev);
       }
     }
@@ -552,12 +552,6 @@ function narrate(metadata, spin, world) {
     telling.push(i);
   }
   spin = getParameters(world.actor, world.item);
-  if(spin.hasOwnProperty("describe")) {
-    spin.describe.forEach(item => {
-      // FIXME is this cheating?
-      eventSeq.unshift(new Event(item, "be " + item.spatial, item.parent));
-    });
-  }
   h1.innerHTML = metadata.title;
   element.appendChild(h1);
   h2.innerHTML = metadata.author;
@@ -582,6 +576,16 @@ function narrate(metadata, spin, world) {
     telling.reverse();
   } else if (spin.order === "random") {
     shuffle(telling);
+  }
+  descriptions = [];
+  if (spin.hasOwnProperty("describe")) {
+    spin.describe.forEach(item => {
+      div = document.createElement("div");
+      // FIXME probably still cheating, but less so
+      sentence = new Event(item, "be " + item.spatial, item.parent).realize(spin);
+      div.innerHTML = sentence;
+      element.appendChild(div);
+    });
   }
   div = document.createElement("div");
   element.appendChild(div);
