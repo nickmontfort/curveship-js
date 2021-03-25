@@ -12,7 +12,7 @@
 // Not covered gendered nouns blond/blonde, fiancé/fiancée
 
 const plurals = {
-	"aircraft": ["aircreft"],
+	"aircraft": ["aircraft"],
 	"alumnus": ["alumni"],
 	"analysis": ["analyses"],
 	"appendix": ["appendices"],
