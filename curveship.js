@@ -107,7 +107,7 @@ class Existent {
       }
     }
     if (this.owner) {
-      // FIXME? "Jim's girlfriend sits on his bed" would likely be realized as "Jim's girlfriend sits on Jim's laptop"
+      // FIXME? "Jim's girlfriend sits on his bed" would likely be realized as "Jim's girlfriend sits on Jim's bed"
       if (typeof lastNarratedEvent !== "undefined" && lastNarratedEvent.hasObject(this)) {
         return this.owner.getPossessivePronoun(spin, ev);
       }
