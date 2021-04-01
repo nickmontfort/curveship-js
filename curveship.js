@@ -223,9 +223,9 @@ class Existent {
   describe(spin){
     var phrase = "There ";
     phrase += this.conjugate("be", spin, { 'agent': actor.cosmos }) + " ";
-    phrase += this.getNounPhrase("object", spin, { 'agent': actor.cosmos }) + " ";
-    if(this.hasOwnProperty("spatial")) {
-      phrase += this.spatial;
+    phrase += this.getNounPhrase("object", spin, { 'agent': actor.cosmos });
+    if(this.hasOwnProperty("spatialRelation")) {
+      phrase += " which is " + this.spatialRelation;
       phrase += " " + this.parent.getNounPhrase("extra", spin, { 'agent': actor.cosmos });
     }
     return phrase + ".";
