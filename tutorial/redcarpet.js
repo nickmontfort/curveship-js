@@ -24,8 +24,8 @@ thing.purse.owner = actor.actress;
 
 // Finally, EVENTS
 var APPEAR = new Event(actor.actress, "appear", place.redcarpet);
-var SHOOT = new Event(actor.reporter,"point", thing.camera);
-var MOVE = new Event(actor.reporter, "interview",actor.actress)
+var SHOOT = new Event(actor.reporter, "point", thing.camera);
+var MOVE = new Event(actor.reporter, "interview",actor.actress);
 
 var world = new World(place, actor, thing, eventSeq);
 function run() { narrate(metadata, {}, world); }
