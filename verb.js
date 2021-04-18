@@ -1,5 +1,5 @@
-// Part of Curveship-js version 0.2.0
-//  Copyright 2020 Nick Montfort
+// Part of Curveship-js version 0.4
+//  Copyright 2020-2021 Nick Montfort
 //
 // licensed under the GNU General Public License v3.0. See the file LICENSE
 // for complete terms.
