@@ -6,55 +6,52 @@
 // notice and this notice are preserved. This file is offered as-is,
 // without any warranty.
 //
-// Adapted from the original Curveship, now called Curveship-py 0.6.
+// Adapted from the original Curveship, now called Curveship-py.
 
 let title = "The Simulated Bank Robbery";
 
-// PLACES first
-place.vestibule = new Place("the", "vestibule");
-place.lobby = new Place("the", "lobby");
-place.guard_post = new Place("the", "guard post");
-place.street = new Place("the", "street outside the bank");
+// EXISTENTS: Places, Actors, Things in that order
 
-// ACTORS next
-actor.teller = new Actor("a", "bank teller", spatial.in, place.vestibule, pronoun.feminine);
-actor.robber = new Actor("a", "twitchy man", spatial.in, place.street, pronoun.masculine);
-actor.guard = new Actor("a", "burly guard", spatial.in, place.guard_post, pronoun.masculine);
+place.vestibule = new Place();
+place.lobby = new Place();
+place.guard_post = new Place();
+place.street = new Place();
 
-// THINGS next
-thing.slip = new Thing("a", "deposit slip", spatial.in, place.vestibule);
-thing.fake_money = new Thing("some", "fake money", spatial.in, place.vestibule);
-thing.bag = new Thing("a", "black bag", spatial.in, place.vestibule);
-thing.mask = new Thing("a", "Dora the Explorer mask", spatial.held_by, actor.robber);
-thing.fake_gun = new Thing("a", "gun-shaped object", spatial.held_by, actor.robber);
-thing.pistol = new Thing("a", "pistol", spatial.worn_by, actor.guard);
-thing.pistol.owner = actor.guard;
+actor.teller = new Actor(spatial.in, place.vestibule, "female");
+actor.robber = new Actor(spatial.in, place.street, "male");
+actor.guard = new Actor(spatial.in, place.guard_post, "male");
 
-// Finally, EVENTS
-var READ = new Event(actor.teller, "read", thing.slip);
-var SNOOZE = new Event(actor.guard, "sleep +ing");
-var COUNT = new Event(actor.teller, "recheck", thing.slip);
-clock += 50;
-var COVER_FACE = new Event(actor.robber, "put on", thing.mask);
-var TYPE = new Event(actor.teller, "type");
-var PLAY = new Event(actor.teller, "play around");
-var BEGIN_ROBBING = new Event(actor.robber, "enter");
-var WAVE = new Event(actor.teller, "wave to", actor.robber);
-var THREATEN = new Event(actor.robber, "threaten", actor.teller, temporal.using, thing.fake_gun);
-var LAUGH = new Event(actor.teller, "laugh");
-var WAKE = new Event(actor.guard, "wake");
-var SEE_THREAT = new Event(actor.guard, "see", actor.robber);
-var LEAVE_POST = new Event(actor.guard, "leave", place.guard_post);
-var GRAB_FAKE = new Event(actor.teller, "put", thing.fake_money, temporal.into, thing.bag);
-var TURN = new Event(actor.robber, "turn to", actor.guard);
-var SHOOT_1 = new Event(actor.guard, "shoot", actor.robber);
-var SHOOT_2 = new Event(actor.guard, "shoot", actor.robber);
-var FALL = new Event(actor.robber, "fall");
-var DIE = new Event(actor.robber, "die");
-var SHOOT_2 = new Event(actor.guard, "shoot", actor.robber);
-var DROP_GUN = new Event(actor.guard, "drop", thing.pistol);
-DROP_GUN.reconfigures(thing.pistol, "owner", actor.guard, null);
-var CRY = new Event(actor.teller, "weep");
-var STARE = new Event(actor.guard, "stare at", thing.pistol);
+thing.slip = new Thing(spatial.in, place.vestibule);
+thing.fake_money = new Thing(spatial.in, place.vestibule);
+thing.bag = new Thing(spatial.in, place.vestibule);
+thing.mask = new Thing(spatial.of, actor.robber);
+thing.fake_gun = new Thing(spatial.of, actor.robber);
+thing.pistol = new Thing(spatial.of, actor.guard, actor.guard);
 
-var world = new World(place, actor, thing, eventSeq);
+// EVENTS
+
+ev.read = new Event(actor.teller, thing.slip);
+ev.snooze = new Event(actor.guard);
+ev.count = new Event(actor.teller, thing.slip);
+ev.cover_face = new Event(actor.robber, thing.mask);
+ev.type = new Event(actor.teller);
+ev.play = new Event(actor.teller);
+ev.begin_robbing = new Event(actor.robber);
+ev.wave = new Event(actor.teller, actor.robber);
+ev.threaten = new Event(actor.robber, actor.teller, temporal.using, thing.fake_gun);
+ev.laugh = new Event(actor.teller);
+ev.wake = new Event(actor.guard);
+ev.see_threat = new Event(actor.guard, actor.robber);
+ev.leave_post = new Event(actor.guard, place.guard_post);
+ev.grab_fake = new Event(actor.teller, thing.fake_money, temporal.into, thing.bag);
+ev.turn = new Event(actor.robber, actor.guard);
+ev.shoot_1 = new Event(actor.guard, actor.robber);
+ev.shoot_2 = new Event(actor.guard, actor.robber);
+ev.fall = new Event(actor.robber);
+ev.die = new Event(actor.robber);
+ev.drop_gun = new Event(actor.guard, thing.pistol);
+ev.drop_gun.reconfigures(thing.pistol, actor.guard, null);
+ev.cry = new Event(actor.teller);
+ev.stare = new Event(actor.guard, thing.pistol);
+
+var world = new World(place, actor, thing, ev);
