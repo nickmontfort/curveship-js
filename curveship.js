@@ -77,110 +77,14 @@ class Existent {
   }
 }
 
-// ### PRONOUNS ###
-// Need to be defined here so Actor can use them by default
-
-class PronounSet {
-  constructor(thirdPersonSingular) {
-    this.pronoun = [];
-    this.pronoun.push([
-      [],
-      [],
-      [],
-    ]); // There is no 0th person or number
-    this.pronoun.push([
-      [],
-      ["I", "me", "my", "mine", "myself"],
-      ["we", "us", "our", "ours", "ourselves"]
-    ]);
-    this.pronoun.push([
-      [],
-      ["you", "you", "your", "yours", "yourself"],
-      ["you", "you", "your", "yours", "yourselves"]
-    ]);
-    this.pronoun.push([
-      [], thirdPersonSingular,
-      ["they", "them", "their", "theirs", "themselves"]
-    ]);
-  }
-  getSubject(person, number = 1) {
-    return this.pronoun[person][number][0];
-  }
-  getObject(person, number = 1) {
-    return this.pronoun[person][number][1];
-  }
-  getPossessiveAdj(person, number = 1) {
-    return this.pronoun[person][number][2];
-  }
-  getPossessivePronoun(person, number = 1) {
-    return this.pronoun[person][number][3];
-  }
-  getReflexive(person, number = 1) {
-    return this.pronoun[person][number][4];
-  }
-}
-
-var pronoun = {};
-pronoun.feminine = new PronounSet(["she", "her", "her", "hers", "herself"]);
-pronoun.masculine = new PronounSet(["he", "him", "his", "his", "himself"]);
-pronoun.neuter = new PronounSet(["it", "it", "its", "its", "itself"]);
-pronoun.unknownBinary = new PronounSet(["he or she", "him or her", "his or her", "his or hers", "himself or herself"]);
-pronoun.nonBinary = new PronounSet(["they", "them", "their", "theirs", "themself"]); // If you prefer, you can make the last entry "themselves"
-
 class ExistentGroup extends Existent {
   constructor(existentArray) {
     super(null, null);
     this.existentArray = existentArray;
     this.number = existentArray.length;
   }
-  pronominalization(role, spin, ev) {
-    return false;
-  }
   includes(obj) {
     return this.existentArray.includes(obj);
-  }
-  addToGivens() {
-    this.existentArray.forEach(existent => givens.add(existent));
-  }
-  getNounPhrase(role, spin, ev) {
-    var phrase = "";
-    var isGroup = (spin.group == "parts");
-    if (isGroup && this.existentArray.length >= 1 && this.checkGroupings()) {
-      return this.getGroupingPhrase(role, spin, ev);
-    }
-
-    if (this.existentArray.length == 2) {
-      var first = this.existentArray[0].getNounPhrase(role, spin, ev),
-        second = this.existentArray[1].getNounPhrase(role, spin, ev);
-      if (first === "I") {
-        [first, second] = [second, first];
-      }
-      phrase = first + " and " + second;
-    } else {
-      for (var i = 0; i < this.existentArray.length - 1; i++) {
-        phrase += this.existentArray[i].getNounPhrase(role, spin, ev) + ", ";
-      }
-      phrase += "and " + this.existentArray[this.existentArray.length - 1].getNounPhrase(role, spin, ev);
-    }
-    return phrase;
-  }
-  getPossessiveAdj(spin, ev) {
-    var phrase = "";
-    if (this.existentArray.length == 2) {
-      var first = this.existentArray[0].getPossessiveAdj(spin, ev),
-        second = this.existentArray[1].getPossessiveAdj(spin, ev);
-      phrase = first + " and " + second;
-    }
-    for (var i = 0; i < this.existentArray.length - 1; i++) {
-      phrase += this.existentArray[i].getPossessiveAdj(spin, ev) + ", ";
-    }
-    phrase += "and " + this.existentArray[this.existentArray.length - 1].getPossessiveAdj(spin, ev);
-    return phrase;
-  }
-  getGroupingPhrase(role, spin, ev) {
-    var partPhrase = (this.existentArray.length == 1) ? "part" : "parts";
-    var group = `the ${partPhrase} of ${this.existentArray[0].parent.getNounPhrase(role, spin, ev)}`;
-    return group;
   }
   checkGroupings() {
     for (let i = 0; i < this.existentArray.length; i++) { //check for nulls
@@ -212,7 +116,7 @@ class ValueError extends Error {
 }
 
 class Actor extends Existent {
-  constructor(spatialRelation, parent, gender, age = "adult", number = 1) {
+  constructor(spatialRelation, parent, gender, age = "adult") {
     super();
     this.spatial = spatialRelation;
     this.parent = parent;
@@ -228,15 +132,6 @@ class Actor extends Existent {
       throw new ValueError("Given " + age + "; Supported ages are: " +
         genders.join(", ") + ".");
     }
-    if (number == "singular") {
-      number = 1;
-    } else if (number == "plural") {
-      number = 2;
-    } else if (number != 1 && number != 2) {
-      throw new ValueError("Given " + number + "; Number must be singular " +
-        "or plural. You can also use numbers 1 and 2.");
-    }
-    this.number = number;
   }
 }
 
@@ -266,17 +161,17 @@ var evSeq = [];
 var lastNarratedTag = "";
 
 class Event {
-  constructor(agent, object, temporalRelation, extra) {
+  constructor(agent, direct, temporalRelation, indirect) {
     this.agent = Array.isArray(agent) ? new ExistentGroup(agent) : agent;
     this.continuous = false;
-    if (object) {
-      this.object = Array.isArray(object) ? new ExistentGroup(object) : object;
+    if (direct) {
+      this.direct = Array.isArray(direct) ? new ExistentGroup(direct) : direct;
     }
     if (temporalRelation) {
       this.temporal = temporalRelation;
     }
-    if (extra) {
-      this.extra = Array.isArray(extra) ? new ExistentGroup(extra) : extra;
+    if (indirect) {
+      this.indirect = Array.isArray(indirect) ? new ExistentGroup(indirect) : indirect;
     }
     this.start = clock;
     clock += 10;
@@ -285,14 +180,7 @@ class Event {
     evSeq.push(this);
   }
   hasParticipant(actor) {
-    return ((this.agent === actor) || (this.object === actor) || (this.extra === actor));
-  }
-  hasObject(object) {
-    if (this.hasOwnProperty(object)) {
-      return (this.object.name == object.name);
-    } else {
-      return false;
-    }
+    return ((this.agent === actor) || (this.direct === actor) || (this.indirect === actor));
   }
   reconfigures(ex, property, val_1, val_2) {
     var alteration = {
@@ -317,20 +205,45 @@ class Names {
   }
 }
 
-class Representations {
+class VerbPh {
   constructor(phrase) {
     if (phrase === null) {
-      this.phrase = "act";
+      this.verb_phrase = "act";
     } else {
-      this.phrase = phrase;
+      this.verb_phrase = phrase;
     }
   }
 }
 
 class Narrator {
-  constructor(names, representations) {
+  constructor(world, names, vp) {
     this.names = names;
-    this.representations = representations;
+    this.base_vp = {};
+    this.representation = {};
+    for (let v in vp) {
+      this.base_vp[v] = vp[v].verb_phrase;
+      this.representation[v] = {};
+      this.representation[v].template = "[SUB] [VP]";
+      if (ev[v].hasOwnProperty("direct")) {
+        this.representation[v].template += " [DO]";
+      }
+      if (ev[v].hasOwnProperty("temporal")) {
+        this.representation[v].template += " [TMP]";
+      }
+      if (ev[v].hasOwnProperty("indirect")) {
+        this.representation[v].template += " [IO]";
+      }
+      this.representation[v].subject = world.ev[v].agent.tag;
+      if (world.ev[v].hasOwnProperty("direct")) {
+        this.representation[v].direct = world.ev[v].direct.tag;
+      }
+      if (world.ev[v].hasOwnProperty("temporal")) {
+        this.representation[v].temporal = world.ev[v].temporal;
+      }
+      if (world.ev[v].hasOwnProperty("indirect")) {
+        this.representation[v].indirect = world.ev[v].indirect.tag;
+      }
+    }
     this.givens = new Set();
   }
   name(exTag) {
@@ -342,8 +255,20 @@ class Narrator {
     }
   }
   represent(evTag) {
-    let agent = world.ev[evTag].agent;
-    return capitalize(this.name(agent.tag) + " acts.");
+    let result = this.representation[evTag].template;
+    result = result.replace("\[SUB\]", this.name(world.ev[evTag].agent.tag));
+    result = result.replace("\[VP\]", this.base_vp[evTag] + "s");
+    if (world.ev[evTag].hasOwnProperty("direct")) {
+      result = result.replace("\[DO\]", this.name(world.ev[evTag].direct.tag));
+    }
+    if (ev[evTag].hasOwnProperty("temporal")) { // FIXME
+      result = result.replace("\[TMP\]", world.ev[evTag].temporal);
+    }
+    if (ev[evTag].hasOwnProperty("indirect")) {
+      result = result.replace("\[IO\]", this.name(world.ev[evTag].indirect.tag));
+    }
+    result = result += ".";
+    return capitalize(result);
   }
 }
 
@@ -369,7 +294,7 @@ class World {
   }
 }
 
-function narrate(title, told_by, world, spin, names, representations) {
+function narrate(title, told_by, world, spin, names, reps) {
   var element = document.getElementById("narrative"),
     h1 = document.createElement("h1"),
     h2 = document.createElement("h2"),
@@ -377,7 +302,7 @@ function narrate(title, told_by, world, spin, names, representations) {
     sentence, fix,
     oldReferring, exp = 0,
     i, leftPart, narr;
-  narr = new Narrator(names, representations);
+  narr = new Narrator(world, names, reps);
   document.title = title;
   h1.innerHTML = title;
   element.appendChild(h1);
@@ -427,7 +352,8 @@ function narrate(title, told_by, world, spin, names, representations) {
       current.start < world.ev[lastNarratedTag].start) {
       if (spin.time_markers) {
         sentence += choice(["Before that, ", "Previously, ", "Earlier, ",
-          "Beforehand, "]);
+          "Beforehand, "
+        ]);
         fix = false;
       } else {
         fix = true;
@@ -462,21 +388,13 @@ function narrate(title, told_by, world, spin, names, representations) {
   element.appendChild(div);
 }
 
-// ### ARTICLES ###
-
-const singularArticles = ["a", "an", "one"];
-const pluralArticles = ["several", "many"];
-// "the" or "some" can be used with singular or plural NPs
-
-
 // ### PREPOSITIONS ###
 
 var spatial = {
   in: "in",
-  of: "possessed by", // Not exactly spatial, but it's here for now
+  held_by: "held by",
   on: "on",
-  partOf: "a part of",
-  featureOf: "a feature of"
+  worn_by: "worn by"
 };
 
 var temporal = {
@@ -499,6 +417,6 @@ var temporal = {
 
 // ### UTILITY ###
 
-function capitalize (string) {
+function capitalize(string) {
   return string[0].toUpperCase() + string.slice(1);
 }

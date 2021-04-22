@@ -10,7 +10,7 @@
 
 var spin = {};
 
-let told_by = "a casual and very oblique narrator";
+let told_by = "a casual, very oblique narrator";
 
 names = {};
 
@@ -30,6 +30,29 @@ names.mask = new Names("a Dora the Explorer mask", "the mask");
 names.fake_gun = new Names("a gun-shaped object", "the fake gun");
 names.pistol = new Names("a pistol");
 
-representations = {};
+vp = {};
 
-function run() { narrate(title, told_by, world, spin, names, representations); }
+vp.read = new VerbPh("read");
+vp.snooze = new VerbPh("snooze");
+vp.reread = new VerbPh("reread");
+vp.cover_face = new VerbPh("put on");
+vp.type = new VerbPh("type");
+vp.play = new VerbPh("play Solitaire");
+vp.begin_robbing = new VerbPh("pretend to rob");
+vp.wave = new VerbPh("wave to");
+vp.threaten = new VerbPh("threaten");
+vp.laugh = new VerbPh("laugh");
+vp.wake = new VerbPh("wake up");
+vp.see_threat = new VerbPh("see");
+vp.leave_post = new VerbPh("leave");
+vp.grab_fake = new VerbPh("bag");
+vp.turn = new VerbPh("turn");
+vp.shoot_1 = new VerbPh("shoot");
+vp.shoot_2 = new VerbPh("shoot");
+vp.fall = new VerbPh("fall");
+vp.die = new VerbPh("die");
+vp.drop_gun = new VerbPh("drop");
+vp.cry = new VerbPh("cry");
+vp.stare = new VerbPh("stare");
+
+function run() { narrate(title, told_by, world, spin, names, vp); }

@@ -32,7 +32,7 @@ thing.pistol = new Thing(spatial.of, actor.guard, actor.guard);
 
 ev.read = new Event(actor.teller, thing.slip);
 ev.snooze = new Event(actor.guard);
-ev.count = new Event(actor.teller, thing.slip);
+ev.reread = new Event(actor.teller, thing.slip);
 ev.cover_face = new Event(actor.robber, thing.mask);
 ev.type = new Event(actor.teller);
 ev.play = new Event(actor.teller);
