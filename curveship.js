@@ -228,7 +228,7 @@ class Narrator {
         this.representation[v].template += " [DO]";
       }
       if (ev[v].hasOwnProperty("temporal")) {
-        this.representation[v].template += " [TMP]";
+        this.representation[v].template += " [PREP]";
       }
       if (ev[v].hasOwnProperty("indirect")) {
         this.representation[v].template += " [IO]";
@@ -261,8 +261,8 @@ class Narrator {
     if (world.ev[evTag].hasOwnProperty("direct")) {
       result = result.replace("\[DO\]", this.name(world.ev[evTag].direct.tag));
     }
-    if (ev[evTag].hasOwnProperty("temporal")) { // FIXME
-      result = result.replace("\[TMP\]", world.ev[evTag].temporal);
+    if (ev[evTag].hasOwnProperty("temporal")) {
+      result = result.replace("\[PREP\]", temporal[world.ev[evTag].temporal]);
     }
     if (ev[evTag].hasOwnProperty("indirect")) {
       result = result.replace("\[IO\]", this.name(world.ev[evTag].indirect.tag));
@@ -390,14 +390,14 @@ function narrate(title, told_by, world, spin, names, reps) {
 
 // ### PREPOSITIONS ###
 
-var spatial = {
+var spatial = { // Maps an abstract spatial relationship to a preposition
   in: "in",
   held_by: "held by",
   on: "on",
   worn_by: "worn by"
 };
 
-var temporal = {
+var temporal = { // Maps an abstract temporal relationship to a preposition
   at: "at",
   by: "by",
   down: "down",
@@ -410,7 +410,7 @@ var temporal = {
   through: "through",
   to: "to",
   up: "up",
-  upTo: "up to",
+  up_to: "up to",
   using: "using",
   with: "with"
 };
