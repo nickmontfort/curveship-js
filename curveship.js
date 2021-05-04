@@ -196,17 +196,30 @@ class Event {
 var ev = {};
 
 class Names {
-  constructor(initial, subsequent) {
+  constructor(initial, subsequent = null, pronouns = null) {
     this.initial = initial;
     if (subsequent === null) {
       subsequent = initial;
     }
     this.subsequent = subsequent;
+    this.pronouns = pronouns;
+  }
+}
+
+class ProperNames extends Names {
+  constructor(given, family, pronouns, common = null, title = null) {
+    let initial = (title !== null ? title + " " : "")  + given + " " + family;
+    let subsequent = title !== null ? title + " " + family : given;
+    super(initial, subsequent, pronouns);
+    this.title = title;
+    this.given = given;
+    this.family = family;
+    this.common = common;
   }
 }
 
 class VerbPh {
-  constructor(phrase) {
+  constructor(phrase = null) {
     if (phrase === null) {
       this.verb_phrase = "act";
     } else {
@@ -246,7 +259,48 @@ class Narrator {
     }
     this.givens = new Set();
   }
-  name(exTag) {
+  pronominalization(ex, role) {
+    let exTag = ex.tag;
+    var person = 3;
+    if (this.i === exTag) person = 1; // TODO connect these to a spin
+    if (this.you === exTag) person = 2;
+    /** TODO restore reflexive
+     * if (ev.agent.includes(this)) {
+     *   if (role === "object") return ["reflexive", person];
+     * } 
+     */
+    if (person != 3) return [role, person];
+    // if (this.owner) return false; TODO with possessives
+    if (this.givens.has(exTag) && typeof this.lastNarratedEvent !== "undefined" && this.lastNarratedEvent.hasParticipant(ex)) {
+      return [role, 3];
+    }
+    return false;
+  }
+  name(ex, role) {
+    let exTag = ex.tag;
+    if (this.names[exTag].pronouns !== null || ex.hasOwnProperty("gender")) {
+      let pronouns = this.names[exTag].pronouns !== null ? this.names[exTag].pronouns : pronoun[ex.gender];
+      let pronominalize = this.pronominalization(ex, role);
+      if (pronominalize) {
+        switch (pronominalize[0]) {
+          case "subject": {
+            return pronouns.getSubject(pronominalize[1], ex.number);
+          }
+          case "object": {
+            return pronouns.getObject(pronominalize[1], ex.number);
+          }
+          case "reflexive": {
+            return pronouns.getReflexive(pronominalize[1], ex.number);
+          }
+        }
+      }
+    }
+    /** TODO make possessive pronouns work if (ex.owner) {
+      if (typeof this.lastNarratedEvent !== "undefined" && this.lastNarratedEvent.hasObject(this)) {
+         return this.names[ex.owner.tag].pronouns.getPossessivePronoun(spin, ev);
+      }
+      return this.names[ex.owner.tag].pronouns.getPossessivePronoun(spin, ev);
+    } */
     if (this.givens.has(exTag)) {
       return this.names[exTag].subsequent;
     } else {
@@ -256,18 +310,19 @@ class Narrator {
   }
   represent(evTag) {
     let result = this.representation[evTag].template;
-    result = result.replace("\[SUB\]", this.name(world.ev[evTag].agent.tag));
+    result = result.replace("\[SUB\]", this.name(world.ev[evTag].agent, "subject"));
     result = result.replace("\[VP\]", this.base_vp[evTag] + "s");
     if (world.ev[evTag].hasOwnProperty("direct")) {
-      result = result.replace("\[DO\]", this.name(world.ev[evTag].direct.tag));
+      result = result.replace("\[DO\]", this.name(world.ev[evTag].direct, "object"));
     }
     if (ev[evTag].hasOwnProperty("temporal")) {
       result = result.replace("\[PREP\]", temporal[world.ev[evTag].temporal]);
     }
     if (ev[evTag].hasOwnProperty("indirect")) {
-      result = result.replace("\[IO\]", this.name(world.ev[evTag].indirect.tag));
+      result = result.replace("\[IO\]", this.name(world.ev[evTag].indirect, "object"));
     }
     result = result += ".";
+    this.lastNarratedEvent = world.ev[evTag];
     return capitalize(result);
   }
 }
@@ -420,3 +475,56 @@ var temporal = { // Maps an abstract temporal relationship to a preposition
 function capitalize(string) {
   return string[0].toUpperCase() + string.slice(1);
 }
+
+// ### PRONOUNS ###
+// Need to be defined here so Narrator can use them by default
+// TODO proposal: a PronounSet is just a set of six words, and we 
+//      since the 'I' of a story is defined by the narrator, we can
+//      just put the first person pronounset into their Names objec
+
+class PronounSet {
+  constructor(thirdPersonSingular) {
+    this.pronoun = [];
+    this.pronoun.push([
+      [],
+      [],
+      [],
+    ]); // There is no 0th person or number
+    this.pronoun.push([
+      [],
+      ["I", "me", "my", "mine", "myself"],
+      ["we", "us", "our", "ours", "ourselves"]
+    ]);
+    this.pronoun.push([
+      [],
+      ["you", "you", "your", "yours", "yourself"],
+      ["you", "you", "your", "yours", "yourselves"]
+    ]);
+    this.pronoun.push([
+      [], thirdPersonSingular,
+      ["they", "them", "their", "theirs", "themselves"]
+    ]);
+  }
+  getSubject(person, number = 1) {
+    return this.pronoun[person][number][0];
+  }
+  getObject(person, number = 1) {
+    return this.pronoun[person][number][1];
+  }
+  getPossessiveAdj(person, number = 1) {
+    return this.pronoun[person][number][2];
+  }
+  getPossessivePronoun(person, number = 1) {
+    return this.pronoun[person][number][3];
+  }
+  getReflexive(person, number = 1) {
+    return this.pronoun[person][number][4];
+  }
+}
+
+var pronoun = {};
+pronoun.female = new PronounSet(["she", "her", "her", "hers", "herself"]);
+pronoun.male = new PronounSet(["he", "him", "his", "his", "himself"]);
+pronoun.neuter = new PronounSet(["it", "it", "its", "its", "itself"]);
+pronoun.unknownBinary = new PronounSet(["he or she", "him or her", "his or her", "his or hers", "himself or herself"]);
+pronoun.nonbinary = new PronounSet(["they", "them", "their", "theirs", "themself"]); // If you prefer, you can make the last entry "themselves"
