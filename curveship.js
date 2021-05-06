@@ -65,6 +65,15 @@ class Existent {
     if (new.target === Existent) {
       throw new TypeError("Can't directly instantiate Existent");
     }
+    this.class = null;
+  }
+
+  setClass(obj) { //TODO: allow for more than one class per object?
+    this.class = obj;
+  }
+
+  getClass() {
+    return this.class;
   }
 
   includes(obj) {
@@ -83,24 +92,14 @@ class ExistentGroup extends Existent {
     this.existentArray = existentArray;
     this.number = existentArray.length;
   }
+  length() {
+    return this.existentArray.length
+  }
+  get(ind) {
+    return this.existentArray[ind];
+  }
   includes(obj) {
     return this.existentArray.includes(obj);
-  }
-  checkGroupings() {
-    for (let i = 0; i < this.existentArray.length; i++) { //check for nulls
-      let elem = this.existentArray[i];
-      if (elem.spatialRelation != spatial.partOf || elem.parent == null) {
-        return false;
-      }
-    }
-    for (let i = 0; i < this.existentArray.length - 1; i++) { //check for nulls
-      let elem = this.existentArray[i];
-      let next = this.existentArray[i + 1];
-      if (elem.parent != next.parent) {
-        return false;
-      }
-    }
-    return true;
   }
 }
 
@@ -112,6 +111,25 @@ ages = ["child", "adult"];
 class ValueError extends Error {
   constructor(message) {
     super(message);
+  }
+}
+
+class Category {
+  constructor(name, ...args) {
+    this.name = name;
+    this.properties = new Map()
+    for (var existent of args) {
+      existent.setClass(this);
+    }
+  }
+  has(property) { //TODO: allow mappings of more than property: true/false
+    this.properties.set(property, true);
+  }
+  getProperties() {
+    return this.properties;
+  }
+  name() {
+    return this.name;
   }
 }
 
@@ -157,6 +175,7 @@ class Thing extends Existent {
 }
 
 var thing = {};
+var category = {};
 var evSeq = [];
 var lastNarratedTag = "";
 
@@ -277,6 +296,9 @@ class Narrator {
     return false;
   }
   name(ex, role) {
+    if (ex instanceof ExistentGroup) {
+      return this.group(ex, role)
+    }
     let exTag = ex.tag;
     if (this.names[exTag].pronouns !== null || ex.hasOwnProperty("gender")) {
       let pronouns = this.names[exTag].pronouns !== null ? this.names[exTag].pronouns : pronoun[ex.gender];
@@ -308,6 +330,41 @@ class Narrator {
       return this.names[exTag].initial;
     }
   }
+
+  findSimilarities(ex) {
+    var initClass = ex.get(0).getClass();
+    var isAllSameClass = ex.existentArray.every(item => item.getClass() === initClass); //TODO: maybe don't access array directly
+    if (isAllSameClass) {
+      return "the " + initClass.name;
+    }
+    var initProperties = initClass.getProperties();
+    for (var property of initProperties.keys()) {
+      var shareAllProperties = ex.existentArray.every(item => item.getClass().getProperties().has(property));
+      if (shareAllProperties) {
+        return "the objects with " + property;
+      }
+    }
+    return null;
+  }
+
+  group(ex, role) {
+    var groupBySimilarity = true;
+    if (groupBySimilarity) {
+      var similarities = this.findSimilarities(ex);
+      if (similarities != null) {
+        return similarities;
+      }
+    }
+    if (ex.length() == 2) {
+      return this.name(ex.get(0), role) + " and " + this.name(ex.get(1), role);
+    }
+    let result = "";
+    for (var i = 0; i < ex.length() - 1; i++) {
+      result += this.name(ex.get(i), role) + ", ";
+    }
+    return result + " and " + this.name(ex.get(ex.length() - 1), role);
+  }
+
   represent(evTag) {
     let result = this.representation[evTag].template;
     result = result.replace("\[SUB\]", this.name(world.ev[evTag].agent, "subject"));
