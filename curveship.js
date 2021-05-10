@@ -65,7 +65,7 @@ class Existent {
     if (new.target === Existent) {
       throw new TypeError("Can't directly instantiate Existent");
     }
-    this.class = null;
+    this.class = category.existent;
   }
 
   setClass(obj) { //TODO: allow for more than one class per object?
@@ -93,7 +93,7 @@ class ExistentGroup extends Existent {
     this.number = existentArray.length;
   }
   length() {
-    return this.existentArray.length
+    return this.existentArray.length;
   }
   get(ind) {
     return this.existentArray[ind];
@@ -115,9 +115,11 @@ class ValueError extends Error {
 }
 
 class Category {
-  constructor(name, ...args) {
-    this.name = name;
-    this.properties = new Map()
+  constructor(parent = category.existent) {
+    this.parent = parent;
+    this.properties = new Map();
+  }
+  addExistents(...args){
     for (var existent of args) {
       existent.setClass(this);
     }
@@ -126,12 +128,17 @@ class Category {
     this.properties.set(property, true);
   }
   getProperties() {
+    if (this.parent != null) return new Map([...this.properties, ...this.parent.getProperties()]);
     return this.properties;
   }
   name() {
     return this.name;
   }
 }
+
+var category = {
+  existent: new Category(null)
+};
 
 class Actor extends Existent {
   constructor(spatialRelation, parent, gender, age = "adult") {
@@ -175,7 +182,6 @@ class Thing extends Existent {
 }
 
 var thing = {};
-var category = {};
 var evSeq = [];
 var lastNarratedTag = "";
 
@@ -250,6 +256,7 @@ class VerbPh {
 class Narrator {
   constructor(world, names, vp) {
     this.names = names;
+    if (this.names.existent === undefined) this.names.existent = new Names("the entities");
     this.base_vp = {};
     this.representation = {};
     for (let v in vp) {
@@ -297,7 +304,7 @@ class Narrator {
   }
   name(ex, role) {
     if (ex instanceof ExistentGroup) {
-      return this.group(ex, role)
+      return this.group(ex, role);
     }
     let exTag = ex.tag;
     if (this.names[exTag].pronouns !== null || ex.hasOwnProperty("gender")) {
@@ -332,11 +339,31 @@ class Narrator {
   }
 
   findSimilarities(ex) {
-    var initClass = ex.get(0).getClass();
-    var isAllSameClass = ex.existentArray.every(item => item.getClass() === initClass); //TODO: maybe don't access array directly
-    if (isAllSameClass) {
-      return "the " + initClass.name;
+    var exCategories = [];
+    for (var item of ex.existentArray) {
+      var basicClass = item.getClass();
+      var superClasses = [];
+      while (basicClass !== category.existent) { // TODO you can chose to stop at some level of the tree using this predicate
+        superClasses.push(basicClass);
+        basicClass = basicClass.parent;
+      }
+      superClasses.reverse();
+      exCategories.push(superClasses);
     }
+    let minLength = Math.min(...exCategories.map(item => item.length));
+    var superClass = null;
+    for(var i = 0; i < minLength; i++) {
+      var classAtI = exCategories[0][i];
+      if(exCategories.every(item => item[i] === classAtI)) {
+         superClass = classAtI;
+      } else {
+        break;
+      }
+    }
+
+    if(superClass !== null) return this.name(superClass, "category");
+    
+    var initClass = ex.existentArray[0].getClass();
     var initProperties = initClass.getProperties();
     for (var property of initProperties.keys()) {
       var shareAllProperties = ex.existentArray.every(item => item.getClass().getProperties().has(property));
@@ -393,11 +420,13 @@ function addTags(object) {
 }
 
 class World {
-  constructor(places, actors, things, events) {
+  constructor(places, actors, categories, things, events) {
     addTags(places);
     this.place = places;
     addTags(actors);
     this.actor = actors;
+    addTags(categories);
+    this.categories = categories;
     addTags(things);
     this.thing = things;
     addTags(events);

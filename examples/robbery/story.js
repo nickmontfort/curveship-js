@@ -54,4 +54,4 @@ ev.drop_gun.reconfigures(thing.pistol, "parent", actor.guard, actor.cosmos);
 ev.cry = new Event(actor.teller);
 ev.stare = new Event(actor.guard, thing.pistol);
 
-var world = new World(place, actor, thing, ev);
+var world = new World(place, actor, category, thing, ev);
