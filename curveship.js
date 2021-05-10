@@ -115,8 +115,7 @@ class ValueError extends Error {
 }
 
 class Category {
-  constructor(name, parent = category.existent) { // TODO name categories in narrator, *not* in initializer
-    this.name = name;
+  constructor(parent = category.existent) {
     this.parent = parent;
     this.properties = new Map();
   }
@@ -138,7 +137,7 @@ class Category {
 }
 
 var category = {
-  existent: new Category("entities", null)
+  existent: new Category(null)
 };
 
 class Actor extends Existent {
@@ -257,6 +256,7 @@ class VerbPh {
 class Narrator {
   constructor(world, names, vp) {
     this.names = names;
+    if (this.names.existent === undefined) this.names.existent = new Names("the entities");
     this.base_vp = {};
     this.representation = {};
     for (let v in vp) {
@@ -343,7 +343,7 @@ class Narrator {
     for (var item of ex.existentArray) {
       var basicClass = item.getClass();
       var superClasses = [];
-      while (basicClass !== null) { // TODO you can chose to stop at some level of the tree using this predicate
+      while (basicClass !== category.existent) { // TODO you can chose to stop at some level of the tree using this predicate
         superClasses.push(basicClass);
         basicClass = basicClass.parent;
       }
@@ -361,7 +361,7 @@ class Narrator {
       }
     }
 
-    if(superClass !== null) return "the " + superClass.name;
+    if(superClass !== null) return this.name(superClass, "category");
     
     var initClass = ex.existentArray[0].getClass();
     var initProperties = initClass.getProperties();
@@ -420,11 +420,13 @@ function addTags(object) {
 }
 
 class World {
-  constructor(places, actors, things, events) {
+  constructor(places, actors, categories, things, events) {
     addTags(places);
     this.place = places;
     addTags(actors);
     this.actor = actors;
+    addTags(categories);
+    this.categories = categories;
     addTags(things);
     this.thing = things;
     addTags(events);
