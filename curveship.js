@@ -340,6 +340,11 @@ class Narrator {
 
   findSimilarities(ex) {
     var exCategories = [];
+    var initParent = ex.existentArray[0].parent;
+    var isAllParts = ex.existentArray.every(item => item.spatialRelation == spatial.part_of && item.parent == initParent);
+    if (isAllParts) {
+      return (ex.length() == 1) ? "the part of the " + initParent.tag : " the parts of the " + initParent.tag;
+    }
     for (var item of ex.existentArray) {
       var basicClass = item.getClass();
       var superClasses = [];
@@ -535,7 +540,8 @@ var spatial = { // Maps an abstract spatial relationship to a preposition
   in: "in",
   held_by: "held by",
   on: "on",
-  worn_by: "worn by"
+  worn_by: "worn by",
+  part_of: "part of"
 };
 
 var temporal = { // Maps an abstract temporal relationship to a preposition
