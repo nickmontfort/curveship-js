@@ -174,10 +174,17 @@ class Place extends Existent {
 var place = {};
 
 class Thing extends Existent {
-  constructor(spatialRelation = "in", parent = actor.cosmos) {
+  constructor(spatialRelation = "in", spatialParent = actor.cosmos) {
     super();
     this.spatialRelation = spatialRelation;
-    this.parent = parent;
+    this.spatialParent = spatialParent;
+    this.parent = actor.cosmos;
+    console.log(this.parent);
+  }
+  setParts(parts) {
+    for (var existent of parts) {
+      existent.parent = this;
+    }
   }
 }
 
@@ -338,15 +345,10 @@ class Narrator {
     }
   }
 
-  findSimilarities(ex) {
+  traverseRelationTree(relations) {
     var exCategories = [];
-    var initParent = ex.existentArray[0].parent;
-    var isAllParts = ex.existentArray.every(item => item.spatialRelation == spatial.part_of && item.parent == initParent);
-    if (isAllParts) {
-      return (ex.length() == 1) ? "the part of the " + initParent.tag : " the parts of the " + initParent.tag;
-    }
-    for (var item of ex.existentArray) {
-      var basicClass = item.getClass();
+    for (var relation of relations) {
+      var basicClass = relation;
       var superClasses = [];
       while (basicClass !== category.existent) { // TODO you can chose to stop at some level of the tree using this predicate
         superClasses.push(basicClass);
@@ -365,6 +367,23 @@ class Narrator {
         break;
       }
     }
+    return null;
+  }
+
+  findSimilarities(ex) {
+    var exCategories = [];
+    var initParent = ex.existentArray[0].parent;
+    var isAllParts = ex.existentArray.every(item => item.parent == initParent);
+    if (isAllParts) {
+      return (ex.length() == 1) ? "the part of the " + initParent.tag : " the parts of the " + initParent.tag;
+    }
+    classes = []
+    //parents = []
+    for (elem of ex.existentArray) {
+      classes.push(elem.getClass());
+      //relations.push(elem);
+    }
+    superClass = traverseRelationTree(classes);
 
     if(superClass !== null) return this.name(superClass, "category");
     
@@ -543,6 +562,10 @@ var spatial = { // Maps an abstract spatial relationship to a preposition
   worn_by: "worn by",
   part_of: "part of"
 };
+
+var relation = {
+  part_of: "part of"
+}
 
 var temporal = { // Maps an abstract temporal relationship to a preposition
   at: "at",
