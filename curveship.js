@@ -178,7 +178,7 @@ class Thing extends Existent {
     super();
     this.spatialRelation = spatialRelation;
     this.spatialParent = spatialParent;
-    this.parent = actor.cosmos;
+    this.parent = actor.cosmos; //note that this is the "part of" parent — probably not the best naming, but used now b/c of traverseRelationTree refactoring
   }
   setParts(parts) {
     for (var existent of parts) {
@@ -393,8 +393,8 @@ class Narrator {
 
   findSimilarities(ex) {
     var exCategories = [];
-    var classes = []
-    var parents = []
+    var classes = [];
+    var parents = [];
     for (var elem of ex.existentArray) {
       classes.push(elem.getClass());
       parents.push(elem);
