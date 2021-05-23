@@ -235,6 +235,14 @@ class Names {
     }
     this.subsequent = subsequent;
     this.pronouns = pronouns;
+    this.nameByClass = false;
+  }
+}
+
+class NameByClass extends Names {
+  constructor() {
+    super();
+    this.nameByClass = true;
   }
 }
 
@@ -247,6 +255,16 @@ class ProperNames extends Names {
     this.given = given;
     this.family = family;
     this.common = common;
+  }
+}
+
+class CategoryNames extends Names {
+  constructor(name, proper = null) {
+    let initial = "some " + (proper !== null ? proper + " " : "") + name + "s";
+    let subsequent = "the " + (proper !== null ? proper + " " : "") + name + "s";
+    super(initial, subsequent, pronoun.neuter);
+    this.name = (proper !== null ? proper + " " : "") + name;
+    this.proper = proper;
   }
 }
 
@@ -263,7 +281,7 @@ class VerbPh {
 class Narrator {
   constructor(world, names, vp) {
     this.names = names;
-    if (this.names.existent === undefined) this.names.existent = new Names("the entities");
+    if (this.names.existent === undefined) this.names.existent = new CategoryNames("entity");
     this.base_vp = {};
     this.representation = {};
     for (let v in vp) {
@@ -309,11 +327,16 @@ class Narrator {
     }
     return false;
   }
-  name(ex, role) {
+  name(ex, role, exTag = null) {
     if (ex instanceof ExistentGroup) {
       return this.group(ex, role);
     }
-    let exTag = ex.tag;
+    exTag = exTag == null ? ex.tag  : exTag;
+    if (this.names[exTag].nameByClass) {
+      let className = this.names[ex.getClass().tag];
+      console.log(className);
+      this.names[exTag] = new Names("a " + className.name, "the " + className.name);
+    }
     if (this.names[exTag].pronouns !== null || ex.hasOwnProperty("gender")) {
       let pronouns = this.names[exTag].pronouns !== null ? this.names[exTag].pronouns : pronoun[ex.gender];
       let pronominalize = this.pronominalization(ex, role);
@@ -350,7 +373,7 @@ class Narrator {
     for (var relation of relations) {
       var basicClass = relation;
       var superClasses = [];
-      while (basicClass !== category.existent) { // TODO you can chose to stop at some level of the tree using this predicate
+      while (basicClass !== null) { // TODO you can chose to stop at some level of the tree using this predicate
         superClasses.push(basicClass);
         basicClass = basicClass.parent;
       }
@@ -385,7 +408,7 @@ class Narrator {
     }
     superClass = traverseRelationTree(classes);
 
-    if(superClass !== null) return this.name(superClass, "category");
+    if(superClass !== null) return this.name(superClass, "category", ex.tag);
     
     var initClass = ex.existentArray[0].getClass();
     var initProperties = initClass.getProperties();
