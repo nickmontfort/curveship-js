@@ -174,10 +174,16 @@ class Place extends Existent {
 var place = {};
 
 class Thing extends Existent {
-  constructor(spatialRelation = "in", parent = actor.cosmos) {
+  constructor(spatialRelation = "in", spatialParent = actor.cosmos) {
     super();
     this.spatialRelation = spatialRelation;
-    this.parent = parent;
+    this.spatialParent = spatialParent;
+    this.parent = actor.cosmos; //note that this is the "part of" parent — probably not the best naming, but used now b/c of traverseRelationTree refactoring
+  }
+  setParts(parts) {
+    for (var existent of parts) {
+      existent.parent = this;
+    }
   }
 }
 
@@ -327,7 +333,6 @@ class Narrator {
     exTag = exTag == null ? ex.tag  : exTag;
     if (this.names[exTag].nameByClass) {
       let className = this.names[ex.getClass().tag];
-      console.log(className);
       this.names[exTag] = new Names("a " + className.name, "the " + className.name);
     }
     if (this.names[exTag].pronouns !== null || ex.hasOwnProperty("gender")) {
@@ -361,15 +366,10 @@ class Narrator {
     }
   }
 
-  findSimilarities(ex) {
+  traverseRelationTree(relations) {
     var exCategories = [];
-    var initParent = ex.existentArray[0].parent;
-    var isAllParts = ex.existentArray.every(item => item.spatialRelation == spatial.part_of && item.parent == initParent);
-    if (isAllParts) {
-      return (ex.length() == 1) ? "the part of the " + initParent.tag : " the parts of the " + initParent.tag;
-    }
-    for (var item of ex.existentArray) {
-      var basicClass = item.getClass();
+    for (var relation of relations) {
+      var basicClass = relation;
       var superClasses = [];
       while (basicClass !== null) { // TODO you can chose to stop at some level of the tree using this predicate
         superClasses.push(basicClass);
@@ -388,10 +388,24 @@ class Narrator {
         break;
       }
     }
+    return superClass;
+  }
 
+  findSimilarities(ex) {
+    var exCategories = [];
+    var classes = [];
+    var parents = [];
+    for (var elem of ex.existentArray) {
+      classes.push(elem.getClass());
+      parents.push(elem);
+    }
+    var superPart = this.traverseRelationTree(parents); //check for object relation (eg "part of")
+    var superClass = this.traverseRelationTree(classes); //check for category relations
+
+    if(superPart != actor.cosmos) return (ex.length() == 1) ? "the part of the " + superPart.tag : " the parts of the " + superPart.tag;
     if(superClass !== null) return this.name(superClass, "category", ex.tag);
     
-    var initClass = ex.existentArray[0].getClass();
+    var initClass = ex.existentArray[0].getClass(); //check for property relations
     var initProperties = initClass.getProperties();
     for (var property of initProperties.keys()) {
       var shareAllProperties = ex.existentArray.every(item => item.getClass().getProperties().has(property));
@@ -399,6 +413,7 @@ class Narrator {
         return "the objects with " + property;
       }
     }
+
     return null;
   }
 
@@ -566,6 +581,10 @@ var spatial = { // Maps an abstract spatial relationship to a preposition
   worn_by: "worn by",
   part_of: "part of"
 };
+
+var relation = {
+  part_of: "part of"
+}
 
 var temporal = { // Maps an abstract temporal relationship to a preposition
   at: "at",
