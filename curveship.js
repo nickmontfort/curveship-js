@@ -179,10 +179,11 @@ class Thing extends Existent {
     this.spatialRelation = spatialRelation;
     this.spatialParent = spatialParent;
     this.parent = actor.cosmos;
-    console.log(this.parent);
   }
   setParts(parts) {
+    console.log(parts);
     for (var existent of parts) {
+      console.log(existent);
       existent.parent = this;
     }
   }
@@ -334,7 +335,7 @@ class Narrator {
     exTag = exTag == null ? ex.tag  : exTag;
     if (this.names[exTag].nameByClass) {
       let className = this.names[ex.getClass().tag];
-      console.log(className);
+      //console.log(className);
       this.names[exTag] = new Names("a " + className.name, "the " + className.name);
     }
     if (this.names[exTag].pronouns !== null || ex.hasOwnProperty("gender")) {
@@ -380,6 +381,7 @@ class Narrator {
       superClasses.reverse();
       exCategories.push(superClasses);
     }
+    console.log(exCategories);
     let minLength = Math.min(...exCategories.map(item => item.length));
     var superClass = null;
     for(var i = 0; i < minLength; i++) {
@@ -390,24 +392,23 @@ class Narrator {
         break;
       }
     }
-    return null;
+    return superClass;
   }
 
   findSimilarities(ex) {
     var exCategories = [];
-    var initParent = ex.existentArray[0].parent;
-    var isAllParts = ex.existentArray.every(item => item.parent == initParent);
-    if (isAllParts) {
-      return (ex.length() == 1) ? "the part of the " + initParent.tag : " the parts of the " + initParent.tag;
-    }
-    classes = []
-    //parents = []
-    for (elem of ex.existentArray) {
+    var classes = []
+    var parents = []
+    for (var elem of ex.existentArray) {
       classes.push(elem.getClass());
-      //relations.push(elem);
+      parents.push(elem);
     }
-    superClass = traverseRelationTree(classes);
+    var superPart = this.traverseRelationTree(parents);
+    console.log("super part");
+    console.log(superPart);
+    var superClass = this.traverseRelationTree(classes);
 
+    if(superPart != actor.cosmos) return (ex.length() == 1) ? "the part of the " + superPart.tag : " the parts of the " + superPart.tag;
     if(superClass !== null) return this.name(superClass, "category", ex.tag);
     
     var initClass = ex.existentArray[0].getClass();
