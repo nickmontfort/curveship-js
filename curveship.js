@@ -181,9 +181,7 @@ class Thing extends Existent {
     this.parent = actor.cosmos;
   }
   setParts(parts) {
-    console.log(parts);
     for (var existent of parts) {
-      console.log(existent);
       existent.parent = this;
     }
   }
@@ -335,7 +333,6 @@ class Narrator {
     exTag = exTag == null ? ex.tag  : exTag;
     if (this.names[exTag].nameByClass) {
       let className = this.names[ex.getClass().tag];
-      //console.log(className);
       this.names[exTag] = new Names("a " + className.name, "the " + className.name);
     }
     if (this.names[exTag].pronouns !== null || ex.hasOwnProperty("gender")) {
@@ -381,7 +378,6 @@ class Narrator {
       superClasses.reverse();
       exCategories.push(superClasses);
     }
-    console.log(exCategories);
     let minLength = Math.min(...exCategories.map(item => item.length));
     var superClass = null;
     for(var i = 0; i < minLength; i++) {
@@ -403,15 +399,13 @@ class Narrator {
       classes.push(elem.getClass());
       parents.push(elem);
     }
-    var superPart = this.traverseRelationTree(parents);
-    console.log("super part");
-    console.log(superPart);
-    var superClass = this.traverseRelationTree(classes);
+    var superPart = this.traverseRelationTree(parents); //check for object relation (eg "part of")
+    var superClass = this.traverseRelationTree(classes); //check for category relations
 
     if(superPart != actor.cosmos) return (ex.length() == 1) ? "the part of the " + superPart.tag : " the parts of the " + superPart.tag;
     if(superClass !== null) return this.name(superClass, "category", ex.tag);
     
-    var initClass = ex.existentArray[0].getClass();
+    var initClass = ex.existentArray[0].getClass(); //check for property relations
     var initProperties = initClass.getProperties();
     for (var property of initProperties.keys()) {
       var shareAllProperties = ex.existentArray.every(item => item.getClass().getProperties().has(property));
@@ -419,6 +413,7 @@ class Narrator {
         return "the objects with " + property;
       }
     }
+
     return null;
   }
 
