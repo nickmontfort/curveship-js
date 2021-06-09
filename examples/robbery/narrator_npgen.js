@@ -8,9 +8,11 @@
 //
 // Adapted from the original Curveship, now called Curveship-py 0.6.
 
-var spin = {};
+var spin = {
+  // i: teller,
+};
 
-let told_by = "a casual, very oblique narrator";
+var told_by = "a casual, very oblique narrator";
 
 names = {};
 
@@ -22,7 +24,7 @@ names.street = new Names("the sidewalk outside the bank", "the sidewalk");
 names.teller = new Names("a lady working for the bank", "the bank teller");
 names.robber = new Names("a nervous man", "the pretend robber");
 // names.guard = new Names("this burly guard", "the guard", pronoun.masculine);
-names.guard = new ProperNames("John", "Smith", pronoun.male, "the guard", "Mister");
+names.guard = new ProperNames("John", "Smith", pronoun.masculine, "the guard", "Mister");
 
 names.slip = new Names("a deposit slip", "the deposit slip");
 names.fake_money = new Names("some fake money");

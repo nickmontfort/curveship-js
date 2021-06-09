@@ -38,27 +38,30 @@ function shuffle(array) {
   return array;
 }
 
+/**
+ * Specifies a new main sequence of expressions to enable
+ * ellipsis, reordering, and repetition in the telling.
+ * Examples of sequences:  1-4;7;9-12  18;2-16   2;4;6;8
+ */
 function select_main(telling, order) {
   var order_list = order.split(";");
   var indices = [];
   var new_telling = [];
-  for (var i of order_list) {
+  for (let i of order_list) {
     if (i.includes("-")) {
-      ends = i.split("-");
-      for (var j = parseInt(ends[0]); j <= parseInt(ends[1]); j++) {
+      let ends = i.split("-");
+      for (let j = parseInt(ends[0]); j <= parseInt(ends[1]); j++) {
         indices.push(j);
       }
     } else {
       indices.push(i);
     }
   }
-  for (i of indices) {
+  for (let i of indices) {
     new_telling.push(telling[i]);
   }
   return new_telling;
 }
-
-var clock = 0;
 
 class Existent {
   constructor() {
@@ -68,7 +71,7 @@ class Existent {
     this.class = category.existent;
   }
 
-  setClass(obj) { //TODO: allow for more than one class per object?
+  setClass(obj) {
     this.class = obj;
   }
 
@@ -81,7 +84,7 @@ class Existent {
   }
 
   configuredAs(spatialRelation, parent) {
-    this.spatial = spatialRelation;
+    this.spatial = spatialRelation; // TODO if used, multiple conceptual relations must be supported.
     this.parent = parent;
   }
 }
@@ -204,9 +207,6 @@ class Event {
     if (indirect) {
       this.indirect = Array.isArray(indirect) ? new ExistentGroup(indirect) : indirect;
     }
-    this.start = clock;
-    clock += 10;
-    this.duration = 5;
     this.alterations = [];
     evSeq.push(this);
   }
@@ -238,7 +238,7 @@ class Names {
   }
 }
 
-class NameByClass extends Names {
+class NameByClass extends Names { // TODO always do this if no more specific name is provided
   constructor() {
     super();
     this.nameByClass = true;
@@ -281,11 +281,14 @@ class Narrator {
   constructor(world, names, vp) {
     this.names = names;
     if (this.names.existent === undefined) this.names.existent = new CategoryNames("entity");
-    this.base_vp = {};
     this.representation = {};
     for (let v in vp) {
-      this.base_vp[v] = vp[v].verb_phrase;
       this.representation[v] = {};
+      this.representation[v].verb = vp[v].verb_phrase;
+      if (vp[v].verb_phrase.includes(' ')){
+        this.representation[v].verb = vp[v].verb_phrase.substr(0, vp[v].verb_phrase.indexOf(' '));
+        this.representation[v].rest = vp[v].verb_phrase.substr(vp[v].verb_phrase.indexOf(' '));
+      }
       this.representation[v].template = "[SUB] [VP]";
       if (ev[v].hasOwnProperty("direct")) {
         this.representation[v].template += " [DO]";
@@ -317,9 +320,9 @@ class Narrator {
     /** TODO restore reflexive
      * if (ev.agent.includes(this)) {
      *   if (role === "object") return ["reflexive", person];
-     * } 
+     * }
      */
-    if (person != 3) return [role, person];
+    if (person !== 3) return [role, person];
     // if (this.owner) return false; TODO with possessives
     if (this.givens.has(exTag) && typeof this.lastNarratedEvent !== "undefined" && this.lastNarratedEvent.hasParticipant(ex)) {
       return [role, 3];
@@ -380,9 +383,9 @@ class Narrator {
     }
     let minLength = Math.min(...exCategories.map(item => item.length));
     var superClass = null;
-    for(var i = 0; i < minLength; i++) {
+    for (var i = 0; i < minLength; i++) {
       var classAtI = exCategories[0][i];
-      if(exCategories.every(item => item[i] === classAtI)) {
+      if (exCategories.every(item => item[i] === classAtI)) {
          superClass = classAtI;
       } else {
         break;
@@ -404,11 +407,11 @@ class Narrator {
 
     if(superPart != actor.cosmos) return (ex.length() == 1) ? "the part of the " + superPart.tag : " the parts of the " + superPart.tag;
     if(superClass !== null) return this.name(superClass, "category", ex.tag);
-    
+
     var initClass = ex.existentArray[0].getClass(); //check for property relations
     var initProperties = initClass.getProperties();
     for (var property of initProperties.keys()) {
-      var shareAllProperties = ex.existentArray.every(item => item.getClass().getProperties().has(property));
+      var shareAllProperties = ex.existentArray.every (item => item.getClass().getProperties().has(property));
       if (shareAllProperties) {
         return "the objects with " + property;
       }
@@ -436,9 +439,10 @@ class Narrator {
   }
 
   represent(evTag) {
-    let result = this.representation[evTag].template;
+    var result = this.representation[evTag].template;
+    var vp = this.representation[evTag].verb + "s" + (this.representation[evTag].rest ? ' ' + this.representation[evTag].rest : '');
     result = result.replace("\[SUB\]", this.name(world.ev[evTag].agent, "subject"));
-    result = result.replace("\[VP\]", this.base_vp[evTag] + "s");
+    result = result.replace("\[VP\]", vp);
     if (world.ev[evTag].hasOwnProperty("direct")) {
       result = result.replace("\[DO\]", this.name(world.ev[evTag].direct, "object"));
     }
@@ -579,12 +583,12 @@ var spatial = { // Maps an abstract spatial relationship to a preposition
   held_by: "held by",
   on: "on",
   worn_by: "worn by",
-  part_of: "part of"
+  part_of: "part of",
 };
 
 var relation = {
-  part_of: "part of"
-}
+  part_of: "part of",
+};
 
 var temporal = { // Maps an abstract temporal relationship to a preposition
   at: "at",
@@ -601,7 +605,7 @@ var temporal = { // Maps an abstract temporal relationship to a preposition
   up: "up",
   up_to: "up to",
   using: "using",
-  with: "with"
+  with: "with",
 };
 
 // ### UTILITY ###
@@ -609,56 +613,3 @@ var temporal = { // Maps an abstract temporal relationship to a preposition
 function capitalize(string) {
   return string[0].toUpperCase() + string.slice(1);
 }
-
-// ### PRONOUNS ###
-// Need to be defined here so Narrator can use them by default
-// TODO proposal: a PronounSet is just a set of six words, and we 
-//      since the 'I' of a story is defined by the narrator, we can
-//      just put the first person pronounset into their Names objec
-
-class PronounSet {
-  constructor(thirdPersonSingular) {
-    this.pronoun = [];
-    this.pronoun.push([
-      [],
-      [],
-      [],
-    ]); // There is no 0th person or number
-    this.pronoun.push([
-      [],
-      ["I", "me", "my", "mine", "myself"],
-      ["we", "us", "our", "ours", "ourselves"]
-    ]);
-    this.pronoun.push([
-      [],
-      ["you", "you", "your", "yours", "yourself"],
-      ["you", "you", "your", "yours", "yourselves"]
-    ]);
-    this.pronoun.push([
-      [], thirdPersonSingular,
-      ["they", "them", "their", "theirs", "themselves"]
-    ]);
-  }
-  getSubject(person, number = 1) {
-    return this.pronoun[person][number][0];
-  }
-  getObject(person, number = 1) {
-    return this.pronoun[person][number][1];
-  }
-  getPossessiveAdj(person, number = 1) {
-    return this.pronoun[person][number][2];
-  }
-  getPossessivePronoun(person, number = 1) {
-    return this.pronoun[person][number][3];
-  }
-  getReflexive(person, number = 1) {
-    return this.pronoun[person][number][4];
-  }
-}
-
-var pronoun = {};
-pronoun.female = new PronounSet(["she", "her", "her", "hers", "herself"]);
-pronoun.male = new PronounSet(["he", "him", "his", "his", "himself"]);
-pronoun.neuter = new PronounSet(["it", "it", "its", "its", "itself"]);
-pronoun.unknownBinary = new PronounSet(["he or she", "him or her", "his or her", "his or hers", "himself or herself"]);
-pronoun.nonbinary = new PronounSet(["they", "them", "their", "theirs", "themself"]); // If you prefer, you can make the last entry "themselves"

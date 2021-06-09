@@ -8,9 +8,11 @@
 //
 // Adapted from the original Curveship, now called Curveship-py 0.6.
 
-var spin = {};
+var spin = {
+  // i: teller,
+};
 
-let told_by = "a casual, very oblique narrator";
+var told_by = "a casual, very oblique narrator";
 
 names = {};
 

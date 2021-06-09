@@ -7,7 +7,7 @@
 // Verb class, along with English-language verb forms for all but the
 // most simply conjugated verbs, helper words, and all forms of "to be."
 //
-// const "irregular" has not only irregular verbs [strictly speaking]
+// const "irregularVerbs" has not only irregular verbs [strictly speaking]
 // but also any regular verbs not correctly conjugated by the simple
 // preterite / past participle / present participle algorithms below.
 // These do not do any consonant doubling, so verbs whose consontants
@@ -28,15 +28,15 @@ class Verb {
         return this.base + "ed";
     }
     preterite() {
-        if (this.base in irregular) { return irregular[this.base][0]; }
+        if (this.base in irregularVerbs) { return irregularVerbs[this.base][0]; }
         return this.regularPretPastP();
     }
     pastPart() {
-        if (this.base in irregular) { return irregular[this.base][1]; }
+        if (this.base in irregularVerbs) { return irregularVerbs[this.base][1]; }
         return this.regularPretPastP();
     }
     presentPart() {
-        if (this.base in irregular) { return irregular[this.base][2]; }
+        if (this.base in irregularVerbs) { return irregularVerbs[this.base][2]; }
         if (this.base.slice(-1) === "e") { return this.base.slice(0,-1) + "ing"; }
         if (this.base.slice(-2) === "ie") { return this.base.slice(0,-2) + "ying"; }
         return this.base + "ing";
@@ -240,7 +240,7 @@ const toBe = [
     "being",    // 71 3-S-future-progressive-perfect
     "being"];    // 72 3-P-future-progressive-perfect
 
-const irregular = {
+const irregularVerbs = {
     "abet": ["abetted", "abetted", "abetting"],
     "abhor": ["abhorred", "abhorred", "abhorring"],
     "abide": ["abode", "abode", "abiding"],
