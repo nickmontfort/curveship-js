@@ -46,11 +46,13 @@ ev.leave_post = new Event(actor.guard, place.guard_post);
 ev.grab_fake = new Event(actor.teller, thing.fake_money, temporal.into, thing.bag);
 ev.turn = new Event(actor.robber, actor.guard);
 ev.shoot_1 = new Event(actor.guard, actor.robber);
-ev.shoot_2 = new Event(actor.guard, actor.robber);
+//ev.shoot_2 = new Event(actor.guard, actor.robber);
 ev.fall = new Event(actor.robber);
 ev.die = new Event(actor.robber);
 ev.drop_gun = new Event(actor.guard, thing.pistol);
 ev.drop_gun.reconfigures(thing.pistol, "parent", actor.guard, actor.cosmos);
+//ev.regret = new Event(actor.guard, ev.shoot_1);
+// FIXME allow events to be constituents of other events.
 ev.cry = new Event(actor.teller);
 ev.stare = new Event(actor.guard, thing.pistol);
 

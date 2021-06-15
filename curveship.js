@@ -164,7 +164,7 @@ class Actor extends Existent {
 }
 
 var actor = {
-  cosmos: new Actor(null, null, "neuter")
+  cosmos: new Actor(null, null, "neuter"),
 };
 
 class Place extends Existent {
@@ -238,6 +238,10 @@ class Names {
   }
 }
 
+var names = {
+  cosmos: new Names(""),
+};
+
 class NameByClass extends Names { // TODO always do this if no more specific name is provided
   constructor() {
     super();
@@ -280,34 +284,39 @@ class VerbPh {
 class Narrator {
   constructor(world, names, vp) {
     this.names = names;
-    if (this.names.existent === undefined) this.names.existent = new CategoryNames("entity");
+    if (this.names.existent === undefined) {
+      this.names.existent = new CategoryNames("entity");
+    }
     this.representation = {};
     for (let v in vp) {
-      this.representation[v] = {};
-      this.representation[v].verb = vp[v].verb_phrase;
-      if (vp[v].verb_phrase.includes(' ')){
-        this.representation[v].verb = vp[v].verb_phrase.substr(0, vp[v].verb_phrase.indexOf(' '));
-        this.representation[v].rest = vp[v].verb_phrase.substr(vp[v].verb_phrase.indexOf(' '));
-      }
-      this.representation[v].template = "[SUB] [VP]";
-      if (ev[v].hasOwnProperty("direct")) {
-        this.representation[v].template += " [DO]";
-      }
-      if (ev[v].hasOwnProperty("temporal")) {
-        this.representation[v].template += " [PREP]";
-      }
-      if (ev[v].hasOwnProperty("indirect")) {
-        this.representation[v].template += " [IO]";
-      }
-      this.representation[v].subject = world.ev[v].agent.tag;
-      if (world.ev[v].hasOwnProperty("direct")) {
-        this.representation[v].direct = world.ev[v].direct.tag;
-      }
-      if (world.ev[v].hasOwnProperty("temporal")) {
-        this.representation[v].temporal = world.ev[v].temporal;
-      }
-      if (world.ev[v].hasOwnProperty("indirect")) {
-        this.representation[v].indirect = world.ev[v].indirect.tag;
+      if (world.ev.hasOwnProperty(v)) {
+        this.representation[v] = {};
+        let verbString = vp[v].verb_phrase;
+        if (vp[v].verb_phrase.includes(' ')){
+          verbString = vp[v].verb_phrase.substr(0, vp[v].verb_phrase.indexOf(' '));
+          this.representation[v].rest = vp[v].verb_phrase.substr(vp[v].verb_phrase.indexOf(' '));
+        }
+        this.representation[v].verb = new Verb(verbString);
+        this.representation[v].template = "[SUB] [VP]";
+        if (world.ev[v].hasOwnProperty("direct")) {
+          this.representation[v].template += " [DO]";
+        }
+        if (world.ev[v].hasOwnProperty("temporal")) {
+          this.representation[v].template += " [PREP]";
+        }
+        if (world.ev[v].hasOwnProperty("indirect")) {
+          this.representation[v].template += " [IO]";
+        }
+        this.representation[v].subject = world.ev[v].agent.tag;
+        if (world.ev[v].hasOwnProperty("direct")) {
+          this.representation[v].direct = world.ev[v].direct.tag;
+        }
+        if (world.ev[v].hasOwnProperty("temporal")) {
+          this.representation[v].temporal = world.ev[v].temporal;
+        }
+        if (world.ev[v].hasOwnProperty("indirect")) {
+          this.representation[v].indirect = world.ev[v].indirect.tag;
+        }
       }
     }
     this.givens = new Set();
@@ -329,37 +338,47 @@ class Narrator {
     }
     return false;
   }
-  name(ex, role, exTag = null) {
-    if (ex instanceof ExistentGroup) {
-      return this.group(ex, role);
+  name(e, role, exTag = null) {
+    if (e instanceof Event) {
+      return "that" + this.represent(e);
     }
-    exTag = exTag == null ? ex.tag  : exTag;
+    if (e instanceof ExistentGroup) {
+      return this.group(e, role);
+    }
+    exTag = exTag == null ? e.tag : exTag;
     if (this.names[exTag].nameByClass) {
       let className = this.names[ex.getClass().tag];
       this.names[exTag] = new Names("a " + className.name, "the " + className.name);
     }
-    if (this.names[exTag].pronouns !== null || ex.hasOwnProperty("gender")) {
-      let pronouns = this.names[exTag].pronouns !== null ? this.names[exTag].pronouns : pronoun[ex.gender];
-      let pronominalize = this.pronominalization(ex, role);
+    if (this.names[exTag].pronouns !== null || e.hasOwnProperty("gender")) {
+      let pronouns = this.names[exTag].pronouns !== null ? this.names[exTag].pronouns : pronoun[e.gender];
+      let pronominalize = this.pronominalization(e, role);
+      if (this.names[exTag].initial === "") {
+        // Existents that have been given blank initial names are always
+        // pronominalized. To have existents referred to by "default"
+        // common names based on the type of existent they are, simply
+        // don't include a name for them at all in narrator.js.
+        pronominalize = true;
+      }
       if (pronominalize) {
         switch (pronominalize[0]) {
           case "subject": {
-            return pronouns.getSubject(pronominalize[1], ex.number);
+            return pronouns.getSubject(pronominalize[1], e.number);
           }
           case "object": {
-            return pronouns.getObject(pronominalize[1], ex.number);
+            return pronouns.getObject(pronominalize[1], e.number);
           }
           case "reflexive": {
-            return pronouns.getReflexive(pronominalize[1], ex.number);
+            return pronouns.getReflexive(pronominalize[1], e.number);
           }
         }
       }
     }
-    /** TODO make possessive pronouns work if (ex.owner) {
+    /** TODO make possessive pronouns work if (e.owner) {
       if (typeof this.lastNarratedEvent !== "undefined" && this.lastNarratedEvent.hasObject(this)) {
-         return this.names[ex.owner.tag].pronouns.getPossessivePronoun(spin, ev);
+         return this.names[e.owner.tag].pronouns.getPossessivePronoun(spin, ev);
       }
-      return this.names[ex.owner.tag].pronouns.getPossessivePronoun(spin, ev);
+      return this.names[e.owner.tag].pronouns.getPossessivePronoun(spin, ev);
     } */
     if (this.givens.has(exTag)) {
       return this.names[exTag].subsequent;
@@ -438,22 +457,23 @@ class Narrator {
     return result + " and " + this.name(ex.get(ex.length() - 1), role);
   }
 
-  represent(evTag) {
-    var result = this.representation[evTag].template;
-    var vp = this.representation[evTag].verb + "s" + (this.representation[evTag].rest ? ' ' + this.representation[evTag].rest : '');
-    result = result.replace("\[SUB\]", this.name(world.ev[evTag].agent, "subject"));
+  represent(ev) {
+    var result = this.representation[ev.tag].template;
+    var vp = this.representation[ev.tag].verb.thirdPersonSingular(); // FIXME
+    vp = vp + (this.representation[ev.tag].rest ? ' ' + this.representation[ev.tag].rest : '');
+    result = result.replace("\[SUB\]", this.name(world.ev[ev.tag].agent, "subject"));
     result = result.replace("\[VP\]", vp);
-    if (world.ev[evTag].hasOwnProperty("direct")) {
-      result = result.replace("\[DO\]", this.name(world.ev[evTag].direct, "object"));
+    if (world.ev[ev.tag].hasOwnProperty("direct")) {
+      result = result.replace("\[DO\]", this.name(world.ev[ev.tag].direct, "object"));
     }
-    if (ev[evTag].hasOwnProperty("temporal")) {
-      result = result.replace("\[PREP\]", temporal[world.ev[evTag].temporal]);
+    if (world.ev[ev.tag].hasOwnProperty("temporal")) {
+      result = result.replace("\[PREP\]", temporal[world.ev[ev.tag].temporal]);
     }
-    if (ev[evTag].hasOwnProperty("indirect")) {
-      result = result.replace("\[IO\]", this.name(world.ev[evTag].indirect, "object"));
+    if (world.ev[ev.tag].hasOwnProperty("indirect")) {
+      result = result.replace("\[IO\]", this.name(world.ev[ev.tag].indirect, "object"));
     }
     result = result += ".";
-    this.lastNarratedEvent = world.ev[evTag];
+    this.lastNarratedEvent = world.ev[ev.tag];
     return capitalize(result);
   }
 }
@@ -561,11 +581,11 @@ function narrate(title, told_by, world, spin, names, reps) {
       if (spin.speaking === "before") {
         spin.speaking = "during";
       }
-      sentence += narr.represent(current.tag);
+      sentence += narr.represent(current);
       spin.speaking = oldSpeaking;
       spin.referring = oldReferring;
     } else {
-      sentence += narr.represent(current.tag);
+      sentence += narr.represent(current);
     }
     div.innerHTML = sentence;
     element.appendChild(div);
