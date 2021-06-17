@@ -41,7 +41,7 @@ function shuffle(array) {
 /**
  * Specifies a new main sequence of expressions to enable
  * ellipsis, reordering, and repetition in the telling.
- * Examples of sequences:  1-4;7;9-12  18;2-16   2;4;6;8
+ * Examples of sequences:  1-4;7;9-12   18;2-16   2;4;6;8
  */
 function select_main(telling, order) {
   var order_list = order.split(";");
@@ -68,15 +68,15 @@ class Existent {
     if (new.target === Existent) {
       throw new TypeError("Can't directly instantiate Existent");
     }
-    this.class = category.existent;
+    this.category = category.entity;
   }
 
-  setClass(obj) {
-    this.class = obj;
+  setCategory(obj) {
+    this.category = obj;
   }
 
-  getClass() {
-    return this.class;
+  getCategory() {
+    return this.category;
   }
 
   includes(obj) {
@@ -117,14 +117,12 @@ class ValueError extends Error {
   }
 }
 
-class Category {
-  constructor(parent = category.existent) {
+class Category { // TODO Categories should be existents!
+  constructor(children = [], parent = category.entity) {
     this.parent = parent;
     this.properties = new Map();
-  }
-  addExistents(...args){
-    for (var existent of args) {
-      existent.setClass(this);
+    for (let existent of children) {
+      existent.setCategory(this);
     }
   }
   has(property) { //TODO: allow mappings of more than property: true/false
@@ -140,7 +138,7 @@ class Category {
 }
 
 var category = {
-  existent: new Category(null)
+  entity: new Category([], null)
 };
 
 class Actor extends Existent {
@@ -234,18 +232,14 @@ class Names {
     }
     this.subsequent = subsequent;
     this.pronouns = pronouns;
-    this.nameByClass = false;
+    this.nameByCategory = false;
   }
 }
 
-var names = {
-  cosmos: new Names(""),
-};
-
-class NameByClass extends Names { // TODO always do this if no more specific name is provided
+class NameByCategory extends Names { // TODO always do this if no more specific name is provided
   constructor() {
     super();
-    this.nameByClass = true;
+    this.nameByCategory = true;
   }
 }
 
@@ -338,7 +332,8 @@ class Narrator {
     }
     return false;
   }
-  name(e, role, exTag = null) {
+  name(e, role, exTag = null) { // TODO sloppy to have exTag, I think?
+                                // why not just use e.tag?
     if (e instanceof Event) {
       return "that" + this.represent(e);
     }
@@ -346,9 +341,9 @@ class Narrator {
       return this.group(e, role);
     }
     exTag = exTag == null ? e.tag : exTag;
-    if (this.names[exTag].nameByClass) {
-      let className = this.names[ex.getClass().tag];
-      this.names[exTag] = new Names("a " + className.name, "the " + className.name);
+    if (this.names[exTag].nameByCategory) {
+      let categoryName = this.names[e.getCategory().tag];
+      this.names[exTag] = new Names("a " + categoryName.name, "the " + categoryName.name);
     }
     if (this.names[exTag].pronouns !== null || e.hasOwnProperty("gender")) {
       let pronouns = this.names[exTag].pronouns !== null ? this.names[exTag].pronouns : pronoun[e.gender];
@@ -418,19 +413,19 @@ class Narrator {
     var classes = [];
     var parents = [];
     for (var elem of ex.existentArray) {
-      classes.push(elem.getClass());
+      classes.push(elem.getCategory());
       parents.push(elem);
     }
     var superPart = this.traverseRelationTree(parents); //check for object relation (eg "part of")
     var superClass = this.traverseRelationTree(classes); //check for category relations
 
-    if(superPart != actor.cosmos) return (ex.length() == 1) ? "the part of the " + superPart.tag : " the parts of the " + superPart.tag;
+    if(superPart != actor.cosmos) return (ex.length() == 1) ? "the part of " + this.name(superPart) : " the parts of " + this.name(superPart);
     if(superClass !== null) return this.name(superClass, "category", ex.tag);
 
-    var initClass = ex.existentArray[0].getClass(); //check for property relations
+    var initClass = ex.existentArray[0].getCategory(); //check for property relations
     var initProperties = initClass.getProperties();
     for (var property of initProperties.keys()) {
-      var shareAllProperties = ex.existentArray.every (item => item.getClass().getProperties().has(property));
+      var shareAllProperties = ex.existentArray.every (item => item.getCategory().getProperties().has(property));
       if (shareAllProperties) {
         return "the objects with " + property;
       }
@@ -440,7 +435,8 @@ class Narrator {
   }
 
   group(ex, role) {
-    var groupBySimilarity = true;
+//    var groupBySimilarity = true;
+    var groupBySimilarity = false; // FIXME this shouldn't be hard-coded
     if (groupBySimilarity) {
       var similarities = this.findSimilarities(ex);
       if (similarities != null) {
@@ -459,8 +455,9 @@ class Narrator {
 
   represent(ev) {
     var result = this.representation[ev.tag].template;
-    var vp = this.representation[ev.tag].verb.thirdPersonSingular(); // FIXME
-    vp = vp + (this.representation[ev.tag].rest ? ' ' + this.representation[ev.tag].rest : '');
+    var number = world.ev[ev.tag].agent instanceof ExistentGroup ? 2 : 1;
+    var verbString = this.representation[ev.tag].verb.conjugatedVP(3, number, "present", "", ev); // FIXME different persons, tenseER, tenseRS
+    var vp = verbString + (this.representation[ev.tag].rest ? ' ' + this.representation[ev.tag].rest : '');
     result = result.replace("\[SUB\]", this.name(world.ev[ev.tag].agent, "subject"));
     result = result.replace("\[VP\]", vp);
     if (world.ev[ev.tag].hasOwnProperty("direct")) {

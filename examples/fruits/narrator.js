@@ -8,7 +8,9 @@ names.room = new Names("a room", "the room");
 
 names.eater = new Names("a fruit-eater", "the fruit-eater");
 
-names.apple = new NameByClass();
+names.apple = new NameByCategory(); // TODO this isn't needed explicitly,
+                                // the system must fall back to naming by
+                                // category or if no category "generically"
 names.strawberry = new Names("a strawberry", "the strawberry");
 names.cherry = new Names("a cherry", "the cherry");
 

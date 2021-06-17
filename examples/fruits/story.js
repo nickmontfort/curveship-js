@@ -10,7 +10,7 @@
 
 let title = "The Fruit";
 
-// EXISTENTS: Places, Actors, Things in that order
+// EXISTENTS: Places, Actors, Things, Categories in that order
 
 place.room = new Place();
 
@@ -21,14 +21,17 @@ thing.strawberry = new Thing(spatial.in, place.room);
 thing.cherry = new Thing(spatial.in, place.room);
 
 category.fruit = new Category();
-category.galaApple = new Category(category.fruit);
-category.berries = new Category(category.fruit);
-category.galaApple.addExistents(thing.apple);
-category.berries.addExistents(thing.cherry, thing.strawberry);
+category.galaApple = new Category(
+  [thing.apple],
+  category.fruit);
+category.berries = new Category(
+  [thing.cherry, thing.strawberry],
+  category.fruit
+);
 category.fruit.has("skin");
 
-category.human = new Category();
-category.human.addExistents(actor.eater);
+category.human = new Category(
+  [actor.eater]);
 category.human.has("skin");
 
 

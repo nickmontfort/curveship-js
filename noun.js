@@ -89,3 +89,7 @@ pronoun.male = new PronounSet(["he", "him", "his", "his", "himself"]);
 pronoun.neuter = new PronounSet(["it", "it", "its", "its", "itself"]);
 pronoun.unknownBinary = new PronounSet(["he or she", "him or her", "his or her", "his or hers", "himself or herself"]);
 pronoun.nonBinary = new PronounSet(["they", "them", "their", "theirs", "themself"]); // If you prefer, you can make the last entry "themselves"
+
+var names = {
+  cosmos: new Names(""),
+};

@@ -12,7 +12,7 @@ var spin = {
   // i: teller,
 };
 
-var told_by = "a casual, very oblique narrator";
+var told_by = "a teller of parables";
 
 // PLACES
 
@@ -25,13 +25,13 @@ names.front = new Names("the front of the house");
 // ACTORS
 
 names.father = new Names("a land owner", "the father");
-names.older = new Names("the older son");
-names.younger = new Names("the younger son", "the son");
+names.older = new Names("an older son", "the older son");
+names.younger = new Names("a younger son", "the younger son");
 names.citizen = new Names("a citizen");
 names.swine = new Names("some swine", "the swine");
-names.servant_1 = new Names("the servant");
-names.servant_2 = new Names("the servant");
-names.servant_3 = new Names("the servant");
+names.servant_1 = new Names("a servant");
+names.servant_2 = new Names("a servant");
+names.servant_3 = new Names("a servant");
 
 // THINGS
 
