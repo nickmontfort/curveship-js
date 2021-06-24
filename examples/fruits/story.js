@@ -8,17 +8,17 @@
 //
 // Adapted from the original Curveship, now called Curveship-py.
 
-let title = "The Fruit";
+let title = "Fruit Eating";
 
 // EXISTENTS: Places, Actors, Things, Categories in that order
 
 place.room = new Place();
 
-actor.eater = new Actor(spatial.in, place.room, "male");
+actor.eater = new Actor(place.room, "male");
 
-thing.apple = new Thing(spatial.in, place.room);
-thing.strawberry = new Thing(spatial.in, place.room);
-thing.cherry = new Thing(spatial.in, place.room);
+thing.apple = new Thing(place.room);
+thing.strawberry = new Thing(place.room);
+thing.cherry = new Thing(place.room);
 
 category.fruit = new Category();
 category.galaApple = new Category(
@@ -28,11 +28,11 @@ category.berries = new Category(
   [thing.cherry, thing.strawberry],
   category.fruit
 );
-category.fruit.has("skin");
+category.fruit.addProperties(["skin"]);
 
 category.human = new Category(
   [actor.eater]);
-category.human.has("skin");
+category.human.addProperties(["skin"]);
 
 
 // EVENTS
@@ -41,5 +41,7 @@ ev.eatBerries = new Event(actor.eater, [thing.strawberry, thing.cherry]);
 ev.eat = new Event(actor.eater, [thing.apple, thing.cherry]);
 ev.eatApple = new Event(actor.eater, thing.apple);
 ev.eatSelf = new Event(actor.eater, [thing.apple, thing.cherry, actor.eater]);
+
+// WORLD joining all existents and events together
 
 var world = new World(place, actor, category, thing, ev);

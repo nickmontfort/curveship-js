@@ -14,19 +14,17 @@ let title = "Bike";
 
 place.street = new Place();
 
-actor.man = new Actor(spatial.in, place.street, "male");
+actor.man = new Actor(place.street, "male");
 
-thing.bike = new Thing(spatial.in, place.street);
-thing.tire = new Thing(spatial.in, place.street);
-thing.handlebar = new Thing(spatial.in, place.street);
-thing.seat = new Thing(spatial.in, place.street);
-thing.shell = new Thing(spatial.in, place.street);
-thing.cover = new Thing(spatial.in, place.street);
-
+thing.bike = new Thing(place.street);
+thing.tire = new Thing();
+thing.handlebar = new Thing();
+thing.seat = new Thing();
+thing.shell = new Thing();
+thing.cover = new Thing();
 
 thing.bike.setParts([thing.tire, thing.handlebar, thing.seat]);
 thing.seat.setParts([thing.shell, thing.cover]);
-
 
 
 // EVENTS

@@ -69,6 +69,8 @@ class Existent {
       throw new TypeError("Can't directly instantiate Existent");
     }
     this.category = category.entity;
+    this.partOf = null;
+    this.owner = null;
   }
 
   setCategory(obj) {
@@ -81,11 +83,6 @@ class Existent {
 
   includes(obj) {
     return obj === this;
-  }
-
-  configuredAs(spatialRelation, parent) {
-    this.spatial = spatialRelation; // TODO if used, multiple conceptual relations must be supported.
-    this.parent = parent;
   }
 }
 
@@ -120,16 +117,23 @@ class ValueError extends Error {
 class Category { // TODO Categories should be existents!
   constructor(children = [], parent = category.entity) {
     this.parent = parent;
-    this.properties = new Map();
+    this.properties = new Set();
     for (let existent of children) {
       existent.setCategory(this);
     }
   }
-  has(property) { //TODO: allow mappings of more than property: true/false
-    this.properties.set(property, true);
+  addProperties(properties) {
+    for (let property of properties) {
+      this.properties.add(property);
+    }
+  }
+  removeProperties(properties) {
+    for (let sproperty of properties) {
+      this.properties.delete(property, false);
+    }
   }
   getProperties() {
-    if (this.parent != null) return new Map([...this.properties, ...this.parent.getProperties()]);
+    if (this.parent != null) return new Set([...this.properties, ...this.parent.getProperties()]);
     return this.properties;
   }
   name() {
@@ -141,11 +145,19 @@ var category = {
   entity: new Category([], null)
 };
 
-class Actor extends Existent {
-  constructor(spatialRelation, parent, gender, age = "adult") {
+class Place extends Existent {
+  constructor() {
     super();
-    this.spatial = spatialRelation;
-    this.parent = parent;
+    this.location = thing.cosmos;
+  }
+}
+
+var place = {};
+
+class Actor extends Existent {
+  constructor(location, gender, age = "adult") {
+    super();
+    this.location = location;
     if (genders.includes(gender)) {
       this.gender = gender;
     } else {
@@ -161,34 +173,28 @@ class Actor extends Existent {
   }
 }
 
-var actor = {
-  cosmos: new Actor(null, null, "neuter"),
-};
-
-class Place extends Existent {
-  constructor() {
-    super();
-    this.configuredAs(spatial.in, actor.cosmos);
-  }
-}
-
-var place = {};
+var actor = {};
 
 class Thing extends Existent {
-  constructor(spatialRelation = "in", spatialParent = actor.cosmos) {
+  constructor(location = null) {
     super();
-    this.spatialRelation = spatialRelation;
-    this.spatialParent = spatialParent;
-    this.parent = actor.cosmos; //note that this is the "part of" parent — probably not the best naming, but used now b/c of traverseRelationTree refactoring
+    this.location = location;
   }
   setParts(parts) {
     for (var existent of parts) {
-      existent.parent = this;
+      existent.location = this.location;
+      existent.partOf = this;
     }
+  }
+  setOwner(actor) {
+    this.owner = actor;
   }
 }
 
-var thing = {};
+var thing = {
+  cosmos: new Thing(),
+};
+
 var evSeq = [];
 var lastNarratedTag = "";
 
@@ -245,7 +251,7 @@ class NameByCategory extends Names { // TODO always do this if no more specific 
 
 class ProperNames extends Names {
   constructor(given, family, pronouns, common = null, title = null) {
-    let initial = (title !== null ? title + " " : "")  + given + " " + family;
+    let initial = (title !== null ? title + " " : "") + given + " " + family;
     let subsequent = title !== null ? title + " " + family : given;
     super(initial, subsequent, pronouns);
     this.title = title;
@@ -276,40 +282,43 @@ class VerbPh {
 }
 
 class Narrator {
-  constructor(world, names, vp) {
+  constructor(world, names, vps) {
     this.names = names;
     if (this.names.existent === undefined) {
       this.names.existent = new CategoryNames("entity");
     }
     this.representation = {};
-    for (let v in vp) {
-      if (world.ev.hasOwnProperty(v)) {
-        this.representation[v] = {};
-        let verbString = vp[v].verb_phrase;
-        if (vp[v].verb_phrase.includes(' ')){
-          verbString = vp[v].verb_phrase.substr(0, vp[v].verb_phrase.indexOf(' '));
-          this.representation[v].rest = vp[v].verb_phrase.substr(vp[v].verb_phrase.indexOf(' '));
+    for (let vp in vps) {
+      if (world.ev.hasOwnProperty(vp)) {
+        this.representation[vp] = {};
+        let verb = vps[vp].verb_phrase, rest = "";
+        if (verb.includes(' ')) {
+          verb = vps[vp].verb_phrase.substr(0, vps[vp].verb_phrase.indexOf(' '));
+          rest = vps[vp].verb_phrase.substr(vps[vp].verb_phrase.indexOf(' '));
         }
-        this.representation[v].verb = new Verb(verbString);
-        this.representation[v].template = "[SUB] [VP]";
-        if (world.ev[v].hasOwnProperty("direct")) {
-          this.representation[v].template += " [DO]";
+        this.representation[vp].verb = new Verb(verb);
+        this.representation[vp].template = "[SUB] [V]";
+        if (rest.length > 0) {
+          this.representation[vp].template += " " + rest;
         }
-        if (world.ev[v].hasOwnProperty("temporal")) {
-          this.representation[v].template += " [PREP]";
+        if (world.ev[vp].hasOwnProperty("direct")) {
+          this.representation[vp].template += " [DO]";
         }
-        if (world.ev[v].hasOwnProperty("indirect")) {
-          this.representation[v].template += " [IO]";
+        if (world.ev[vp].hasOwnProperty("temporal")) {
+          this.representation[vp].template += " [PREP]";
         }
-        this.representation[v].subject = world.ev[v].agent.tag;
-        if (world.ev[v].hasOwnProperty("direct")) {
-          this.representation[v].direct = world.ev[v].direct.tag;
+        if (world.ev[vp].hasOwnProperty("indirect")) {
+          this.representation[vp].template += " [IO]";
         }
-        if (world.ev[v].hasOwnProperty("temporal")) {
-          this.representation[v].temporal = world.ev[v].temporal;
+        this.representation[vp].subject = world.ev[vp].agent.tag;
+        if (world.ev[vp].hasOwnProperty("direct")) {
+          this.representation[vp].direct = world.ev[vp].direct.tag;
         }
-        if (world.ev[v].hasOwnProperty("indirect")) {
-          this.representation[v].indirect = world.ev[v].indirect.tag;
+        if (world.ev[vp].hasOwnProperty("temporal")) {
+          this.representation[vp].temporal = world.ev[vp].temporal;
+        }
+        if (world.ev[vp].hasOwnProperty("indirect")) {
+          this.representation[vp].indirect = world.ev[vp].indirect.tag;
         }
       }
     }
@@ -333,7 +342,7 @@ class Narrator {
     return false;
   }
   name(e, role, exTag = null) { // TODO sloppy to have exTag, I think?
-                                // why not just use e.tag?
+    // why not just use e.tag?
     if (e instanceof Event) {
       return "that" + this.represent(e);
     }
@@ -400,7 +409,7 @@ class Narrator {
     for (var i = 0; i < minLength; i++) {
       var classAtI = exCategories[0][i];
       if (exCategories.every(item => item[i] === classAtI)) {
-         superClass = classAtI;
+        superClass = classAtI;
       } else {
         break;
       }
@@ -408,24 +417,26 @@ class Narrator {
     return superClass;
   }
 
-  findSimilarities(ex) {
+  findSimilarities(ex) { // FIXME TODO sort this out!!
     var exCategories = [];
-    var classes = [];
-    var parents = [];
-    for (var elem of ex.existentArray) {
-      classes.push(elem.getCategory());
-      parents.push(elem);
+    var categories = [];
+    var existents = [];
+    for (var existent of existent.existentArray) {
+      categories.push(ex.getCategory());
+      existents.push(existent);
     }
-    var superPart = this.traverseRelationTree(parents); //check for object relation (eg "part of")
-    var superClass = this.traverseRelationTree(classes); //check for category relations
+    var aggregate = this.ascendRelationTree(existents);
+    // are they parts of something? find the most specific thing
+    var meta = this.ascendRelationTree(category);
+    // are they in a common category? find the most specific one
 
-    if(superPart != actor.cosmos) return (ex.length() == 1) ? "the part of " + this.name(superPart) : " the parts of " + this.name(superPart);
-    if(superClass !== null) return this.name(superClass, "category", ex.tag);
+    if (aggregate != actor.cosmos) return (ex.length() == 1) ? "the part of " + this.name(superPart) : " the parts of " + this.name(aggregate);
+    if (meta !== null) return this.name(meta, "category", ex.tag);
 
-    var initClass = ex.existentArray[0].getCategory(); //check for property relations
-    var initProperties = initClass.getProperties();
+    var initCategory = ex.existentArray[0].getCategory(); //check for property relations
+    var initProperties = initCategory.getProperties();
     for (var property of initProperties.keys()) {
-      var shareAllProperties = ex.existentArray.every (item => item.getCategory().getProperties().has(property));
+      var shareAllProperties = ex.existentArray.every(item => item.getCategory().getProperties().has(property));
       if (shareAllProperties) {
         return "the objects with " + property;
       }
@@ -435,7 +446,7 @@ class Narrator {
   }
 
   group(ex, role) {
-//    var groupBySimilarity = true;
+    //    var groupBySimilarity = true;
     var groupBySimilarity = false; // FIXME this shouldn't be hard-coded
     if (groupBySimilarity) {
       var similarities = this.findSimilarities(ex);
@@ -459,7 +470,7 @@ class Narrator {
     var verbString = this.representation[ev.tag].verb.conjugatedVP(3, number, "present", "", ev); // FIXME different persons, tenseER, tenseRS
     var vp = verbString + (this.representation[ev.tag].rest ? ' ' + this.representation[ev.tag].rest : '');
     result = result.replace("\[SUB\]", this.name(world.ev[ev.tag].agent, "subject"));
-    result = result.replace("\[VP\]", vp);
+    result = result.replace("\[V\]", vp);
     if (world.ev[ev.tag].hasOwnProperty("direct")) {
       result = result.replace("\[DO\]", this.name(world.ev[ev.tag].direct, "object"));
     }
@@ -594,18 +605,6 @@ function narrate(title, told_by, world, spin, names, reps) {
 }
 
 // ### PREPOSITIONS ###
-
-var spatial = { // Maps an abstract spatial relationship to a preposition
-  in: "in",
-  held_by: "held by",
-  on: "on",
-  worn_by: "worn by",
-  part_of: "part of",
-};
-
-var relation = {
-  part_of: "part of",
-};
 
 var temporal = { // Maps an abstract temporal relationship to a preposition
   at: "at",

@@ -18,23 +18,25 @@ place.citizens_field = new Place();
 place.rich_field = new Place();
 place.front = new Place();
 
-actor.father = new Actor(spatial.in, place.house, "male");
-actor.older = new Actor(spatial.in, place.house, "male");
-actor.younger = new Actor(spatial.in, place.house, "male");
-actor.citizen = new Actor(spatial.in, place.citizens_field, "male");
-actor.swine = new Actor(spatial.in, place.citizens_field, "neuter");
-actor.servant_1 = new Actor(spatial.in, place.rich_field, "male");
-actor.servant_2 = new Actor(spatial.in, place.rich_field, "male");
-actor.servant_3 = new Actor(spatial.in, place.rich_field, "male");
+actor.father = new Actor(place.house, "male");
+actor.older = new Actor(place.house, "male");
+actor.younger = new Actor(place.house, "male");
+actor.citizen = new Actor(place.citizens_field, "male");
+actor.servant_1 = new Actor(place.rich_field, "male");
+actor.servant_2 = new Actor(place.rich_field, "male");
+actor.servant_3 = new Actor(place.rich_field, "male");
 
-thing.inheritance = new Thing(spatial.of, actor.father);
-thing.husks = new Thing(spatial.of, actor.cosmos);
-thing.robe = new Thing(spatial.of, actor.cosmos);
-thing.ring = new Thing(spatial.of, actor.cosmos);
-thing.shoes = new Thing(spatial.of, actor.cosmos);
-thing.calf = new Thing(spatial.of, actor.cosmos);
-thing.riotous = new Thing(spatial.of, actor.cosmos);
-thing.music = new Thing(spatial.of, actor.cosmos);
+thing.inheritance = new Thing(actor.father);
+thing.inheritance.setOwner(actor.younger);
+thing.swine = new Thing(place.citizens_field);
+thing.swine.setOwner(actor.citizen);
+thing.husks = new Thing();
+thing.robe = new Thing();
+thing.ring = new Thing();
+thing.shoes = new Thing();
+thing.calf = new Thing();
+thing.riotous = new Thing();
+thing.music = new Thing();
 
 // EVENTS
 

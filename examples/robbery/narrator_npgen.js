@@ -55,7 +55,8 @@ vp.shoot_2 = new VerbPh("shoot");
 vp.fall = new VerbPh("fall");
 vp.die = new VerbPh("die");
 vp.drop_gun = new VerbPh("drop");
+vp.regret = new VerbPh("regret");
 vp.cry = new VerbPh("cry");
-vp.stare = new VerbPh("stare");
+vp.stare = new VerbPh("stare at");
 
 function run() { narrate(title, told_by, world, spin, names, vp); }

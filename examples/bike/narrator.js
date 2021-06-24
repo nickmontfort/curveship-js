@@ -10,18 +10,18 @@
 
 var spin = {};
 
-let told_by = "a casual, very oblique narrator";
+let told_by = "a typical narrator";
 
 names = {};
 
-names.bike = new Names("the bike");
+names.man = new Names("the man");
 
+names.bike = new Names("the bike");
 names.tire = new Names("the tire");
 names.handlebar = new Names("the handlebar");
 names.seat = new Names("the seat");
-
-names.man = new Names("the man");
-names.apple = new Names("the apple")
+names.shell = new Names("the shell");
+names.cover = new Names("the cover");
 
 vp = {};
 

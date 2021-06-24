@@ -17,16 +17,17 @@ place.lobby = new Place();
 place.guard_post = new Place();
 place.street = new Place();
 
-actor.teller = new Actor(spatial.in, place.vestibule, "female");
-actor.robber = new Actor(spatial.in, place.street, "male");
-actor.guard = new Actor(spatial.in, place.guard_post, "male");
+actor.teller = new Actor(place.vestibule, "female");
+actor.robber = new Actor(place.street, "male");
+actor.guard = new Actor(place.guard_post, "male");
 
-thing.slip = new Thing(spatial.in, place.vestibule);
-thing.fake_money = new Thing(spatial.in, place.vestibule);
-thing.bag = new Thing(spatial.in, place.vestibule);
-thing.mask = new Thing(spatial.of, actor.robber);
-thing.fake_gun = new Thing(spatial.of, actor.robber);
-thing.pistol = new Thing(spatial.of, actor.guard, actor.guard);
+thing.slip = new Thing(place.vestibule);
+thing.fake_money = new Thing(place.vestibule);
+thing.bag = new Thing(place.vestibule);
+thing.mask = new Thing(actor.robber);
+thing.fake_gun = new Thing(actor.robber);
+thing.pistol = new Thing(actor.guard, actor.guard);
+thing.pistol.setOwner(actor.guard);
 
 // EVENTS
 
