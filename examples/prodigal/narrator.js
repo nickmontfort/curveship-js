@@ -1,4 +1,4 @@
-// Casual Narrator for the Simulated Bank Robbery - a Curveship-js example
+// Casual Narrator for The Prodigal Son - a Curveship-js example
 //  Copyright 2021 Nick Montfort
 //
 // Copying and distribution of this file, with or without modification,

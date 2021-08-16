@@ -201,6 +201,7 @@ var lastNarratedTag = "";
 class Event {
   constructor(agent, direct, temporalRelation, indirect) {
     this.agent = Array.isArray(agent) ? new ExistentGroup(agent) : agent;
+    this.agent = (typeof this.agent === "object") ? this.agent : thing.cosmos;
     this.continuous = false;
     if (direct) {
       this.direct = Array.isArray(direct) ? new ExistentGroup(direct) : direct;
