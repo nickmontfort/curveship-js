@@ -350,7 +350,7 @@ class Narrator {
     if (e instanceof ExistentGroup) {
       return this.group(e, role);
     }
-    exTag = exTag == null ? e.tag : exTag;
+    exTag = (exTag === null) ? e.tag : exTag;
     if (this.names[exTag].nameByCategory) {
       let categoryName = this.names[e.getCategory().tag];
       this.names[exTag] = new Names("a " + categoryName.name, "the " + categoryName.name);
@@ -393,48 +393,70 @@ class Narrator {
     }
   }
 
-  traverseRelationTree(relations) {
-    var exCategories = [];
-    for (var relation of relations) {
-      var basicClass = relation;
-      var superClasses = [];
-      while (basicClass !== null) { // TODO you can chose to stop at some level of the tree using this predicate
-        superClasses.push(basicClass);
-        basicClass = basicClass.parent;
+  ascendTree(existents, method) {
+    var aboveArray = [];
+    for (var existent of existents) {
+      let current = existent;
+      let above = [];
+      if (method === "by part") {
+        while (current !== null) {
+          current = current.partOf;
+          above.push(current);
+        }
       }
-      superClasses.reverse();
-      exCategories.push(superClasses);
+      else if (method === "by category") {
+        let cat = current.getCategory();
+        while (cat !== category.entity) {
+          cat = cat.parent;
+          above.push(cat);
+        }
+      }
+      above.reverse();
+      aboveArray.push(above);
     }
-    let minLength = Math.min(...exCategories.map(item => item.length));
-    var superClass = null;
+    let minLength = Math.min(...aboveArray.map(item => item.length));
+    var join = null;
     for (var i = 0; i < minLength; i++) {
-      var classAtI = exCategories[0][i];
-      if (exCategories.every(item => item[i] === classAtI)) {
-        superClass = classAtI;
+      let current = aboveArray[0][i];
+      if (aboveArray.every(item => item[i] === current)) {
+        join = current;
       } else {
         break;
       }
     }
-    return superClass;
+    return join;
   }
 
-  findSimilarities(ex) { // FIXME TODO sort this out!!
-    var exCategories = [];
+  whatAreWePartsOf(ex) {
+    var existents = [];
+    for (let existent of ex.existentArray) {
+      existents.push(existent);
+    }
+    var something = this.ascendTree(existents, "by part");
+    // are they parts of something? find the most specific thing
+    if (something === null || something === thing.cosmos) return "";
+    return (ex.length() == 1) ? "the part of " + this.name(something) : " the parts of " + this.name(something);
+  }
+
+  whatCategoryAreWeIn(ex) {
     var categories = [];
     var existents = [];
-    for (var existent of existent.existentArray) {
+    for (let existent of ex.existentArray) {
       categories.push(ex.getCategory());
       existents.push(existent);
     }
-    var aggregate = this.ascendRelationTree(existents);
-    // are they parts of something? find the most specific thing
-    var meta = this.ascendRelationTree(category);
+    var meta = this.ascendTree(existents, "by category");
     // are they in a common category? find the most specific one
+    if (meta === category.entity) return "";
+    return this.name(meta, "category", ex.tag);
+  }
 
-    if (aggregate != actor.cosmos) return (ex.length() == 1) ? "the part of " + this.name(superPart) : " the parts of " + this.name(aggregate);
-    if (meta !== null) return this.name(meta, "category", ex.tag);
 
-    var initCategory = ex.existentArray[0].getCategory(); //check for property relations
+
+  findSimilarities(ex) {
+
+    var initCategory = ex.existentArray[0].getCategory();
+    // check for property relations
     var initProperties = initCategory.getProperties();
     for (var property of initProperties.keys()) {
       var shareAllProperties = ex.existentArray.every(item => item.getCategory().getProperties().has(property));
@@ -447,12 +469,18 @@ class Narrator {
   }
 
   group(ex, role) {
-    //    var groupBySimilarity = true;
-    var groupBySimilarity = false; // FIXME this shouldn't be hard-coded
-    if (groupBySimilarity) {
-      var similarities = this.findSimilarities(ex);
-      if (similarities != null) {
-        return similarities;
+    var groupByParts = true; // FIXME this shouldn't be hard-coded
+    var groupByCategory = true; // FIXME this shouldn't be hard-coded
+    if (groupByParts) {
+      var partOf = this.whatAreWePartsOf(ex);
+      if (partOf !== "") {
+        return partOf;
+      }
+    }
+    if (groupByCategory) {
+      var inCategory = this.whatCategoryAreWeIn(ex);
+      if (inCategory !== "") {
+        return inCategory;
       }
     }
     if (ex.length() == 2) {
