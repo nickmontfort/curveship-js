@@ -21,47 +21,91 @@
 
 <div id="main">
 
-<h2>Curveship-<span style="color:black">js</span><br>
-Reference:<br>
-Major Terms &amp; Ideas</h2>
+<h1>Curveship-<span style="color:black">js</span><br>
+Reference<br>
+Major Terms &amp; Ideas</h1>
 
-<p>A bit of familiarity with narrative theory is very helpful for understanding the way Curveship-js works. On the other hand, poking around with Curveship-js for a short amount of time may help one understand narrative theory—that is part of the idea. Below, I have defined some of the major terms and explained some of the major ideas that underlie the system.</p>
+<p>If you’re familar with narrative theory, you will have a head start at using Curveship-js.</p>
 
-<p>Please note that Curveship-js is <i>not</i> a system for creating parser-based interactive fiction. It’s for creating stories, or narratives, that can be automatically told in different ways.</p>
+<p>If you’re not, making use of Curveship-js, as an author, is meant to help you understand narrative theory.</p>
 
-<p>To create a new variable narratives, an author will mainly define three types of Existents (Places, Actors, and Things) along with a sequence of Events. The Places, Actors, and Things are everything that exists in the world of the narrative. The Events correspond to what happens, including what would normally be considered actions (undertaken by Actors) and occurrences that aren’t caused by any obvious Actor.</p>
+<p>The fundamental idea of the system, from research, creative, and learning perspectives, is to <i>model post-structuralist narratology</i> by operationally representing the main concepts computationally.</p>
 
-<h3 id="world">World and Story // Curveship-js</h3>
+<p>That sounds a little dense. But to take it a step at a time...</p>
 
-<p>There is a simulated world or diegesis, which defines the “reality” within which all of the Actors live. This corresponds to the “story” or content level (as opposed to the “discourse” or expression level) of a particular narrative. While this world doesn’t have all the features of one in a parser-based interactive fiction, there are Places, Actors, and Things that are part of this world model.</i>
+<p>Curveship-js is a system for creating stories that can be automatically <i>told</i> in different ways: <i>variable narratives.</i></p>
 
-<p>The main difference between Curveship-js’s world and an IF world is that in this version of the system, the world and what actually <i>happens</i> in it isn’t <i>interactive.</i> The system won’t check to see if a door is locked and prevent it from being opened by a player character; whatever is specified in the sequence of Events is exactly what happens in this particular world. The simulation is being done for the purposes of telling the underlying story in different ways. This makes it much easier to define each element.</p>
+<p>(Curveship-js is <i>not</i> a system for creating parser-based interactive fiction, unlike the original Curveship, now called Curveship-py.)</p>
 
-<h3>Existents // Curveship-js</h3>
+<p>To create a new variable narrative, an author will need to define three types of Existents (Places, Actors, and Things) along with a sequence of Events. The Places, Actors, and Things are everything that exists in the world of the narrative. The Events correspond to what happens, including what would normally be considered actions (undertaken by Actors) and occurrences that aren’t caused by any obvious Actor.</p>
 
-<p id="item"><strong>Existent.</strong> Basically, this is any physical object that has a representation in the story. In other contexts these might be called “objects,” but that term means something different in object-oriented programming. In Curveship-py, which was intended more for IF enthusiasts and less for teaching narrative theory, these are called “items.” Existents must be in one of three categories, so that they are either Actors, Places, or Things.</p>
+<h2 id="world">World & Content // Curveship-js</h2>
 
-<p id="place"><strong>Place.</strong> A discrete location. Everything in one Place can be seen by all Actors in that Place. It’s also possible to specify that other Places are visible, or partly visible, from a particular Place. Places get defined first.</p>
+<p>There is a simulated world or diegesis, which defines the “reality” within which all of the Actors live. This corresponds to the “story” or content level (as opposed to the “discourse” or expression level) of a particular narrative. There are Places, Actors, and Things that are part of this content level and world model.</p>
 
-<p id="actor"><strong>Actor.</strong> An Existent that can take action on its own, and one that can serve for instance as narrator (the “I” of the narrative) or narratee (the “you”). Unless an Actor is “offstage” the Actor will have a spatial relationship to a Place, typically being “in” the Place. Actors are defined after Places and before Things.</p>
+<p>In Curveship-js, the world and what actually <i>happens</i> in this world isn’t <i>interactive.</i> The underlying content of a variable narrative is fixed. What changes is the <i>telling,</i> not the underlying Existents and Events.</p>
 
-<p id="thing"><strong>Thing.</strong> This is typically an Existent that is not a location and is more or less inert; a sort of “prop” in theater terms. A Thing will have a spatial relationship to either a Place or an Actor. Typically that relationship will be “in” a Place or “of” (that is, possessed by) an Actor. Things are the last Existents that are defined.</p>
+<h3>Existents</h3>
 
-<p id="cosmos"><strong>Cosmos.</strong> This special Actor is sort of like “nature,” responsible for earthquakes, power outages, and any occurrence where you don't want to declare some other specific Actor as being responsible. Cosmos is defined by default for all stories.</p>
+<p id="item"><strong>Existent.</strong> Basically, this is any physical object that has a representation in the story. In other contexts these might be called “objects,” but that term means something different in object-oriented programming, while “existent,” even if it sounds odd, is a bona fide term in narratology. Existents must be in one of three categories, so that they are either Places, Actors, or Things.</p>
+
+<p id="place"><strong>Place.</strong> A discrete location. Everything in one Place can be seen by all Actors in that Place. (In advanced usage of the system, it’s possible to specify that other Places are visible, or partly visible, from a particular Place.) Places get defined first.</p>
+
+<p id="actor"><strong>Actor.</strong> An anthropomorphic Existent that can take action on its own, and one that can serve for instance as narrator (the “I” of the narrative) or narratee (the “you”). Unless an Actor is “offstage” the Actor will be in some Place. Actors are defined after Places and before Things.</p>
+
+<p id="thing"><strong>Thing.</strong> This is typically an Existent that is neither a location or an active, anthropomorphic being — a sort of prop, in theater terms. A Thing will be in a Place unless “offstage.” It’s less usual for Things to be the agents of Events, but it can happen. A blender could pulverize an apple, for instance, or even an android, for that matter. Things are the last Existents that are defined.</p>
+
+<p id="cosmos"><strong>Cosmos.</strong> This special Thing is sort of like “nature,” responsible for earthquakes, power outages, and any occurrence where you don't want to declare some other specific Actor as being responsible. (Cosmos is the type of Thing that does indeed serve as the agent of Events.) Cosmos is defined by default for all stories.</p>
 
 
-<h3 id="events">Events // Curveship-js</h3>
+<h3 id="events">Events</h3>
 
-<p>Defining an Event declares that this does indeed take place in the story world. Placing Events one after another arranges them in chronological order.</p>
+<p>Defining an Event declares that this does indeed take place in the story world. Placing Events one after another arranges them in chronological order at the content level.</p>
 
 
-<h3>Required Files &amp; Specifying Spin // Curveship-js</h3>
+<h2 id="narrating">Narrating & Expression // Curveship-js</h2>
 
-<p><strong>Story File.</strong> This has all of the particular Existents and Events corresponding to what there is, and what happens, in a narrative: It defines the “story” or “content” level.</p>
+<h3 id="spin">Spin</h3>
 
-<p><strong>Required JS files.</strong> Both curveship.js and verb.js need to be sourced on every Curveship-js HTML page, along with the story file.</p>
+<p>General paramaters for narrating are indicated in the spin at the beginning of a narrator file.</p>
 
-<p><strong>Spin.</strong> The way the story is told, at the level of narrative discourse, is currently specified by adding arguments to the URL. There is no spin file. The examples show how this can be done.</p>
+<h3 id="names">Names</h3>
+
+<p>Narrators need to name Existents. For each particular Existent, Names can be specified by providing what string is used on first reference and, optionally, what is used on subsequent references. There is also the option to specify ProperNames for an Existent.</p>
+
+<p>If an Existent does not have corresponding Names provided in a particular narrator file, the narrator will use a generic term. For an Actor who is female and a child, for instance, this will be “a girl” on first reference and “the girl” thereafter. It’s almost certainly a good idea to provide specific Names for any Thing that is included, because otherwise, it will be referred to as “a thing” the first time and “the thing” thereafter.</p>
+
+<h3 id="vps">Verb Phrases</h3>
+
+<p>Narrators also need to represnt Events. For each particular Event, a VerbPh can be specified by providing a string that will be processed when output text is realized. It’s almost certainly a good idea to provide a specific VerbPh for every Event that is included, because otherwise, a very generic verb, “act,” will be used.</p>
+
+
+<h2>Advanced & Research Features // Curveship-js</h2>
+
+<p>The following three features are <i>content level</i> (thus, they are specified along with Existents in the story.js file) but are <i>used in narrating</i> (a spin parameter, “groupings,” determines which methods of grouping are used). <b>All of these features are being implemented as part of a research project. None of them pertain to the basics of narrative theory. There is no guarantee thay any will be fully working!</b></p>
+
+<p><b>Categories.</b> A tree (graph-theoretically) of Categories can, optionally, be defined, with “entity” (the most general category) as its root. Specific Existents can then be placed in Categories. This allows for some narrators to be specific in naming Existents (e.g., “parsley, sage, rosemary, and thyme”) while others can be general and group Existents together when they are in the same Category (e.g., “some herbs”).
+
+<p><b>Parts.</b> Things can, optionally, be specified as parts of other Things to create a forest (graph-theoretically). This allows for some narrators to be specific in naming Existents (e.g., “the wheel, the axle, the rope”) while others can be general and group Existents together when they are parts of a Thing (e.g., “the pulley”).
+
+<p><b>Properties.</b> Properties of Things can, optionally, be specified. In the current implementation of Curveship-js, properties are simply strings, and Things either have a property or don’t have it. This feature is meant to allow for some narrators to be specific in naming Existents (e.g., “the strawberry, the ladybug, the stop sign”) while others can be general and group Existents together when they share a property (e.g., “the red things”).
+
+
+<h2>Required Files // Curveship-js</h2>
+
+<p>Each variable tale is placed in its own directory, which bears a short, descriptive name consisting only of lowercase letters and (if necessary) numerals and underscore characters. “The Simulate Bank Robbery” for instance is located in the directory <i>robbery</i>. A file index.html within the directory allows the variable tale to be generated.</p>
+
+<p><strong>Standard JS files.</strong> Three files must be sourced at the top of index.html:
+<ul>
+  <li><b>curveship.js</b> — the main file, which eventually will be made as language-independent as possible.</li>
+  <li><b>noun.js</b> — for English noun pluralization.</li>
+  <li><b>verb.js</b> — for English verb formation.</li>
+</ul>
+</p>
+
+<p><strong>Story File.</strong> This <i>story.js</i> is placed in the variable narrative directory and sourced immediately after the standard files. This has all of the particular Existents and Events corresponding to what there is, and what happens, in a narrative: It defines the “story” or “content” level.</p>
+
+<p><strong>Narrator Files.</strong> One or more JS files are also included in the variable narrative directory. The way the story is told, at the level of narrative discourse, is currently specified by changing <i>index.html</i> to refer to a particular one of these.</p>
 
 
 <div class="homeward" style="text-align:center">

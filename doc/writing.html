@@ -23,13 +23,17 @@
 
 <h2>Writing for Curveship-<span style="color:black">js</span></h2>
 
-<p>To write a Curveship-js story file ending in ".js" one needs only define some <b>metadata,</b> provide sequences of <b>Places, Actors, Things,</b> and <b>Events,</b> and then conclude with a final, standard two lines.</p>
+<p>To write a Curveship-js story file ending in ".js" one needs only define some <b>metadata,</b> provide sequences of <b>Places, Actors, Things,</b> and <b>Events,</b> and then conclude with a final, standard line.</p>
 
-<p>The easy things, such as defining a story that is like a folk tale, with straightforward story elements and little underlying complexity, are meant to be easy to implement in Curveship-js. See <a href="examples/robbery.js" target="_blank">robbery.js</a> for one reasonably simple example, with only a few special nuances; even simpler is <a href="examples/waiting.js" target="_blank">waiting.js.</a> The harder things are meant to be possible, even if they may take some effort. See <a href="examples/hour.js" target="_blank">hour.js</a> and <a href="examples/prodigal.js" target="_blank">prodigal.js</a></p>
+<p>Easy things are meant to be easy to do in Curveship-js. For instance, it should be easy to define a story that is like a folk tale, with straightforward story elements and little underlying complexity in terms of what fundamentally happens. See <a href="examples/robbery/story.js" target="_blank">robbery/story.js</a> for one reasonably simple example, with only a few special nuances; even simpler is <a href="examples/waiting/story.js" target="_blank">waiting/story.js.</a></p>
+
+<p>Harder things are meant to be possible, even if they may take some effort. See <a href="examples/hour/story.js" target="_blank">hour/story.js</a> for an example of a variable narrative based on a shrot story with a lot of interiority. There's also <a href="examples/prodigal/story.js" target="_blank">prodigal/story.js</a>, which, although it’s based on a parable, has a lot of events of different sorts.</p>
 
 <p>The <b>metadata</b> is an associative array with your own <i>title, author, date, instructions,</i> and <i>examples,</i> several of which are optional. See the beginning of any story file for an example.</p>
 
 <p><b>Places</b> in the most simple case are defined like so:</p>
+
+<!-- FIXME need to describe the split between story and narrator files -->
 
 <pre>
   place.stairs = new Place("the", "stairs");
