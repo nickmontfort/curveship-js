@@ -114,7 +114,7 @@ class ValueError extends Error {
   }
 }
 
-class Category { // TODO Categories should be existents!
+class Category { // TODO Should Categories be existents?
   constructor(children = [], parent = category.entity) {
     this.parent = parent;
     this.properties = new Set();
@@ -343,6 +343,9 @@ class Narrator {
     return false;
   }
   name(e, role, groupBy) {
+    if (e === thing.cosmos) {
+      return "it";
+    }
     if (e instanceof Event) {
       return "that " + this.represent(e, groupBy);
     }
@@ -559,11 +562,9 @@ function narrate(title, told_by, world, spin, names, reps) {
     shuffle(telling);
   }
   var groupBy = new Set();
-  console.log(spin.groupings);
   if (spin.groupings) {
     groupBy = new Set(spin.groupings.split(" "));
   }
-  console.log(groupBy);
   div = document.createElement("div");
   element.appendChild(div);
   for (i of telling) {
