@@ -1,4 +1,4 @@
-// Casual Narrator for the Simulated Bank Robbery - a Curveship-js example
+// Prim Narrator for The Story of an Hour - a Curveship-js example
 //  Copyright 2021 Nick Montfort
 //
 // Copying and distribution of this file, with or without modification,
@@ -12,10 +12,9 @@ var spin = {
   // i: teller,
 };
 
-var told_by = "a casual, very oblique narrator";
+var told_by = "a prim narrator";
 
 names = {};
-
 
 // PLACES
 
@@ -35,7 +34,6 @@ names.josephine = new ProperNames("Josephine", "", pronoun.female, "the sister")
 names.doctor1 = new Names("the doctor", "", pronoun.male);
 names.doctor2 = new Names("the doctor", "", pronoun.male);
 names.peddler = new Names("a peddler");
-
 
 // THINGS
 
@@ -67,60 +65,60 @@ vp = {};
 
 vp.shudder = new VerbPh("shudder to think that life might be long");
 vp.crash = new VerbPh("crash");
-// vp.far_away = new VerbPh("is far away");
-// vp.does_not_know = new VerbPh("do not know");
+vp.far_away = new VerbPh("is far away");
+vp.does_not_know = new VerbPh("do not know");
 vp.learn_of_crash = new VerbPh("learn");
 vp.learn_of_death = new VerbPh("see Brently Mallard listed as dead");
 vp.confirm_crash = new VerbPh("confirm");
 vp.hasten = new VerbPh("hasten");
 vp.tell_josephine = new VerbPh("tell");
-// vp.tell_mrs_mallard = new VerbPh("tell");
-// vp.is_not_paralyzed = new VerbPh("do not become paralyzed");
-// vp.weep = new VerbPh("weep");
-// vp.finish_weeping = new VerbPh("finish weeping");
-// vp.go_to_room = new VerbPh("go");
-// vp.sit_in_chair = new VerbPh("sit");
-// vp.see_trees = new VerbPh("see");
-// vp.sense_breath_of_rain = new VerbPh("sense");
-// vp.hear_peddler = new VerbPh("hear");
-// vp.hear_song = new VerbPh("hear");
-// vp.hear_sparrows = new VerbPh("hear");
-// vp.show_through_clouds = new VerbPh("show");
-// vp.loll = new VerbPh("loll");
-// vp.sob = new VerbPh("sob");
-// vp.see_show = new VerbPh("see");
-// vp.stare_at_patches = new VerbPh("stare");
-// vp.wait = new VerbPh("wait");
-// vp.think_what = new VerbPh("think 'What is it?'");
-// vp.not_understand = new VerbPh("do not undertand");
-// vp.feels_thing = new VerbPh("feel");
-// vp.reach = new VerbPh("reach");
-// vp.breathe = new VerbPh("breathe");
-// vp.begin_to_recognize = new VerbPh("begin to recognize");
-// vp.resist = new VerbPh("resist");
-// vp.say_free = new VerbPh("say 'Free! Free! Free!'");
-// vp.look_ahead = new VerbPh("look ahead");
-// vp.beat_fast = new VerbPh("beat");
-// vp.see_years = new VerbPh("see");
-// vp.open_arms = new VerbPh("open");
-// vp.whisper_free = new VerbPh("whisper 'Free! Body and soul free!'");
-// vp.ask_to_enter = new VerbPh("ask to enter");
-// vp.implore = new VerbPh("say 'Louise, open the door! I beg; open the door. You will make yourself ill. What are you doing, Louise? For heaven's sake open the door'");
-// vp.reply = new VerbPh("say 'Go away. I am not making myself ill'");
-// vp.drink_elixir = new VerbPh("drink");
-// vp.pray = new VerbPh("pray that life might be long");
-// vp.open_door = new VerbPh("open");
-// vp.stride_down = new VerbPh("stride");
-// vp.decend = new VerbPh("decend");
-// vp.open_front = new VerbPh("open");
-// vp.enter_house = new VerbPh("enter");
-// vp.cry = new VerbPh("cry out");
-// vp.stand_amazed_at_cry = new VerbPh("stand amazed");
-// vp.try_to_hide = new VerbPh("try to hide");
-// vp.stand_amazed_at_hide = new VerbPh("stand amazed");
-// vp.fall_down = new VerbPh("fall down");
-// vp.die = new VerbPh("die");
-// vp.say_cause = new VerbPh("say that 'Mrs. Mallard died of heart disease — of the joy that kills'");
-// vp.arrive = new VerbPh("arrive");
+vp.tell_mrs_mallard = new VerbPh("tell");
+vp.is_not_paralyzed = new VerbPh("do not become paralyzed");
+vp.weep = new VerbPh("weep");
+vp.finish_weeping = new VerbPh("finish weeping");
+vp.go_to_room = new VerbPh("go");
+vp.sit_in_chair = new VerbPh("sit");
+vp.see_trees = new VerbPh("see");
+vp.sense_breath_of_rain = new VerbPh("sense");
+vp.hear_peddler = new VerbPh("hear");
+vp.hear_song = new VerbPh("hear");
+vp.hear_sparrows = new VerbPh("hear");
+vp.show_through_clouds = new VerbPh("show");
+vp.loll = new VerbPh("loll");
+vp.sob = new VerbPh("sob");
+vp.see_show = new VerbPh("see");
+vp.stare_at_patches = new VerbPh("stare");
+vp.wait = new VerbPh("wait");
+vp.think_what = new VerbPh("think 'What is it?'");
+vp.not_understand = new VerbPh("do not undertand");
+vp.feels_thing = new VerbPh("feel");
+vp.reach = new VerbPh("reach");
+vp.breathe = new VerbPh("breathe");
+vp.begin_to_recognize = new VerbPh("begin to recognize");
+vp.resist = new VerbPh("resist");
+vp.say_free = new VerbPh("say 'Free! Free! Free!'");
+vp.look_ahead = new VerbPh("look ahead");
+vp.beat_fast = new VerbPh("beat");
+vp.see_years = new VerbPh("see");
+vp.open_arms = new VerbPh("open");
+vp.whisper_free = new VerbPh("whisper 'Free! Body and soul free!'");
+vp.ask_to_enter = new VerbPh("ask to enter");
+vp.implore = new VerbPh("say 'Louise, open the door! I beg; open the door. You will make yourself ill. What are you doing, Louise? For heaven's sake open the door'");
+vp.reply = new VerbPh("say 'Go away. I am not making myself ill'");
+vp.drink_elixir = new VerbPh("drink");
+vp.pray = new VerbPh("pray that life might be long");
+vp.open_door = new VerbPh("open");
+vp.stride_down = new VerbPh("stride");
+vp.decend = new VerbPh("decend");
+vp.open_front = new VerbPh("open");
+vp.enter_house = new VerbPh("enter");
+vp.cry = new VerbPh("cry out");
+vp.stand_amazed_at_cry = new VerbPh("stand amazed");
+vp.try_to_hide = new VerbPh("try to hide");
+vp.stand_amazed_at_hide = new VerbPh("stand amazed");
+vp.fall_down = new VerbPh("fall down");
+vp.die = new VerbPh("die");
+vp.say_cause = new VerbPh("say that 'Mrs. Mallard died of heart disease — of the joy that kills'");
+vp.arrive = new VerbPh("arrive");
 
 function run() { narrate(title, told_by, world, spin, names, vp); }
