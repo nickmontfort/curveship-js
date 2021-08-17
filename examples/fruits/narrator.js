@@ -1,4 +1,6 @@
-var spin = {};
+var spin = {
+  groupings: "category properties",
+};
 
 let told_by = "a narrator";
 

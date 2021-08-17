@@ -342,23 +342,21 @@ class Narrator {
     }
     return false;
   }
-  name(e, role, exTag = null) { // TODO sloppy to have exTag, I think?
-    // why not just use e.tag?
+  name(e, role, groupBy) {
     if (e instanceof Event) {
-      return "that" + this.represent(e);
+      return "that " + this.represent(e, groupBy);
     }
     if (e instanceof ExistentGroup) {
-      return this.group(e, role);
+      return this.nameGroup(e, role, groupBy);
     }
-    exTag = (exTag === null) ? e.tag : exTag;
-    if (this.names[exTag].nameByCategory) {
-      let categoryName = this.names[e.getCategory().tag];
-      this.names[exTag] = new Names("a " + categoryName.name, "the " + categoryName.name);
+    if (this.names[e.tag].nameByCategory) {
+      let cat = this.names[e.getCategory().tag];
+      this.names[e.tag] = new Names("a " + cat.name, "the " + cat.name);
     }
-    if (this.names[exTag].pronouns !== null || e.hasOwnProperty("gender")) {
-      let pronouns = this.names[exTag].pronouns !== null ? this.names[exTag].pronouns : pronoun[e.gender];
+    if (this.names[e.tag].pronouns !== null || e.hasOwnProperty("gender")) {
+      let pronouns = this.names[e.tag].pronouns !== null ? this.names[e.tag].pronouns : pronoun[e.gender];
       let pronominalize = this.pronominalization(e, role);
-      if (this.names[exTag].initial === "") {
+      if (this.names[e.tag].initial === "") {
         // Existents that have been given blank initial names are always
         // pronominalized. To have existents referred to by "default"
         // common names based on the type of existent they are, simply
@@ -385,14 +383,13 @@ class Narrator {
       }
       return this.names[e.owner.tag].pronouns.getPossessivePronoun(spin, ev);
     } */
-    if (this.givens.has(exTag)) {
-      return this.names[exTag].subsequent;
+    if (this.givens.has(e.tag)) {
+      return this.names[e.tag].subsequent;
     } else {
-      this.givens.add(exTag);
-      return this.names[exTag].initial;
+      this.givens.add(e.tag);
+      return this.names[e.tag].initial;
     }
   }
-
   ascendTree(existents, method) {
     var aboveArray = [];
     for (var existent of existents) {
@@ -426,7 +423,6 @@ class Narrator {
     }
     return join;
   }
-
   whatAreWePartsOf(ex) {
     var existents = [];
     for (let existent of ex.existentArray) {
@@ -437,7 +433,6 @@ class Narrator {
     if (something === null || something === thing.cosmos) return "";
     return (ex.length() == 1) ? "the part of " + this.name(something) : " the parts of " + this.name(something);
   }
-
   whatCategoryAreWeIn(ex) {
     var categories = [];
     var existents = [];
@@ -448,39 +443,38 @@ class Narrator {
     var meta = this.ascendTree(existents, "by category");
     // are they in a common category? find the most specific one
     if (meta === category.entity) return "";
-    return this.name(meta, "category", ex.tag);
+    return this.name(meta, "category");
   }
-
-
-
-  findSimilarities(ex) {
-
-    var initCategory = ex.existentArray[0].getCategory();
+  // FIXME
+  doWeShareProperties(ex) {
+    var cat = ex.existentArray[0].getCategory();
     // check for property relations
-    var initProperties = initCategory.getProperties();
-    for (var property of initProperties.keys()) {
-      var shareAllProperties = ex.existentArray.every(item => item.getCategory().getProperties().has(property));
-      if (shareAllProperties) {
+    var props = cat.getProperties();
+    for (let property of props.keys()) {
+      let allShareAProperty = ex.existentArray.every(item => item.getCategory().getProperties().has(property));
+      if (allShareAProperty) {
         return "the objects with " + property;
       }
     }
-
-    return null;
+    return "";
   }
-
-  group(ex, role) {
-    var groupByParts = true; // FIXME this shouldn't be hard-coded
-    var groupByCategory = true; // FIXME this shouldn't be hard-coded
-    if (groupByParts) {
+  nameGroup(ex, role, groupBy) {
+    if (groupBy.has("parts")) {
       var partOf = this.whatAreWePartsOf(ex);
       if (partOf !== "") {
         return partOf;
       }
     }
-    if (groupByCategory) {
+    if (groupBy.has("category")) {
       var inCategory = this.whatCategoryAreWeIn(ex);
       if (inCategory !== "") {
         return inCategory;
+      }
+    }
+    if (groupBy.has("properties")) {
+      var sharedProperty = this.doWeShareProperties(ex);
+      if (sharedProperty !== "") {
+        return sharedProperty;
       }
     }
     if (ex.length() == 2) {
@@ -493,21 +487,21 @@ class Narrator {
     return result + " and " + this.name(ex.get(ex.length() - 1), role);
   }
 
-  represent(ev) {
+  represent(ev, groupBy) {
     var result = this.representation[ev.tag].template;
     var number = world.ev[ev.tag].agent instanceof ExistentGroup ? 2 : 1;
     var verbString = this.representation[ev.tag].verb.conjugatedVP(3, number, "present", "", ev); // FIXME different persons, tenseER, tenseRS
     var vp = verbString + (this.representation[ev.tag].rest ? ' ' + this.representation[ev.tag].rest : '');
-    result = result.replace("\[SUB\]", this.name(world.ev[ev.tag].agent, "subject"));
+    result = result.replace("\[SUB\]", this.name(world.ev[ev.tag].agent, "subject", groupBy));
     result = result.replace("\[V\]", vp);
     if (world.ev[ev.tag].hasOwnProperty("direct")) {
-      result = result.replace("\[DO\]", this.name(world.ev[ev.tag].direct, "object"));
+      result = result.replace("\[DO\]", this.name(world.ev[ev.tag].direct, "object", groupBy));
     }
     if (world.ev[ev.tag].hasOwnProperty("temporal")) {
       result = result.replace("\[PREP\]", temporal[world.ev[ev.tag].temporal]);
     }
     if (world.ev[ev.tag].hasOwnProperty("indirect")) {
-      result = result.replace("\[IO\]", this.name(world.ev[ev.tag].indirect, "object"));
+      result = result.replace("\[IO\]", this.name(world.ev[ev.tag].indirect, "object", groupBy));
     }
     result = result += ".";
     this.lastNarratedEvent = world.ev[ev.tag];
@@ -564,6 +558,12 @@ function narrate(title, told_by, world, spin, names, reps) {
   } else if (spin.order === "random") {
     shuffle(telling);
   }
+  var groupBy = new Set();
+  console.log(spin.groupings);
+  if (spin.groupings) {
+    groupBy = new Set(spin.groupings.split(" "));
+  }
+  console.log(groupBy);
   div = document.createElement("div");
   element.appendChild(div);
   for (i of telling) {
@@ -618,11 +618,11 @@ function narrate(title, told_by, world, spin, names, reps) {
       if (spin.speaking === "before") {
         spin.speaking = "during";
       }
-      sentence += narr.represent(current);
+      sentence += narr.represent(current, groupBy);
       spin.speaking = oldSpeaking;
       spin.referring = oldReferring;
     } else {
-      sentence += narr.represent(current);
+      sentence += narr.represent(current, groupBy);
     }
     div.innerHTML = sentence;
     element.appendChild(div);

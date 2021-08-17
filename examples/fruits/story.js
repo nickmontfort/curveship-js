@@ -21,17 +21,11 @@ thing.strawberry = new Thing(place.room);
 thing.cherry = new Thing(place.room);
 
 category.fruit = new Category();
-category.galaApple = new Category(
-  [thing.apple],
-  category.fruit);
-category.berries = new Category(
-  [thing.cherry, thing.strawberry],
-  category.fruit
-);
+category.galaApple = new Category([thing.apple], category.fruit);
+category.berries = new Category([thing.cherry, thing.strawberry], category.fruit);
 category.fruit.addProperties(["skin"]);
 
-category.human = new Category(
-  [actor.eater]);
+category.human = new Category([actor.eater]);
 category.human.addProperties(["skin"]);
 
 
