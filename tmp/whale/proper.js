@@ -48,6 +48,6 @@ vp.enter = new VerbPh("enter");
 vp.out = new VerbPh("come out covered in blood");
 vp.card = new VerbPh("have");
 vp.stare_3 = new VerbPh("stare at");
-vp.card_content = new VerbPh("say 'If you had any problems or did not receive a response, call the number below: +1 (857) 204 0988'");
+vp.card_content = new VerbPh("say 'If you had any problems or did not receive the messenger, call the number below: +1 (857) 204 0988'");
 
 function run() { narrate(title, told_by, world, spin, names, vp); }
