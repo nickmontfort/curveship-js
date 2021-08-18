@@ -114,7 +114,7 @@ class ValueError extends Error {
   }
 }
 
-class Category { // TODO Should Categories be existents?
+class Category { // Should probably extend Existent
   constructor(children = [], parent = category.entity) {
     this.parent = parent;
     this.properties = new Set();
@@ -448,7 +448,6 @@ class Narrator {
     if (meta === category.entity) return "";
     return this.name(meta, "category");
   }
-  // FIXME
   doWeShareProperties(ex) {
     var cat = ex.existentArray[0].getCategory();
     // check for property relations
