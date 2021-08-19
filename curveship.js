@@ -1,5 +1,4 @@
-// Curveship-js version 0.4
-//  Copyright 2020-2021 Nick Montfort
+// Curveship-js version 0.4 //  Copyright 2020-2021 Nick Montfort
 //
 // Licensed under the GNU General Public License v3.0. See the file LICENSE
 // for complete terms.
@@ -243,9 +242,22 @@ class Names {
   }
 }
 
-class NameByCategory extends Names { // TODO always do this if no more specific name is provided
-  constructor() {
-    super();
+class GenericNames extends Names {
+  constructor(tag) {
+    if (tag in actor && actor[tag].gender == "male") {
+      if (actor[tag].age == "adult") {
+        name = "man";
+      } else {
+        name = "boy";
+      }
+    } else if (tag in actor && actor[tag].gender == "female") {
+      if (actor[tag].age == "adult") {
+        name = "woman";
+      } else {
+        name = "girl";
+      }
+    }
+    super("a " + name, "the " + name);
     this.nameByCategory = true;
   }
 }
@@ -352,9 +364,16 @@ class Narrator {
     if (e instanceof ExistentGroup) {
       return this.nameGroup(e, role, groupBy);
     }
+    if (!(e.tag in this.names)) {
+      // there are no Names for this Existent!
+      // we need to generate them, generically
+      this.names[e.tag] = new GenericNames(e.tag);
+    }
     if (this.names[e.tag].nameByCategory) {
       let cat = this.names[e.getCategory().tag];
-      this.names[e.tag] = new Names("a " + cat.name, "the " + cat.name);
+      if (typeof cat === "undefined") {
+        this.names[e.getCategory().tag] = new Names("something");
+      }
     }
     if (this.names[e.tag].pronouns !== null || e.hasOwnProperty("gender")) {
       let pronouns = this.names[e.tag].pronouns !== null ? this.names[e.tag].pronouns : pronoun[e.gender];
