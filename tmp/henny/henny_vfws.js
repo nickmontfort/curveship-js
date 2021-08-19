@@ -12,7 +12,7 @@ var spin = {
    //i: actor.henny,
 };
 
-var told_by = "";
+var told_by = "a modern storyteller";
 
 names = {};
 
@@ -27,8 +27,8 @@ names.turkey = new Names("Turkey Lurkey");
 names.fox = new Names("Fox Lox");
 names.tree= new Names("a pea-stack");
 names.nut = new Names("a pea");
-names.head = new Names("the head")
-names.head2 = new Names("his head")
+names.head = new Names("the head");
+names.head2 = new Names("his head");
 
 names.crowd = new Names("The animals")
 vp = {};
