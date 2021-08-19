@@ -14,18 +14,13 @@ let title = "Henny Penny";
 // EXISTENTS: Places, Actors, Things in that order
 
 place.farmyard = new Place();
-place.barn = new Place();
-place.lake = new Place();
-place.river = new Place();
-place.forest = new Place();
 place.cave = new Place();
-place.tree = new Place()
 
 actor.henny = new Actor(place.farmyard, "female");
-actor.rooster = new Actor(place.barn, "male");
-actor.duck = new Actor(place.lake, "male");
-actor.goose = new Actor(place.river, "female");
-actor.turkey = new Actor(place.forest, "male");
+actor.rooster = new Actor(place.farmyard, "male");
+actor.duck = new Actor(place.farmyard, "male");
+actor.goose = new Actor(place.farmyard, "female");
+actor.turkey = new Actor(place.farmyard, "male");
 actor.fox = new Actor(place.cave, "male");
 
 category.crowd = new Category([actor.henny,

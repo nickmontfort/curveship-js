@@ -13,7 +13,7 @@ var spin = {
    //i: actor.henny,
 };
 
-var told_by = "";
+var told_by = "Buddhist monks";
 
 names = {};
 
