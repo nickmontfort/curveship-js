@@ -7,8 +7,8 @@
 // without any warranty.
 
 var spin = {
-  i: actor.john,
-  you: actor.mary,
+  i: "john",
+  you: "mary",
 };
 
 var told_by = "John";

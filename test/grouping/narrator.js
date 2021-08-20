@@ -15,9 +15,7 @@ names.seat = new Names("the seat");
 names.shell = new Names("the shell");
 names.cover = new Names("the cover");
 names.table = new Names("a table", "the table");
-names.apple = new NameByCategory(); // TODO this isn't needed explicitly,
-                                // the system must fall back to naming by
-                                // category or if no category "generically"
+// names.apple ...
 names.cherry = new Names("a cherry", "the cherry");
 names.strawberry = new Names("a strawberry", "the strawberry");
 names.blueberry = new Names("a blueberry", "the blueberry");

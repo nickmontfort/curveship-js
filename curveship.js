@@ -282,9 +282,9 @@ class Narrator {
   buildRepresentations(world, vps) {
     this.representation = {};
     for (let ev in world.ev) {
-      if (!vps.hasOwnProperty(ev.tag)) {
-        vps[ev] = new GenericVerbPh(world.ev[ev].hasOwnProperty("direct") ? "trans" : "intrans");
-      }
+      if (!(ev in vps)) {
+        console.log("hi...");
+        vps[ev] = new GenericVerbPh(world.ev[ev].hasOwnProperty("direct") ? "trans" : "intrans"); }
     }
     for (let vp in vps) {
       this.representation[vp] = {};
@@ -319,11 +319,11 @@ class Narrator {
       }
     }
   }
-  pronominalization(ex, role) {
+  doWePronominalize(ex, spin, role) { // FIXME lots to be sorted out here!!!
     let exTag = ex.tag;
-    var person = 3;
-    if (this.i === exTag) person = 1; // TODO connect these to a spin
-    if (this.you === exTag) person = 2;
+    let person = 3;
+    if (spin.i === exTag) person = 1;
+    if (spin.you === exTag) person = 2;
     /** TODO restore reflexive
      * if (ev.agent.includes(this)) {
      *   if (role === "object") return ["reflexive", person];
@@ -336,35 +336,34 @@ class Narrator {
     }
     return false;
   }
-  name(e, role, groupBy) {
+  name(e, spin, role) {
     if (e === thing.cosmos) {
-      return "it";
+      pronominalize = true;
     }
     if (e instanceof Event) {
-      return "that " + this.represent(e, groupBy);
+      return "that " + this.represent(e, spin); // FIXME "that" is language-specific
     }
     if (e instanceof ExistentGroup) {
-      return this.nameGroup(e, role, groupBy);
+      return this.nameGroup(e, spin, role);
     }
     if (!(e.tag in this.names)) {
-      // there are no Names for this Existent!
-      // we need to generate them, generically
       this.names[e.tag] = new GenericNames(e.tag);
     }
     if (this.names[e.tag].nameByCategory) {
       let cat = this.names[e.getCategory().tag];
       if (typeof cat === "undefined") {
-        this.names[e.getCategory().tag] = new Names("something");
+        this.names[e.getCategory().tag] = new GenericNames();
       }
     }
     if (this.names[e.tag].pronouns !== null || e.hasOwnProperty("gender")) {
       let pronouns = this.names[e.tag].pronouns !== null ? this.names[e.tag].pronouns : pronoun[e.gender];
-      let pronominalize = this.pronominalization(e, role);
+      let pronominalize = this.doWePronominalize(e, spin, role);
       if (this.names[e.tag].initial === "") {
         // Existents that have been given blank initial names are always
         // pronominalized. To have existents referred to by "default"
         // common names based on the type of existent they are, simply
-        // don't include a name for them at all in narrator.js.
+        // don't include a name for them at all in narrator.js. GenericNames
+        // is instantiated in that case.
         pronominalize = true;
       }
       if (pronominalize) {
@@ -435,7 +434,7 @@ class Narrator {
     var something = this.ascendTree(existents, "by part");
     // are they parts of something? find the most specific thing
     if (something === null || something === thing.cosmos) return "";
-    return (ex.length() == 1) ? "the part of " + this.name(something) : " the parts of " + this.name(something);
+    return (ex.length() == 1) ? "the part of " + this.name(something, spin) : " the parts of " + this.name(something, spin);
   }
   whatCategoryAreWeIn(ex) {
     var categories = [];
@@ -447,7 +446,7 @@ class Narrator {
     var meta = this.ascendTree(existents, "by category");
     // are they in a common category? find the most specific one
     if (meta === category.entity) return "";
-    return this.name(meta, "category");
+    return this.name(meta, spin, "category");
   }
   doWeShareProperties(ex) {
     var cat = ex.existentArray[0].getCategory();
@@ -461,50 +460,50 @@ class Narrator {
     }
     return "";
   }
-  nameGroup(ex, role, groupBy) {
-    if (groupBy.has("parts")) {
+  nameGroup(ex, spin, role) {
+    if (spin.groupings.has("parts")) {
       var partOf = this.whatAreWePartsOf(ex);
       if (partOf !== "") {
         return partOf;
       }
     }
-    if (groupBy.has("category")) {
+    if (spin.groupings.has("category")) {
       var inCategory = this.whatCategoryAreWeIn(ex);
       if (inCategory !== "") {
         return inCategory;
       }
     }
-    if (groupBy.has("properties")) {
+    if (spin.groupings.has("properties")) {
       var sharedProperty = this.doWeShareProperties(ex);
       if (sharedProperty !== "") {
         return sharedProperty;
       }
     }
     if (ex.length() == 2) {
-      return this.name(ex.get(0), role) + " and " + this.name(ex.get(1), role);
+      return this.name(ex.get(0), role) + " and " + this.name(ex.get(1), spin, role);
     }
     let result = "";
     for (var i = 0; i < ex.length() - 1; i++) {
-      result += this.name(ex.get(i), role) + ", ";
+      result += this.name(ex.get(i), spin, role) + ", ";
     }
-    return result + " and " + this.name(ex.get(ex.length() - 1), role);
+    return result + " and " + this.name(ex.get(ex.length() - 1), spin, role);
   }
 
-  represent(ev, groupBy) {
+  represent(ev, spin) {
     var result = this.representation[ev.tag].template;
     var number = world.ev[ev.tag].agent instanceof ExistentGroup ? 2 : 1;
     var verbString = this.representation[ev.tag].verb.conjugatedVP(3, number, "present", "", ev); // FIXME different persons, tenseER, tenseRS
     var vp = verbString + (this.representation[ev.tag].rest ? ' ' + this.representation[ev.tag].rest : '');
-    result = result.replace("\[SUB\]", this.name(world.ev[ev.tag].agent, "subject", groupBy));
+    result = result.replace("\[SUB\]", this.name(world.ev[ev.tag].agent, spin, "subject"));
     result = result.replace("\[V\]", vp);
     if (world.ev[ev.tag].hasOwnProperty("direct")) {
-      result = result.replace("\[DO\]", this.name(world.ev[ev.tag].direct, "object", groupBy));
+      result = result.replace("\[DO\]", this.name(world.ev[ev.tag].direct, spin, "object"));
     }
     if (world.ev[ev.tag].hasOwnProperty("temporal")) {
       result = result.replace("\[PREP\]", temporal[world.ev[ev.tag].temporal]);
     }
     if (world.ev[ev.tag].hasOwnProperty("indirect")) {
-      result = result.replace("\[IO\]", this.name(world.ev[ev.tag].indirect, "object", groupBy));
+      result = result.replace("\[IO\]", this.name(world.ev[ev.tag].indirect, spin, "object"));
     }
     result = result += ".";
     this.lastNarratedEvent = world.ev[ev.tag];
@@ -561,14 +560,12 @@ function narrate(title, told_by, world, spin, names, reps) {
   } else if (spin.order === "random") {
     shuffle(telling);
   }
-  var groupBy = new Set();
-  if (spin.groupings) {
-    groupBy = new Set(spin.groupings.split(" "));
-  }
+  let groupingSet = spin.hasOwnProperty("groupings") ? new  Set(spin.groupings.split(" ")) : spin.groupings = new Set();
+  spin.groupings = groupingSet;
   div = document.createElement("div");
   element.appendChild(div);
-  for (i of telling) {
-    var e, alt;
+  for (let i of telling) {
+    let e, alt;
     current = world.evSeq[i];
     // Each time we narrate an event, all the "after" alterations of
     // chronologically earlier events must be applied, *and* the prior
@@ -619,11 +616,11 @@ function narrate(title, told_by, world, spin, names, reps) {
       if (spin.speaking === "before") {
         spin.speaking = "during";
       }
-      sentence += narr.represent(current, groupBy);
+      sentence += narr.represent(current, spin);
       spin.speaking = oldSpeaking;
       spin.referring = oldReferring;
     } else {
-      sentence += narr.represent(current, groupBy);
+      sentence += narr.represent(current, spin);
     }
     div.innerHTML = sentence;
     element.appendChild(div);
