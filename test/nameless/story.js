@@ -23,15 +23,17 @@ thing.cherry = new Thing(place.room);
 thing.strawberry = new Thing(place.room);
 thing.blueberry = new Thing(place.room);
 
-category.fruit = new Category([thing.apple]);
-category.berries = new Category([thing.cherry, thing.strawberry, thing.blueberry], category.fruit);
+category.fruit = new Category();
+category.apple = new Category([thing.apple], category.fruit);
+category.berry = new Category([thing.cherry, thing.strawberry, thing.blueberry], category.fruit);
 
 // EVENTS
 
 ev.taunt = new Event(actor.littleMan, actor.littleWoman);
 ev.sigh = new Event(actor.heroine);
 ev.throw = new Event(actor.littleWoman, thing.ball);
-ev.give = new Event(actor.heroine, actor.hero, thing.apple);
+ev.catch = new Event(actor.littleMan, thing.ball);
+ev.give = new Event(actor.heroine, thing.apple, temporal.to, actor.hero);
 ev.eat = new Event(actor.hero, [thing.cherry, thing.strawberry]);
 
 var world = new World(place, actor, category, thing, ev);

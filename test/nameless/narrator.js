@@ -9,6 +9,10 @@ names = {};
 vp = {};
 
 vp.taunt = new VerbPh("pester");
+vp.sigh = new VerbPh("sigh");
+vp.throw = new VerbPh("throw");
+vp.catch = new VerbPh("catch");
+vp.give = new VerbPh("give");
 // vp.sigh ...
 // vp.throw ...
 // vp.give ...

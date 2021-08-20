@@ -242,26 +242,6 @@ class Names {
   }
 }
 
-class GenericNames extends Names {
-  constructor(tag) {
-    if (tag in actor && actor[tag].gender == "male") {
-      if (actor[tag].age == "adult") {
-        name = "man";
-      } else {
-        name = "boy";
-      }
-    } else if (tag in actor && actor[tag].gender == "female") {
-      if (actor[tag].age == "adult") {
-        name = "woman";
-      } else {
-        name = "girl";
-      }
-    }
-    super("a " + name, "the " + name);
-    this.nameByCategory = true;
-  }
-}
-
 class ProperNames extends Names {
   constructor(given, family, pronouns, common = null, title = null) {
     let initial = (title !== null ? title + " " : "") + given + " " + family;

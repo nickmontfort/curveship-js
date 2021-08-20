@@ -34,6 +34,29 @@ class Noun {
   }
 }
 
+class GenericNames extends Names {
+  constructor(tag) {
+    let name;
+    if (tag in actor && actor[tag].gender == "male") {
+      if (actor[tag].age == "adult") {
+        name = "man";
+      } else {
+        name = "boy";
+      }
+    } else if (tag in actor && actor[tag].gender == "female") {
+      if (actor[tag].age == "adult") {
+        name = "woman";
+      } else {
+        name = "girl";
+      }
+    } else if (tag in thing) {
+      name = "thing";
+    }
+    super("a " + name, "the " + name);
+    this.nameByCategory = true;
+  }
+}
+
 const irregularNouns = { // To contain a list generated from a dictionary.
   "child" : ["children"]
 };
