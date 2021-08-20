@@ -87,6 +87,13 @@ class Verb {
     }
 }
 
+class GenericVerbPh extends VerbPh {
+  constructor(transitivity) {
+    let phrase = (transitivity === "trans") ? "act on" : "act";
+    super(phrase);
+  }
+}
+
 // A convenience, so people can, e.g., put "is" in their templates
 const be = ["be", "am", "are", "is"];
 

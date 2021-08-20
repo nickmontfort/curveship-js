@@ -265,12 +265,8 @@ class CategoryNames extends Names {
 }
 
 class VerbPh {
-  constructor(phrase = null) {
-    if (phrase === null) {
-      this.verb_phrase = "act";
-    } else {
-      this.verb_phrase = phrase;
-    }
+  constructor(phrase) {
+    this.verb_phrase = phrase;
   }
 }
 
@@ -280,42 +276,48 @@ class Narrator {
     if (this.names.existent === undefined) {
       this.names.existent = new CategoryNames("entity");
     }
+    this.buildRepresentations(world, vps);
+    this.givens = new Set();
+  }
+  buildRepresentations(world, vps) {
     this.representation = {};
-    for (let vp in vps) {
-      if (world.ev.hasOwnProperty(vp)) {
-        this.representation[vp] = {};
-        let verb = vps[vp].verb_phrase, rest = "";
-        if (verb.includes(' ')) {
-          verb = vps[vp].verb_phrase.substr(0, vps[vp].verb_phrase.indexOf(' '));
-          rest = vps[vp].verb_phrase.substr(vps[vp].verb_phrase.indexOf(' '));
-        }
-        this.representation[vp].verb = new Verb(verb);
-        this.representation[vp].template = "[SUB] [V]";
-        if (rest.length > 0) {
-          this.representation[vp].template += " " + rest;
-        }
-        if (world.ev[vp].hasOwnProperty("direct")) {
-          this.representation[vp].template += " [DO]";
-        }
-        if (world.ev[vp].hasOwnProperty("temporal")) {
-          this.representation[vp].template += " [PREP]";
-        }
-        if (world.ev[vp].hasOwnProperty("indirect")) {
-          this.representation[vp].template += " [IO]";
-        }
-        this.representation[vp].subject = world.ev[vp].agent.tag;
-        if (world.ev[vp].hasOwnProperty("direct")) {
-          this.representation[vp].direct = world.ev[vp].direct.tag;
-        }
-        if (world.ev[vp].hasOwnProperty("temporal")) {
-          this.representation[vp].temporal = world.ev[vp].temporal;
-        }
-        if (world.ev[vp].hasOwnProperty("indirect")) {
-          this.representation[vp].indirect = world.ev[vp].indirect.tag;
-        }
+    for (let ev in world.ev) {
+      if (!vps.hasOwnProperty(ev.tag)) {
+        vps[ev] = new GenericVerbPh(world.ev[ev].hasOwnProperty("direct") ? "trans" : "intrans");
       }
     }
-    this.givens = new Set();
+    for (let vp in vps) {
+      this.representation[vp] = {};
+      let verb = vps[vp].verb_phrase, rest = "";
+      if (verb.includes(' ')) {
+        verb = vps[vp].verb_phrase.substr(0, vps[vp].verb_phrase.indexOf(' '));
+        rest = vps[vp].verb_phrase.substr(vps[vp].verb_phrase.indexOf(' '));
+      }
+      this.representation[vp].verb = new Verb(verb);
+      this.representation[vp].template = "[SUB] [V]";
+      if (rest.length > 0) {
+        this.representation[vp].template += " " + rest;
+      }
+      if (world.ev[vp].hasOwnProperty("direct")) {
+        this.representation[vp].template += " [DO]";
+      }
+      if (world.ev[vp].hasOwnProperty("temporal")) {
+        this.representation[vp].template += " [PREP]";
+      }
+      if (world.ev[vp].hasOwnProperty("indirect")) {
+        this.representation[vp].template += " [IO]";
+      }
+      this.representation[vp].subject = world.ev[vp].agent.tag;
+      if (world.ev[vp].hasOwnProperty("direct")) {
+        this.representation[vp].direct = world.ev[vp].direct.tag;
+      }
+      if (world.ev[vp].hasOwnProperty("temporal")) {
+        this.representation[vp].temporal = world.ev[vp].temporal;
+      }
+      if (world.ev[vp].hasOwnProperty("indirect")) {
+        this.representation[vp].indirect = world.ev[vp].indirect.tag;
+      }
+    }
   }
   pronominalization(ex, role) {
     let exTag = ex.tag;
