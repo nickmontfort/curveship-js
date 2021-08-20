@@ -51,6 +51,8 @@ class GenericNames extends Names {
       }
     } else if (tag in thing) {
       name = "thing";
+    } else if (tag in place) {
+      name = "location";
     }
     super("a " + name, "the " + name);
     this.nameByCategory = true;

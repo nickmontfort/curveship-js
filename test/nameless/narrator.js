@@ -8,6 +8,7 @@ names = {};
 
 vp = {};
 
+vp.see = new VerbPh("see");
 vp.taunt = new VerbPh("pester");
 vp.sigh = new VerbPh("sigh");
 vp.throw = new VerbPh("throw");

@@ -29,6 +29,7 @@ category.berry = new Category([thing.cherry, thing.strawberry, thing.blueberry],
 
 // EVENTS
 
+ev.see = new Event(actor.heroine, place.room);
 ev.taunt = new Event(actor.littleMan, actor.littleWoman);
 ev.sigh = new Event(actor.heroine);
 ev.throw = new Event(actor.littleWoman, thing.ball);
