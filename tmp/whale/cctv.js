@@ -18,29 +18,29 @@ var told_by = "a “CCTV” narrator";
 
 // PLACES
 
-names.house = new Names("the transmitted image");
+// names.house = new Names("the transmitted image");
 
 // ACTORS
 
-names.john = new Names("the first person", null, pronoun.male);
-names.doug = new Names("the second person", null, pronoun.male);
+// names.john = new Names("the first person", null, pronoun.male);
+// names.doug = new Names("the second person", null, pronoun.male);
 
 // THINGS
 
 names.whale = new Names("the animal");
 names.violin = new Names("an instrument", "the instrument");
-names.music = new Names("something");
+// names.music = new Names("something");
 names.sound = new Names("creature");
-names.knife = new Names("the knife");
-names.card = new Names("something", "the thing");
+// names.knife = new Names("the knife");
+// names.card = new Names("something", "the thing");
 names.hands = new Names("hand");
 
 // EVENTS
 
 vp = {};
 
-vp.play_violin = new VerbPh("start playing");
-vp.whisper = new VerbPh("whisper something");
+vp.play_violin = new VerbPh("play");
+vp.whisper = new VerbPh("talk");
 vp.stop_music = new VerbPh("react to");
 vp.talk_3 = new VerbPh("say something");
 vp.stab = new VerbPh("stab");
