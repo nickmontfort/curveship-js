@@ -40,14 +40,14 @@ names.hands = new Names("handeth");
 vp = {};
 
 vp.play_violin = new VerbPh("play");
-vp.whisper = new VerbPh("whisp'r 'if Byrd cannot p'rsuade a myst'rious, p'rhaps divine, messeng'r to cometh out of the whale's belly, nothing else can'");
+vp.whisper = new VerbPh("whisp'r 'If Bach cannot persuade a mysterious, perhaps divine, messenger to come out of the whale's belly, nothing else can'");
 vp.stop_music = new VerbPh("muffle");
-vp.talk_3 = new VerbPh("sayeth 'T wouldst has't did destroy the whole castle if 't be true t hadst hath moved m're! i has't been tol'rating this filth and flesh in mine own house f'r a month.  Enow is enow!'");
+vp.talk_3 = new VerbPh("sayeth 'It would've destroyed the whole building if it had moved more! I have been tolerating this filth and flesh in my house for a month. Enough is enough!'");
 vp.stab = new VerbPh("stab");
 vp.enter = new VerbPh("ent'r");
 vp.out = new VerbPh("exit covered in blood");
 vp.card = new VerbPh("have");
 vp.stare_3 = new VerbPh("eye");
-vp.card_content = new VerbPh("sayeth 'If 't be true thee hadst any problems 'r didst not taketh a prophet, rep'rt to thy nearest coven'");
+vp.card_content = new VerbPh("sayeth 'If you had any problems or did not receive the messenger, call the number below: +1 (857) 204 0988'");
 
 function run() { narrate(title, told_by, world, spin, names, vp); }
