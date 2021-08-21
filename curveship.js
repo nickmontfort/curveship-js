@@ -237,6 +237,9 @@ class Names {
       subsequent = initial;
     }
     this.subsequent = subsequent;
+    if (pronouns === null) {
+      pronouns = pronoun.neuter;
+    }
     this.pronouns = pronouns;
     this.nameByCategory = false;
   }
@@ -283,7 +286,6 @@ class Narrator {
     this.representation = {};
     for (let ev in world.ev) {
       if (!(ev in vps)) {
-        console.log("hi...");
         vps[ev] = new GenericVerbPh(world.ev[ev].hasOwnProperty("direct") ? "trans" : "intrans"); }
     }
     for (let vp in vps) {
@@ -319,7 +321,11 @@ class Narrator {
       }
     }
   }
-  doWePronominalize(ex, spin, role) { // FIXME lots to be sorted out here!!!
+  whatPronoun(ex, spin, role) {
+    let pronounToUse = false;
+    // If this returned value is false, it means not to pronominalize.
+    // Otherwise an array is returned, the first element the role,
+    // the second the person.
     let exTag = ex.tag;
     let person = 3;
     if (spin.i === exTag) person = 1;
@@ -329,17 +335,28 @@ class Narrator {
      *   if (role === "object") return ["reflexive", person];
      * }
      */
-    if (person !== 3) return [role, person];
+    if (person !== 3) {
+      pronounToUse = [role, person]
+    } else
     // if (this.owner) return false; TODO with possessives
-    if (this.givens.has(exTag) && typeof this.lastNarratedEvent !== "undefined" && this.lastNarratedEvent.hasParticipant(ex)) {
-      return [role, 3];
+    if (this.names[ex.tag].initial === "") {
+      // Existents that have been given blank initial names are always
+      // pronominalized. To have existents referred to by generic
+      // common names based on the type of existent they are, simply
+      // don't include a Names for them at all in narrator.js.
+      pronounToUse = [role, 3];
+    } else if (this.givens.has(exTag) && (typeof this.lastNarratedEvent !== "undefined" && this.lastNarratedEvent.hasParticipant(ex))) {
+      // In this case the Existent has already been mentioned in the
+      // discourse, and indeed in the previous representation of an
+      // Event.
+      pronounToUse = [role, 3];
     }
-    return false;
+    return pronounToUse;
   }
   name(e, spin, role) {
     let usePronoun = false;
     if (e === thing.cosmos || e.tag === spin.i || e.tag === e.you) {
-      usePronoun = true;
+      usePronoun = true;  // FIXME makes no sense, has to be an array w/ 2 elements
     }
     if (e instanceof Event) {
       return "that " + this.represent(e, spin); // FIXME "that" is language-specific
@@ -358,15 +375,7 @@ class Narrator {
     }
     if (this.names[e.tag].pronouns !== null || e.hasOwnProperty("gender")) {
       let pronouns = this.names[e.tag].pronouns !== null ? this.names[e.tag].pronouns : pronoun[e.gender];
-      usePronoun = this.doWePronominalize(e, spin, role);
-      if (this.names[e.tag].initial === "") {
-        // Existents that have been given blank initial names are always
-        // pronominalized. To have existents referred to by "default"
-        // common names based on the type of existent they are, simply
-        // don't include a name for them at all in narrator.js. GenericNames
-        // is instantiated in that case.
-        usePronoun = true;
-      }
+      usePronoun = this.whatPronoun(e, spin, role);
       if (usePronoun) {
         switch (usePronoun[0]) { // FIXME no no! usePronoun isn't supposed to be the pronoun
           case "subject": {
@@ -481,7 +490,7 @@ class Narrator {
       }
     }
     if (ex.length() == 2) {
-      return this.name(ex.get(0), role) + " and " + this.name(ex.get(1), spin, role);
+      return this.name(ex.get(0), spin, role) + " and " + this.name(ex.get(1), spin, role);
     }
     let result = "";
     for (var i = 0; i < ex.length() - 1; i++) {

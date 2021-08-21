@@ -6,6 +6,8 @@ let told_by = "a narrator";
 
 names = {};
 
+names.apple = new Names(""); // always use a pronoun to refer to the apple
+
 vp = {};
 
 vp.see = new VerbPh("see");

@@ -34,35 +34,6 @@ class Noun {
   }
 }
 
-class GenericNames extends Names {
-  constructor(tag) {
-    let name;
-    if (tag in actor && actor[tag].gender == "male") {
-      if (actor[tag].age == "adult") {
-        name = "man";
-      } else {
-        name = "boy";
-      }
-    } else if (tag in actor && actor[tag].gender == "female") {
-      if (actor[tag].age == "adult") {
-        name = "woman";
-      } else {
-        name = "girl";
-      }
-    } else if (tag in thing) {
-      name = "thing";
-    } else if (tag in place) {
-      name = "location";
-    }
-    super("a " + name, "the " + name);
-    this.nameByCategory = true;
-  }
-}
-
-const irregularNouns = { // To contain a list generated from a dictionary.
-  "child" : ["children"]
-};
-
 // ### PRONOUNS ###
 
 class PronounSet {
@@ -114,6 +85,37 @@ pronoun.male = new PronounSet(["he", "him", "his", "his", "himself"]);
 pronoun.neuter = new PronounSet(["it", "it", "its", "its", "itself"]);
 pronoun.unknownBinary = new PronounSet(["he or she", "him or her", "his or her", "his or hers", "himself or herself"]);
 pronoun.nonBinary = new PronounSet(["they", "them", "their", "theirs", "themself"]); // If you prefer, you can make the last entry "themselves"
+
+class GenericNames extends Names {
+  constructor(tag) {
+    let name, pronounSet = pronoun.neuter;
+    if (tag in actor && actor[tag].gender == "male") {
+      pronounSet = pronoun.male;
+      if (actor[tag].age == "adult") {
+        name = "man";
+      } else {
+        name = "boy";
+      }
+    } else if (tag in actor && actor[tag].gender == "female") {
+      pronounSet = pronoun.female;
+      if (actor[tag].age == "adult") {
+        name = "woman";
+      } else {
+        name = "girl";
+      }
+    } else if (tag in thing) {
+      name = "thing";
+    } else if (tag in place) {
+      name = "location";
+    }
+    super("a " + name, "the " + name, pronounSet);
+    this.nameByCategory = true;
+  }
+}
+
+const irregularNouns = { // To contain a list generated from a dictionary.
+  "child" : ["children"]
+};
 
 var names = {
   cosmos: new Names(""),
