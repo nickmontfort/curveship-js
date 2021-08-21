@@ -255,7 +255,7 @@ class ProperNames extends Names {
 }
 
 class CategoryNames extends Names {
-  constructor(name, proper = null) {
+  constructor(name, proper = null) { // FIXME shuold be the plural of the name???
     let initial = "some " + (proper !== null ? proper + " " : "") + name + "s";
     let subsequent = "the " + (proper !== null ? proper + " " : "") + name + "s";
     super(initial, subsequent, pronoun.neuter);
@@ -337,8 +337,9 @@ class Narrator {
     return false;
   }
   name(e, spin, role) {
-    if (e === thing.cosmos) {
-      pronominalize = true;
+    let usePronoun = false;
+    if (e === thing.cosmos || e.tag === spin.i || e.tag === e.you) {
+      usePronoun = true;
     }
     if (e instanceof Event) {
       return "that " + this.represent(e, spin); // FIXME "that" is language-specific
@@ -357,25 +358,25 @@ class Narrator {
     }
     if (this.names[e.tag].pronouns !== null || e.hasOwnProperty("gender")) {
       let pronouns = this.names[e.tag].pronouns !== null ? this.names[e.tag].pronouns : pronoun[e.gender];
-      let pronominalize = this.doWePronominalize(e, spin, role);
+      usePronoun = this.doWePronominalize(e, spin, role);
       if (this.names[e.tag].initial === "") {
         // Existents that have been given blank initial names are always
         // pronominalized. To have existents referred to by "default"
         // common names based on the type of existent they are, simply
         // don't include a name for them at all in narrator.js. GenericNames
         // is instantiated in that case.
-        pronominalize = true;
+        usePronoun = true;
       }
-      if (pronominalize) {
-        switch (pronominalize[0]) {
+      if (usePronoun) {
+        switch (usePronoun[0]) { // FIXME no no! usePronoun isn't supposed to be the pronoun
           case "subject": {
-            return pronouns.getSubject(pronominalize[1], e.number);
+            return pronouns.getSubject(usePronoun[1], e.number);
           }
           case "object": {
-            return pronouns.getObject(pronominalize[1], e.number);
+            return pronouns.getObject(usePronoun[1], e.number);
           }
           case "reflexive": {
-            return pronouns.getReflexive(pronominalize[1], e.number);
+            return pronouns.getReflexive(usePronoun[1], e.number);
           }
         }
       }
@@ -490,10 +491,13 @@ class Narrator {
   }
 
   represent(ev, spin) {
-    var result = this.representation[ev.tag].template;
-    var number = world.ev[ev.tag].agent instanceof ExistentGroup ? 2 : 1;
-    var verbString = this.representation[ev.tag].verb.conjugatedVP(3, number, "present", "", ev); // FIXME different persons, tenseER, tenseRS
-    var vp = verbString + (this.representation[ev.tag].rest ? ' ' + this.representation[ev.tag].rest : '');
+    let result = this.representation[ev.tag].template;
+    let number = world.ev[ev.tag].agent instanceof ExistentGroup ? 2 : 1;
+    let person = 3;
+    person = (ev.agent.tag === spin.i) ? 1 : person;
+    person = (ev.agent.tag === spin.you) ? 2 : person;
+    let verbString = this.representation[ev.tag].verb.conjugatedVP(person, number, "present", "", ev); // FIXME different persons, tenseER, tenseRS
+    let vp = verbString + (this.representation[ev.tag].rest ? ' ' + this.representation[ev.tag].rest : '');
     result = result.replace("\[SUB\]", this.name(world.ev[ev.tag].agent, spin, "subject"));
     result = result.replace("\[V\]", vp);
     if (world.ev[ev.tag].hasOwnProperty("direct")) {
