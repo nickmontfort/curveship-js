@@ -28,8 +28,12 @@ actor.doctor2 = new Actor(null, "male");
 actor.peddler = new Actor(null, "male");
 
 thing.train = new Thing(place.rail);
-thing.josephinearms = new Thing(actor.josephine);
-thing.louisearms = new Thing(actor.louise);
+thing.josephinesArms = new Thing(actor.josephine);
+thing.josephinesArms.owner = actor.josephine;
+  // FIXME should really a part, and two singular parts!
+thing.louisesArms = new Thing(actor.louise);
+thing.louisesArms.owner = actor.louise;
+  // FIXME should really a part, and two singular parts!
 thing.chair = new Thing(place.room);
 thing.trees = new Thing(place.outside);
 thing.patches = new Thing(place.outside);
@@ -41,12 +45,12 @@ thing.air = new Thing(place.outside);
 thing.street = new Thing(place.outside);
 thing.song = new Thing(thing.cosmos);
 thing.sparrow = new Thing(thing.cosmos);
-thing.air_features = new Thing(thing.air);
+thing.airFeatures = new Thing(thing.air);
 thing.procession = new Thing(actor.louise);
 thing.elixir = new Thing(thing.cosmos);
 thing.window = new Thing(thing.room);
 thing.door = new Thing(thing.room);
-thing.f_door = new Thing(thing.room);
+thing.frontDoor = new Thing(thing.room);
 thing.latchkey = new Thing(actor.brently);
 
 // EVENTS
@@ -62,7 +66,7 @@ ev.hasten = new Event(actor.richards, null, temporal.to, place.downstairs);
 ev.tell_josephine = new Event(actor.richards, actor.josephine); // Eng-rel
 ev.tell_mrs_mallard = new Event(actor.josephine, actor.louise); // Eng-rel
 ev.is_not_paralyzed = new Event(actor.louise); //Do, Does not?
-ev.weep = new Event(actor.louise, null, temporal.into, thing.josephinearms); //ing form
+ev.weep = new Event(actor.louise, null, temporal.into, thing.josephinesArms); //ing form
 ev.finish_weeping = new Event(actor.louise); // arms were supposed to be part of J?
 ev.go_to_room = new Event(actor.louise, null, temporal.to, place.room);
 ev.sit_in_chair = new Event(actor.louise, null, temporal.in, thing.chair);
@@ -88,7 +92,7 @@ ev.say_free = new Event(actor.louise);
 ev.look_ahead = new Event(actor.louise);
 ev.beat_fast = new Event(thing.pulses); // plural err
 ev.see_years = new Event(actor.louise, thing.procession);
-ev.open_arms = new Event(actor.louise, thing.louisearms);
+ev.open_arms = new Event(actor.louise, thing.louisesArms);
 ev.whisper_free = new Event(actor.louise); // What to do with quotes?
 ev.ask_to_enter = new Event(actor.josephine, place.room);
 ev.implore = new Event(actor.josephine, null, temporal.to, actor.louise);

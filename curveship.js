@@ -336,7 +336,7 @@ class Narrator {
      * }
      */
     if (person !== 3) {
-      pronounToUse = [role, person]
+      pronounToUse = [role, person];
     } else
     // if (this.owner) return false; TODO with possessives
     if (this.names[ex.tag].initial === "") {
@@ -390,17 +390,22 @@ class Narrator {
         }
       }
     }
-    /** TODO make possessive pronouns work if (e.owner) {
-      if (typeof this.lastNarratedEvent !== "undefined" && this.lastNarratedEvent.hasObject(this)) {
-         return this.names[e.owner.tag].pronouns.getPossessivePronoun(spin, ev);
+    let possessivePortion = "";
+    if (e.owner) {
+      if (typeof this.lastNarratedEvent !== "undefined" && this.lastNarratedEvent.hasParticipant(this)) {
+         possessivePortion = this.names[e.owner.tag].pronouns.getPossessivePronoun(spin, ev);
+      } else {
+      possessivePortion = this.names[e.owner.tag].subsequent + "’s";
+      // FIXME isn't general; some Names have a special possessive form
+      // e.g., Jesus’
       }
-      return this.names[e.owner.tag].pronouns.getPossessivePronoun(spin, ev);
-    } */
+      possessivePortion += " ";
+    }
     if (this.givens.has(e.tag)) {
-      return this.names[e.tag].subsequent;
+      return possessivePortion + this.names[e.tag].subsequent;
     } else {
       this.givens.add(e.tag);
-      return this.names[e.tag].initial;
+      return possessivePortion + this.names[e.tag].initial;
     }
   }
   ascendTree(existents, method) {

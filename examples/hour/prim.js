@@ -38,8 +38,8 @@ names.peddler = new Names("a peddler");
 // THINGS
 
 names.train = new Names("a train", "the iron horse");
-names.josephinearms = new Names("arms");
-names.louisearms = new Names("arms");
+names.josephinesArms = new Names("arms");
+names.louisesArms = new Names("arms");
 names.chair = new Names("a comfortable chair", "a chair");
 names.trees = new Names("some trees");
 names.patches = new Names("some patches of blue sky");
@@ -48,10 +48,10 @@ names.unknown = new Names("some unknown thing", "the unknown thing");
 names.pulses = new Names("pulses");
 names.rain = new Names("the delicious breath of rain");
 names.air = new Names("the air");
-names.air_features = new Names("the sounds, the scents, the colors of the air");
+names.airFeatures = new Names("the sounds, the scents, the colors of the air");
 names.procession = new Names("a procession of years that would belong to her absolutely");
 names.door = new Names("the door");
-names.f_door = new Names("the front door");
+names.frontDoor = new Names("the front door");
 names.latchkey = new Names("a latchkey");
 names.street = new Names("the street below");
 names.song = new Names("the notes of a distant song");
