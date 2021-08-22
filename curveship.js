@@ -230,43 +230,6 @@ class Event {
 
 var ev = {};
 
-class Names {
-  constructor(initial, subsequent = null, pronouns = null) {
-    this.initial = initial;
-    if (subsequent === null) {
-      subsequent = initial;
-    }
-    this.subsequent = subsequent;
-    if (pronouns === null) {
-      pronouns = pronoun.neuter;
-    }
-    this.pronouns = pronouns;
-    this.nameByCategory = false;
-  }
-}
-
-class ProperNames extends Names {
-  constructor(given, family, pronouns, common = null, title = null) {
-    let initial = (title !== null ? title + " " : "") + given + " " + family;
-    let subsequent = title !== null ? title + " " + family : given;
-    super(initial, subsequent, pronouns);
-    this.title = title;
-    this.given = given;
-    this.family = family;
-    this.common = common;
-  }
-}
-
-class CategoryNames extends Names {
-  constructor(name, proper = null) { // FIXME shuold be the plural of the name???
-    let initial = "some " + (proper !== null ? proper + " " : "") + name + "s";
-    let subsequent = "the " + (proper !== null ? proper + " " : "") + name + "s";
-    super(initial, subsequent, pronoun.neuter);
-    this.name = (proper !== null ? proper + " " : "") + name;
-    this.proper = proper;
-  }
-}
-
 class VerbPh {
   constructor(phrase) {
     this.verb_phrase = phrase;
@@ -367,26 +330,26 @@ class Narrator {
     if (!(e.tag in this.names)) {
       this.names[e.tag] = new GenericNames(e.tag);
     }
+    if (this.names[e.tag].pronouns === null) {
+      this.names[e.tag].setGenericPronouns(e.tag);
+    }
     if (this.names[e.tag].nameByCategory) {
       let cat = this.names[e.getCategory().tag];
       if (typeof cat === "undefined") {
         this.names[e.getCategory().tag] = new GenericNames();
       }
     }
-    if (this.names[e.tag].pronouns !== null || e.hasOwnProperty("gender")) {
-      let pronouns = this.names[e.tag].pronouns !== null ? this.names[e.tag].pronouns : pronoun[e.gender];
-      usePronoun = this.whatPronoun(e, spin, role);
-      if (usePronoun) {
-        switch (usePronoun[0]) { // FIXME no no! usePronoun isn't supposed to be the pronoun
-          case "subject": {
-            return pronouns.getSubject(usePronoun[1], e.number);
-          }
-          case "object": {
-            return pronouns.getObject(usePronoun[1], e.number);
-          }
-          case "reflexive": {
-            return pronouns.getReflexive(usePronoun[1], e.number);
-          }
+    usePronoun = this.whatPronoun(e, spin, role);
+    if (usePronoun) {
+      switch (usePronoun[0]) { // FIXME no no! usePronoun isn't supposed to be the pronoun
+        case "subject": {
+          return this.names[e.tag].pronouns.getSubject(usePronoun[1], e.number);
+        }
+        case "object": {
+          return this.names[e.tag].pronouns.getObject(usePronoun[1], e.number);
+        }
+        case "reflexive": {
+          return this.names[e.tag].pronouns.getReflexive(usePronoun[1], e.number);
         }
       }
     }
@@ -470,7 +433,7 @@ class Narrator {
     for (let property of props.keys()) {
       let allShareAProperty = ex.existentArray.every(item => item.getCategory().getProperties().has(property));
       if (allShareAProperty) {
-        return "the objects with " + property;
+        return "the " + property + " things";
       }
     }
     return "";

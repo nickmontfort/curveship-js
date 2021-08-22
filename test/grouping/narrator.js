@@ -6,7 +6,7 @@ let told_by = "a narrator";
 
 names = {};
 
-names.room = new Names("a room", "the room");
+names.room = new Names("a room");
 names.john = new Names("John");
 names.bike = new Names("the bike");
 names.tire = new Names("the tire");
@@ -14,19 +14,19 @@ names.handlebar = new Names("the handlebar");
 names.seat = new Names("the seat");
 names.shell = new Names("the shell");
 names.cover = new Names("the cover");
-names.table = new Names("a table", "the table");
-// names.apple ...
-names.cherry = new Names("a cherry", "the cherry");
-names.strawberry = new Names("a strawberry", "the strawberry");
-names.blueberry = new Names("a blueberry", "the blueberry");
+names.table = new Names("a table");
+// names.apple OMITTED intentionally
+names.cherry = new Names("a cherry");
+names.strawberry = new Names("a strawberry");
+names.blueberry = new Names("a blueberry");
 
-names.fruit = new CategoryNames("fruit");
-names.fujiApple = new CategoryNames("apple", "Fuji");
-names.cherries = new CategoryNames("cherries");
-names.strawberries = new CategoryNames("strawberries");
-names.blueberry = new CategoryNames("blueberry");
-names.berries = new CategoryNames("berry");
-names.humans = new CategoryNames("human");
+// names.fruit = new CategoryNames("fruit");
+// names.fujiApple = new CategoryNames("apple", "Fuji");
+// names.cherries = new CategoryNames("cherries");
+// names.strawberries = new CategoryNames("strawberries");
+// names.blueberry = new CategoryNames("blueberry");
+// names.berries = new CategoryNames("berry");
+// names.humans = new CategoryNames("human");
 
 vp = {};
 
