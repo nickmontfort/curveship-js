@@ -322,7 +322,8 @@ class Narrator {
       usePronoun = true;  // FIXME makes no sense, has to be an array w/ 2 elements
     }
     if (e instanceof Event) {
-      return "that " + this.represent(e, spin); // FIXME "that" is language-specific
+      let eventRep = this.represent(e, spin);
+      return "that " + eventRep[0].toLowerCase() + eventRep.slice(1, -1); // TODO "that" is language-specific, move out of curveship.js
     }
     if (e instanceof ExistentGroup) {
       return this.nameGroup(e, spin, role);
