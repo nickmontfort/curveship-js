@@ -230,43 +230,6 @@ class Event {
 
 var ev = {};
 
-class Names {
-  constructor(initial, subsequent = null, pronouns = null) {
-    this.initial = initial;
-    if (subsequent === null) {
-      subsequent = initial;
-    }
-    this.subsequent = subsequent;
-    if (pronouns === null) {
-      pronouns = pronoun.neuter;
-    }
-    this.pronouns = pronouns;
-    this.nameByCategory = false;
-  }
-}
-
-class ProperNames extends Names {
-  constructor(given, family, pronouns, common = null, title = null) {
-    let initial = (title !== null ? title + " " : "") + given + " " + family;
-    let subsequent = title !== null ? title + " " + family : given;
-    super(initial, subsequent, pronouns);
-    this.title = title;
-    this.given = given;
-    this.family = family;
-    this.common = common;
-  }
-}
-
-class CategoryNames extends Names {
-  constructor(name, proper = null) { // FIXME shuold be the plural of the name???
-    let initial = "some " + (proper !== null ? proper + " " : "") + name + "s";
-    let subsequent = "the " + (proper !== null ? proper + " " : "") + name + "s";
-    super(initial, subsequent, pronoun.neuter);
-    this.name = (proper !== null ? proper + " " : "") + name;
-    this.proper = proper;
-  }
-}
-
 class VerbPh {
   constructor(phrase) {
     this.verb_phrase = phrase;
@@ -359,7 +322,7 @@ class Narrator {
       usePronoun = true;  // FIXME makes no sense, has to be an array w/ 2 elements
     }
     if (e instanceof Event) {
-      return "that " + this.represent(e, spin); // FIXME "that" is language-specific
+      return "that " + this.represent(e, spin, false); // TODO "that" is language-specific, move out of curveship.js
     }
     if (e instanceof ExistentGroup) {
       return this.nameGroup(e, spin, role);
@@ -367,45 +330,59 @@ class Narrator {
     if (!(e.tag in this.names)) {
       this.names[e.tag] = new GenericNames(e.tag);
     }
+    if (this.names[e.tag].pronouns === null) {
+      this.names[e.tag].setGenericPronouns(e.tag);
+    }
     if (this.names[e.tag].nameByCategory) {
       let cat = this.names[e.getCategory().tag];
       if (typeof cat === "undefined") {
         this.names[e.getCategory().tag] = new GenericNames();
       }
     }
-    if (this.names[e.tag].pronouns !== null || e.hasOwnProperty("gender")) {
-      let pronouns = this.names[e.tag].pronouns !== null ? this.names[e.tag].pronouns : pronoun[e.gender];
-      usePronoun = this.whatPronoun(e, spin, role);
-      if (usePronoun) {
-        switch (usePronoun[0]) { // FIXME no no! usePronoun isn't supposed to be the pronoun
-          case "subject": {
-            return pronouns.getSubject(usePronoun[1], e.number);
-          }
-          case "object": {
-            return pronouns.getObject(usePronoun[1], e.number);
-          }
-          case "reflexive": {
-            return pronouns.getReflexive(usePronoun[1], e.number);
-          }
+    usePronoun = this.whatPronoun(e, spin, role);
+    if (usePronoun) {
+      switch (usePronoun[0]) { // FIXME no no! usePronoun isn't supposed to be the pronoun
+        case "subject": {
+          return this.names[e.tag].pronouns.getSubject(usePronoun[1], e.number);
+        }
+        case "object": {
+          return this.names[e.tag].pronouns.getObject(usePronoun[1], e.number);
+        }
+        case "reflexive": {
+          return this.names[e.tag].pronouns.getReflexive(usePronoun[1], e.number);
         }
       }
     }
-    let possessivePortion = "";
-    if (e.owner) {
-      if (typeof this.lastNarratedEvent !== "undefined" && this.lastNarratedEvent.hasParticipant(this)) {
-         possessivePortion = this.names[e.owner.tag].pronouns.getPossessivePronoun(spin, ev);
-      } else {
-      possessivePortion = this.names[e.owner.tag].subsequent + "’s";
-      // FIXME isn't general; some Names have a special possessive form
-      // e.g., Jesus’
+    if (e.owner || e.partOf) {
+      let possessive = "";
+      let parent = e.owner ? e.owner : e.partOf;
+      if (!(parent.tag in this.names)) {
+        this.names[parent.tag] = new GenericNames(parent.tag);
       }
-      possessivePortion += " ";
+      if (this.names[parent.tag].pronouns === null) {
+        this.names[parent.tag].setGenericPronouns(parent.tag);
+      }
+      if (typeof this.lastNarratedEvent !== "undefined" && this.lastNarratedEvent.hasParticipant(parent)) {
+         let person = 3;
+         if (parent.tag === spin.i) {
+           person = 1;
+         }
+         if (parent.tag === spin.you) {
+           person = 2;
+         }
+         possessive = this.names[parent.tag].pronouns.getPossessivePronoun(person);
+      } else if (this.names[parent.tag].possessive !== null) {
+        possessive = this.names[parent.tag].possessive;
+      } else {
+        possessive = this.names[parent.tag].initial + "’s";
+      }
+      return possessive + " " + this.names[e.tag].bareName;
     }
     if (this.givens.has(e.tag)) {
-      return possessivePortion + this.names[e.tag].subsequent;
+      return this.names[e.tag].subsequent;
     } else {
       this.givens.add(e.tag);
-      return possessivePortion + this.names[e.tag].initial;
+      return this.names[e.tag].initial;
     }
   }
   ascendTree(existents, method) {
@@ -433,7 +410,7 @@ class Narrator {
     var join = null;
     for (var i = 0; i < minLength; i++) {
       let current = aboveArray[0][i];
-      if (aboveArray.every(item => item[i] === current)) {
+      if (aboveArray.every(item => iNametem[i] === current)) {
         join = current;
       } else {
         break;
@@ -470,7 +447,7 @@ class Narrator {
     for (let property of props.keys()) {
       let allShareAProperty = ex.existentArray.every(item => item.getCategory().getProperties().has(property));
       if (allShareAProperty) {
-        return "the objects with " + property;
+        return "the " + property + " things";
       }
     }
     return "";
@@ -503,8 +480,7 @@ class Narrator {
     }
     return result + " and " + this.name(ex.get(ex.length() - 1), spin, role);
   }
-
-  represent(ev, spin) {
+  represent(ev, spin, fixOrthography = true) {
     let result = this.representation[ev.tag].template;
     let number = world.ev[ev.tag].agent instanceof ExistentGroup ? 2 : 1;
     let person = 3;
@@ -523,9 +499,9 @@ class Narrator {
     if (world.ev[ev.tag].hasOwnProperty("indirect")) {
       result = result.replace("\[IO\]", this.name(world.ev[ev.tag].indirect, spin, "object"));
     }
-    result = result += ".";
     this.lastNarratedEvent = world.ev[ev.tag];
-    return capitalize(result);
+    result = fixOrthography ? capitalize(result) + "." : result;
+    return result;
   }
 }
 

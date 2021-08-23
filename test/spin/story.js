@@ -1,3 +1,4 @@
+// Curveship-js test of spin changes
 //  Copyright 2021 Nick Montfort
 //
 // Copying and distribution of this file, with or without modification,
