@@ -9,10 +9,10 @@
 // Adapted from the original Curveship, now called Curveship-py 0.6.
 // Mixed with text from Vivian French and William Stubbs versions
 var spin = {
-   //i: actor.henny,
+   order:"retrograde"
 };
 
-var toldBy = "a modern storyteller";
+var told_by = "a modern storyteller";
 
 names = {};
 
@@ -30,7 +30,7 @@ names.nut = new Names("a pea");
 names.head = new Names("the head");
 names.head2 = new Names("his head");
 names.king = new Names("the king");
-names.crowd = new Names("animals")
+names.crowd = new Names("The animals")
 vp = {};
 vp.hit = new VerbPh("whack");
 vp.decides = new VerbPh("decide to tell it");
@@ -43,4 +43,4 @@ vp.cry6 = new VerbPh("cry 'The sky's a-falling! We must tell the king.'");
 vp.refute= new VerbPh("say 'Oh, the sky is not falling! A pea fell on your head. Let's run home'");
 vp.laugh= new VerbPh("snap");
 
-function run() { narrate(title, toldBy, world, spin, names, vp); }
+function run() { narrate(title, told_by, world, spin, names, vp); }

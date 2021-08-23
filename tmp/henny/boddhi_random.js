@@ -10,10 +10,10 @@
 // Adapted from the Buddhist source story for Henny Penny
 // https://www.accesstoinsight.org/lib/authors/kawasaki/bl142.html#jat322
 var spin = {
-   //i: actor.henny,
+   order:"random"
 };
 
-var toldBy = "Buddhist monks";
+var told_by = "Buddhist monks";
 
 names = {};
 
@@ -44,4 +44,4 @@ vp.cry6 = new VerbPh("say 'Don't be afraid! The frightening noise is from a fall
 vp.refute= new VerbPh("say 'You are right, we won't be afraid. Let's return home'");
 vp.laugh= new VerbPh("bow respectfully");
 
-function run() { narrate(title, toldBy, world, spin, names, vp); }
+function run() { narrate(title, told_by, world, spin, names, vp); }

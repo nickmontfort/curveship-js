@@ -34,7 +34,7 @@ thing.head2 = new Thing(actor.fox);
 // EVENTS
 //how to add "in the farmyard preamble?"
 ev.hit = new Event(thing.nut,actor.henny,temporal.on, thing.head);
-ev.decides = new Event(actor.henny,actor.king);
+ev.decides = new Event(actor.henny,null, temporal.to,actor.king);
 ev.ranc = new Event([actor.henny,actor.rooster,actor.duck,actor.goose,actor.turkey],null,temporal.by,place.cave);
 //subject verb agreement when using categories
 ev.meetf =new Event(category.crowd,actor.fox);
@@ -43,6 +43,6 @@ ev.invite = new Event(actor.fox);
 ev.hitfox= new Event(thing.nut,actor.fox,temporal.on,thing.head2);
 ev.cry6 = new Event(actor.fox);
 ev.refute = new Event(actor.henny);
-ev.laugh = new Event(category.crowd,actor.fox);
+ev.laugh = new Event(category.crowd,null,temporal.at,actor.fox);
 
 var world = new World(place, actor, category, thing, ev);
