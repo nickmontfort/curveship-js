@@ -11,7 +11,7 @@
 var spin = {
 };
 
-var told_by = "a prim narrator";
+var toldBy = "a prim narrator";
 
 names = {};
 
@@ -121,4 +121,4 @@ vp.die = new VerbPh("die");
 vp.sayCause = new VerbPh("say that 'Mrs. Mallard died of heart disease — of the joy that kills'");
 vp.arrive = new VerbPh("arrive");
 
-function run() { narrate(title, told_by, world, spin, names, vp); }
+function run() { narrate(title, toldBy, world, spin, names, vp); }

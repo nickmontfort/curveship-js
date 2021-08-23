@@ -2,7 +2,7 @@ var spin = {
   groupings: "properties",
 };
 
-let told_by = "a narrator";
+var toldBy = "a narrator";
 
 names = {};
 
@@ -41,4 +41,4 @@ vp.eat = new VerbPh("eat");
 
 // SET UP for narrating
 
-function run() { narrate(title, told_by, world, spin, names, vp); }
+function run() { narrate(title, toldBy, world, spin, names, vp); }

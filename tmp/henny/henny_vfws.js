@@ -12,7 +12,7 @@ var spin = {
    //i: actor.henny,
 };
 
-var told_by = "a modern storyteller";
+var toldBy = "a modern storyteller";
 
 names = {};
 
@@ -44,4 +44,4 @@ vp.refute= new VerbPh("say 'Oh, the sky is not falling! A pea fell on your head.
 //how do you add prefixes "Again, But..."
 vp.laugh= new VerbPh("snap at the");
 
-function run() { narrate(title, told_by, world, spin, names, vp); }
+function run() { narrate(title, toldBy, world, spin, names, vp); }

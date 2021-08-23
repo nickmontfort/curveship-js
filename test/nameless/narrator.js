@@ -2,7 +2,7 @@ var spin = {
   groupings: "properties",
 };
 
-let told_by = "a narrator";
+var toldBy = "a narrator";
 
 names = {};
 
@@ -18,4 +18,4 @@ vp.taunt = new VerbPh("pester");
 // vp.give = new VerbPh("give");
 vp.eat = new VerbPh("eat");
 
-function run() { narrate(title, told_by, world, spin, names, vp); }
+function run() { narrate(title, toldBy, world, spin, names, vp); }

@@ -14,7 +14,7 @@ var spin = {
   // i: teller,
 };
 
-var told_by = "a “shakespeare enthusiast” narrator";
+var toldBy = "a “shakespeare enthusiast” narrator";
 
 // PLACES
 
@@ -50,4 +50,4 @@ vp.card = new VerbPh("have");
 vp.stare_3 = new VerbPh("eye");
 vp.card_content = new VerbPh("sayeth 'If you had any problems or did not receive the messenger, call the number below: +1 (857) 204 0988'");
 
-function run() { narrate(title, told_by, world, spin, names, vp); }
+function run() { narrate(title, toldBy, world, spin, names, vp); }

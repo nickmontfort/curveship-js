@@ -12,7 +12,7 @@ var spin = {
   // i: teller,
 };
 
-var told_by = "a casual, very oblique narrator";
+var toldBy = "a casual, very oblique narrator";
 
 names = {};
 
@@ -58,4 +58,4 @@ vp.regret = new VerbPh("regret");
 vp.cry = new VerbPh("cry");
 vp.stare = new VerbPh("stare at");
 
-function run() { narrate(title, told_by, world, spin, names, vp); }
+function run() { narrate(title, toldBy, world, spin, names, vp); }

@@ -8,7 +8,7 @@
 //
 // Adapted from the original Curveship, now called Curveship-py.
 
-let title = "The Prodigal Son";
+var title = "The Prodigal Son";
 
 // EXISTENTS: Places, Actors, Things in that order
 

@@ -9,7 +9,7 @@
 // Adapted from the original Curveship, now called Curveship-py 0.6.
 // Adapted from text https://archive.org/stream/HennyPenny/Henny%20Penny_djvu.txt
 
-let title = "Henny Penny";
+var title = "Henny Penny";
 
 // EXISTENTS: Places, Actors, Things in that order
 

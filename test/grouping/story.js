@@ -6,7 +6,7 @@
 // notice and this notice are preserved. This file is offered as-is,
 // without any warranty.
 
-let title = "Grouping Test";
+var title = "Grouping Test";
 
 // EXISTENTS: Places, Actors, Things, Categories in that order
 

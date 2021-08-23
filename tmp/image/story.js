@@ -6,7 +6,7 @@
 // notice and this notice are preserved. This file is offered as-is,
 // without any warranty.
 
-let title = "The Birth of Image";
+var title = "The Birth of Image";
 
 // EXISTENTS: Places, Actors, Things in that order
 

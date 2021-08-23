@@ -11,7 +11,7 @@ var spin = {
   you: "mary",
 };
 
-var told_by = "John";
+var toldBy = "John";
 
 names = {};
 
@@ -22,4 +22,4 @@ vp.play = new VerbPh("play");
 vp.greet = new VerbPh("greet");
 vp.interrupt = new VerbPh("interrupt");
 
-function run() { narrate(title, told_by, world, spin, names, vp); }
+function run() { narrate(title, toldBy, world, spin, names, vp); }

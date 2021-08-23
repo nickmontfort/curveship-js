@@ -530,7 +530,7 @@ class World {
   }
 }
 
-function narrate(title, told_by, world, spin, names, reps) {
+function narrate(title, toldBy, world, spin, names, reps) {
   var element = document.getElementById("narrative"),
     h1 = document.createElement("h1"),
     h2 = document.createElement("h2"),
@@ -542,7 +542,7 @@ function narrate(title, told_by, world, spin, names, reps) {
   document.title = title;
   h1.innerHTML = title;
   element.appendChild(h1);
-  h2.innerHTML = "as told by " + told_by;
+  h2.innerHTML = "as told by " + toldBy;
   element.appendChild(h2);
   for (i = 0; i < world.evSeq.length; i++) {
     telling.push(i);

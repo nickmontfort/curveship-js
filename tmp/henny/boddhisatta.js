@@ -13,7 +13,7 @@ var spin = {
    //i: actor.henny,
 };
 
-var told_by = "Buddhist monks";
+var toldBy = "Buddhist monks";
 
 names = {};
 
@@ -45,4 +45,4 @@ vp.refute= new VerbPh("say 'You are right, we won't be afraid. Let's return home
 //how do you add prefixes "Again, But..."
 vp.laugh= new VerbPh("respect the wisdom of the ");
 
-function run() { narrate(title, told_by, world, spin, names, vp); }
+function run() { narrate(title, toldBy, world, spin, names, vp); }

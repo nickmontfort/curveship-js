@@ -8,7 +8,7 @@
 //
 // Adapted from the original Curveship, now called Curveship-py.
 
-let title = "The Simulated Bank Robbery";
+var title = "The Simulated Bank Robbery";
 
 // EXISTENTS: Places, Actors, Things in that order
 

@@ -8,7 +8,7 @@
 //
 // Adapted from the original Curveship, now called Curveship-py.
 
-let title = "The Story of an Hour";
+var title = "The Story of an Hour";
 
 // EXISTENTS: Places, Actors, Things in that order
 

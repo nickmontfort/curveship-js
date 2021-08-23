@@ -12,7 +12,7 @@ var spin = {
   // i: teller,
 };
 
-var told_by = "a teller of parables";
+var toldBy = "a teller of parables";
 
 // PLACES
 
@@ -80,4 +80,4 @@ vp.emerge = new VerbPh("leave");
 vp.complain = new VerbPh("say 'Lo, these many years do I serve thee, neither transgressed I at any time thy commandment: and yet thou never gavest me a kid, that I might make merry with my friends: but as soon as this thy son was come, which hath devoured thy living with harlots, thou hast killed for him the fatted calf'");
 vp.reply = new VerbPh("say 'Son, thou art ever with me, and all that I have is thine. It was meet that we should make merry, and be glad: for this thy brother was dead, and is alive again; and was lost, and is found'");
 
-function run() { narrate(title, told_by, world, spin, names, vp); }
+function run() { narrate(title, toldBy, world, spin, names, vp); }

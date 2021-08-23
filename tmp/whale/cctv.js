@@ -14,7 +14,7 @@ var spin = {
   // i: teller,
 };
 
-var told_by = "a “CCTV” narrator";
+var toldBy = "a “CCTV” narrator";
 
 // PLACES
 
@@ -50,4 +50,4 @@ vp.card = new VerbPh("have");
 vp.stare_3 = new VerbPh("stare at");
 vp.card_content = new VerbPh("have something to say");
 
-function run() { narrate(title, told_by, world, spin, names, vp); }
+function run() { narrate(title, toldBy, world, spin, names, vp); }

@@ -9,7 +9,7 @@
 var spin = {
 };
 
-var told_by = "someone not involved in the events";
+var toldBy = "someone not involved in the events";
 
 names = {};
 
@@ -20,4 +20,4 @@ vp.play = new VerbPh("play");
 vp.greet = new VerbPh("greet");
 vp.interrupt = new VerbPh("interrupt");
 
-function run() { narrate(title, told_by, world, spin, names, vp); }
+function run() { narrate(title, toldBy, world, spin, names, vp); }

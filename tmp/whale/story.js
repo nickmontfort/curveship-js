@@ -8,7 +8,7 @@
 //
 // Adapted from the original Curveship, now called Curveship-py.
 
-let title = "A Whale In Brookline";
+var title = "A Whale In Brookline";
 
 // EXISTENTS: Places, Actors, Things in that order
 

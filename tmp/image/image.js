@@ -11,7 +11,7 @@ var spin = {
   you: "dragon",*/
 };
 
-var told_by = "A Photographer";
+var toldBy = "A Photographer";
 
 names = {};
 
@@ -30,4 +30,4 @@ vp.melt = new VerbPh("melt");
 vp.drink = new VerbPh("drink");
 vp.become = new VerbPh("become");
 
-function run() { narrate(title, told_by, world, spin, names, vp); }
+function run() { narrate(title, toldBy, world, spin, names, vp); }
