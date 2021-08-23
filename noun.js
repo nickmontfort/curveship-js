@@ -89,17 +89,20 @@ pronoun.nonBinary = new PronounSet(["they", "them", "their", "theirs", "themself
 class Names {
   constructor(initial, subsequent = null, pronouns = null) {
     this.initial = initial;
+    let bareName = initial;
+    let articles = new Set(["a", "an", "one", "some", "the"]);
+    if (articles.has(bareName.split(" ")[0])) {
+      bareName = bareName.split(" ", 2)[1];
+    }
+    this.bareName = bareName;
     if (subsequent === null) {
-      let bareName = initial;
-      if (bareName.split(" ")[0] in new Set("a", "an", "one")) {
-        bareName = bareName.split(" ", 1);
-        subsequent = "the " + bareName;
-      } else {
-        subsequent = initial;
-      }
+      let subsequent = "the " + bareName;
     }
     this.subsequent = subsequent;
     this.pronouns = pronouns;
+    if (typeof this.possessive === "undefined") {
+      this.possessive = null;
+    }
     this.nameByCategory = false;
   }
   setGenericPronouns(tag) {
@@ -114,14 +117,19 @@ class Names {
 }
 
 class ProperNames extends Names {
-  constructor(given, family, pronouns, common = null, title = null) {
-    let initial = (title !== null ? title + " " : "") + given + " " + family;
-    let subsequent = title !== null ? title + " " + family : given;
+  constructor(given, family = null, pronouns = null, common = null, title = null, possessive = null) {
+    let initial = given;
+    let subsequent = given;
+    if (family !== null) {
+      initial = (title !== null ? title + " " : "") + given + " " + family;
+      subsequent = title !== null ? title + " " + family : given;
+    }
     super(initial, subsequent, pronouns);
     this.title = title;
     this.given = given;
     this.family = family;
     this.common = common;
+    this.possessive = possessive;
   }
 }
 
