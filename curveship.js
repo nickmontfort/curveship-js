@@ -322,8 +322,7 @@ class Narrator {
       usePronoun = true;  // FIXME makes no sense, has to be an array w/ 2 elements
     }
     if (e instanceof Event) {
-      let eventRep = this.represent(e, spin);
-      return "that " + eventRep[0].toLowerCase() + eventRep.slice(1, -1); // TODO "that" is language-specific, move out of curveship.js
+      return "that " + this.represent(e, spin, false); // TODO "that" is language-specific, move out of curveship.js
     }
     if (e instanceof ExistentGroup) {
       return this.nameGroup(e, spin, role);
@@ -411,7 +410,7 @@ class Narrator {
     var join = null;
     for (var i = 0; i < minLength; i++) {
       let current = aboveArray[0][i];
-      if (aboveArray.every(item => item[i] === current)) {
+      if (aboveArray.every(item => iNametem[i] === current)) {
         join = current;
       } else {
         break;
@@ -481,8 +480,7 @@ class Narrator {
     }
     return result + " and " + this.name(ex.get(ex.length() - 1), spin, role);
   }
-
-  represent(ev, spin) {
+  represent(ev, spin, fixOrthography = true) {
     let result = this.representation[ev.tag].template;
     let number = world.ev[ev.tag].agent instanceof ExistentGroup ? 2 : 1;
     let person = 3;
@@ -501,9 +499,9 @@ class Narrator {
     if (world.ev[ev.tag].hasOwnProperty("indirect")) {
       result = result.replace("\[IO\]", this.name(world.ev[ev.tag].indirect, spin, "object"));
     }
-    result = result += ".";
     this.lastNarratedEvent = world.ev[ev.tag];
-    return capitalize(result);
+    result = fixOrthography ? capitalize(result) + "." : result;
+    return result;
   }
 }
 

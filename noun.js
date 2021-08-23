@@ -91,12 +91,12 @@ class Names {
     this.initial = initial;
     let bareName = initial;
     let articles = new Set(["a", "an", "one", "some", "the"]);
-    if (articles.has(bareName.split(" ")[0])) {
-      bareName = bareName.split(" ", 2)[1];
+    if (articles.has(initial.split(" ")[0])) {
+      bareName = initial.substring(initial.indexOf(" "));
     }
     this.bareName = bareName;
     if (subsequent === null) {
-      let subsequent = "the " + bareName;
+      subsequent = "the " + bareName;
     }
     this.subsequent = subsequent;
     this.pronouns = pronouns;

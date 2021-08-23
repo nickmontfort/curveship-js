@@ -17,7 +17,7 @@ names = {};
 
 // PLACES
 
-names.downstairs = new Names("downstairs", "the Mallard house");
+names.downstairs = new Names("the Mallard house");
 names.office = new Names("the newspaper office");
 names.room = new Names("the room");
 names.stairs = new Names("the stairs");
@@ -28,10 +28,10 @@ names.rail = new Names("a rail line");
 
 names.louise = new ProperNames("Louise", "Mallard", pronoun.female, "the wife", "Mrs.");
 names.brently = new ProperNames("Brently", "Mallard", pronoun.male, "the husband", "Mr.");
-names.richards = new ProperNames("Richards", "", pronoun.male, "the friend");
-names.josephine = new ProperNames("Josephine", "", pronoun.female, "the sister");
-names.doctor1 = new Names("the doctor", "", pronoun.male);
-names.doctor2 = new Names("the doctor", "", pronoun.male);
+names.richards = new ProperNames("Richards", null, pronoun.male, "the friend");
+names.josephine = new ProperNames("Josephine", null, pronoun.female, "the sister");
+names.doctor1 = new Names("the doctor");
+names.doctor2 = new Names("the doctor");
 names.peddler = new Names("a peddler");
 
 // THINGS
@@ -67,8 +67,9 @@ vp.crash = new VerbPh("crash");
 vp.farAway = new VerbPh("is far away");
 vp.doesNotKnow = new VerbPh("do not know");
 vp.learnOfCrash = new VerbPh("learn");
-vp.learnOfDeath = new VerbPh("see Brently Mallard listed as dead");
-vp.confirmCrash = new VerbPh("confirm");
+vp.listedAsDead = new VerbPh("is listed as dead");
+vp.gasp = new VerbPh("gasp");
+vp.confirmDeath = new VerbPh("confirm");
 vp.hasten = new VerbPh("hasten");
 vp.tellJosephine = new VerbPh("tell");
 vp.tellMrsMallard = new VerbPh("tell");
