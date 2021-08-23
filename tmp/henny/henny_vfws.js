@@ -19,7 +19,7 @@ names = {};
 names.farmyard = new Names("garden");
 names.cave = new Names("Fox Lox's den");
 
-names.henny = new Names("Hen Pen");
+names.henny = new Names("Hen","Pen", pronoun.female, "a chicken");
 names.rooster = new Names( "Cocky Locky");
 names.duck = new Names("Ducky Luck");
 names.goose = new Names("Goose Loose");
@@ -29,11 +29,11 @@ names.tree= new Names("a pea-stack");
 names.nut = new Names("a pea");
 names.head = new Names("the head");
 names.head2 = new Names("his head");
-
+names.king = new Names("the king");
 names.crowd = new Names("The animals")
 vp = {};
 vp.hit = new VerbPh("whack");
-vp.decides = new VerbPh("decide to tell the king");
+vp.decides = new VerbPh("decide to tell");
 vp.ranc = new VerbPh("went along");
 vp.meetf= new VerbPh("meet");
 vp.cry = new VerbPh("cry 'The sky's a-falling! I must go to tell the king.'");

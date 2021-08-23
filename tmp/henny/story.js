@@ -22,6 +22,7 @@ actor.duck = new Actor(place.farmyard, "male");
 actor.goose = new Actor(place.farmyard, "female");
 actor.turkey = new Actor(place.farmyard, "male");
 actor.fox = new Actor(place.cave, "male");
+actor.king = new Actor(place.cosmos,"male");
 
 category.crowd = new Category([actor.henny,
 	actor.rooster,actor.duck,actor.goose,
@@ -33,7 +34,7 @@ thing.head2 = new Thing(actor.fox);
 // EVENTS
 //how to add "in the farmyard preamble?"
 ev.hit = new Event(thing.nut,actor.henny,temporal.on, thing.head);
-ev.decides = new Event(actor.henny);
+ev.decides = new Event(actor.henny,actor.king);
 ev.ranc = new Event([actor.henny,actor.rooster,actor.duck,actor.goose,actor.turkey],null,temporal.by,place.cave);
 //subject verb agreement when using categories
 ev.meetf =new Event(category.crowd,actor.fox);

@@ -19,8 +19,8 @@ names = {};
 names.farmyard = new Names("that idyllic farmyard", "the farmyard");
 names.cave = new Names("the cave");
 
-names.henny = new ProperNames("Henny","Penny", pronoun.feminine, "a chicken");
-names.rooster = new ProperNames( "Cocky","Locky",pronoun.masculine,"a rooster");
+names.henny = new ProperNames("Henny","Penny", pronoun.female, "a chicken");
+names.rooster = new ProperNames( "Cocky","Locky",pronoun.male,"a rooster");
 //If I try to use proper names it here creashes, why?
 //names.duck = new ProperNames("Ducky Lucky",pronoun.masculine,"a duck" );
 names.duck = new Names("Ducky Lucky","a duck" );
@@ -32,11 +32,11 @@ names.tree= new Names("a tree");
 names.nut = new Names("an acorn", "a nut");
 names.head = new Names("the head")
 names.head2 = new Names("his head")
-
+names.king = new Names("the king");
 names.crowd = new Names("The animals")
 vp = {};
 vp.hit = new VerbPh("hit");
-vp.decides = new VerbPh("decide to tell the king");
+vp.decides = new VerbPh("decide to tell");
 vp.ranc = new VerbPh("run");
 vp.meetf= new VerbPh("meet");
 vp.cry = new VerbPh("cry 'The sky is falling! I must go to tell the king. Come with me'");
