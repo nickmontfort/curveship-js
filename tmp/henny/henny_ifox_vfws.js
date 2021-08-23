@@ -9,8 +9,8 @@
 // Adapted from the original Curveship, now called Curveship-py 0.6.
 // Mixed with text from Vivian French and William Stubbs versions
 var spin = {
-   i:actor.fox,
-   you:actor.henny
+   i:"fox",
+   you:"henny"
 };
 
 var told_by = "a Fox";
