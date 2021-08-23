@@ -22,8 +22,8 @@ names.house = new Names("the apartment", "the house");
 
 // ACTORS
 
-names.john = new ProperNames("John", "", pronoun.male);
-names.doug = new ProperNames("Doug", "", pronoun.male);
+names.john = new ProperNames("John", "", pronoun.masculine);
+names.doug = new ProperNames("Doug", "", pronoun.masculine);
 
 // THINGS
 

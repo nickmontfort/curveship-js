@@ -31,7 +31,7 @@ names.nut = new Names("a ripe belli fruit");
 names.head = new Names("the head")
 names.head2 = new Names("the solid earth")
 names.king = new Names("the place where the noise started");
-names.crowd = new Names("The animals")
+names.crowd = new Names("animals")
 vp = {};
 vp.hit = new VerbPh(["falls"," and whack"]);
 vp.decides = new VerbPh("flee and does not look back");
@@ -42,7 +42,6 @@ vp.invite= new VerbPh("say 'I will investigate the frightful noise.' He goes to 
 vp.hitfox = new VerbPh("lay near")
 vp.cry6 = new VerbPh("say 'Don't be afraid! The frightening noise is from a fallen belli fruit.'");
 vp.refute= new VerbPh("say 'You are right, we won't be afraid. Let's return home'");
-//how do you add prefixes "Again, But..."
-vp.laugh= new VerbPh("respect the wisdom of the ");
+vp.laugh= new VerbPh("bow respectfully");
 
 function run() { narrate(title, told_by, world, spin, names, vp); }

@@ -376,6 +376,7 @@ class Narrator {
       } else {
         possessive = this.names[parent.tag].initial + "’s";
       }
+      this.givens.add(parent.tag);
       return possessive + " " + this.names[e.tag].bareName;
     }
     if (this.givens.has(e.tag)) {
