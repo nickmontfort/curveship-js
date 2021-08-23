@@ -21,19 +21,17 @@ names.cave = new Names("the cave");
 
 names.henny = new ProperNames("Henny","Penny", pronoun.feminine, "a chicken");
 names.rooster = new ProperNames( "Cocky","Locky",pronoun.masculine,"a rooster");
-//If I try to use proper names it here creashes, why?
-//names.duck = new ProperNames("Ducky Lucky",pronoun.masculine,"a duck" );
-names.duck = new Names("Ducky Lucky","a duck" );
+names.duck = new ProperNames("Ducky Lucky",pronoun.masculine,"a duck" );
 names.goose = new Names( "Goosey Loosey");
 names.turkey = new Names("Turkey Lurkey");
-//names.fox = new ProperNames("Foxey","Loxey",pronoun.feminine,"a fox");
-names.fox = new Names("Foxey Loxey");
+
+names.fox = new Names("Foxey Loxey","the fox");
 names.tree= new Names("a tree");
 names.nut = new Names("an acorn", "a nut");
 names.head = new Names("the head")
 names.head2 = new Names("his head")
 names.king = new Names("the king");
-names.crowd = new Names("The animals")
+names.crowd = new Names("animals")
 vp = {};
 vp.hit = new VerbPh("hit");
 vp.decides = new VerbPh("decide to tell");
@@ -44,7 +42,6 @@ vp.invite= new VerbPh("say 'I will, but first, rest in my cave. You must all be 
 vp.hitfox = new VerbPh("fall out of the tree and hits")
 vp.cry6 = new VerbPh("cry 'The sky is falling! We must tell the king. Come with me'");
 vp.refute= new VerbPh("say 'Oh, the sky is not falling! A nut fell on your head. Let's go home'");
-//how do you add prefixes "Again, But..."
-vp.laugh= new VerbPh("laugh at");
+vp.laugh= new VerbPh("laugh");
 
 function run() { narrate(title, told_by, world, spin, names, vp); }

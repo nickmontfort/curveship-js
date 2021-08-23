@@ -9,7 +9,7 @@
 // Adapted from the original Curveship, now called Curveship-py 0.6.
 // Mixed with text from Vivian French and William Stubbs versions
 var spin = {
-   //i: actor.henny,
+   order:"retrograde"
 };
 
 var told_by = "a modern storyteller";
@@ -30,7 +30,7 @@ names.nut = new Names("a pea");
 names.head = new Names("the head");
 names.head2 = new Names("his head");
 names.king = new Names("the king");
-names.crowd = new Names("animals")
+names.crowd = new Names("The animals")
 vp = {};
 vp.hit = new VerbPh("whack");
 vp.decides = new VerbPh("decide to tell");
