@@ -77,11 +77,8 @@ class PronounSet {
 }
 
 var pronoun = {};
-// These are of course "feminine" pronouns rather than "female" ones and so on.
-// The terms use correspond to "underlying" genders of Existents; in other
-// words, in English, the pronoun.female pronouns are used with females.
-pronoun.female = new PronounSet(["she", "her", "her", "hers", "herself"]);
-pronoun.male = new PronounSet(["he", "him", "his", "his", "himself"]);
+pronoun.feminine = new PronounSet(["she", "her", "her", "hers", "herself"]);
+pronoun.masculine = new PronounSet(["he", "him", "his", "his", "himself"]);
 pronoun.neuter = new PronounSet(["it", "it", "its", "its", "itself"]);
 pronoun.unknownBinary = new PronounSet(["he or she", "him or her", "his or her", "his or hers", "himself or herself"]);
 pronoun.nonBinary = new PronounSet(["they", "them", "their", "theirs", "themself"]); // If you prefer, you can make the last entry "themselves"
@@ -108,9 +105,9 @@ class Names {
   setGenericPronouns(tag) {
     let pronounSet = pronoun.neuter;
     if (tag in actor && actor[tag].gender === "male") {
-      pronounSet = pronoun.male;
+      pronounSet = pronoun.masculine;
     } else if (tag in actor && actor[tag].gender === "female") {
-      pronounSet = pronoun.female;
+      pronounSet = pronoun.feminine;
     }
     this.pronouns = pronounSet;
   }

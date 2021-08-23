@@ -22,8 +22,8 @@ var told_by = "a “CCTV” narrator";
 
 // ACTORS
 
-// names.john = new Names("the first person", null, pronoun.male);
-// names.doug = new Names("the second person", null, pronoun.male);
+// names.john = new Names("the first person", null, pronoun.masculine);
+// names.doug = new Names("the second person", null, pronoun.masculine);
 
 // THINGS
 

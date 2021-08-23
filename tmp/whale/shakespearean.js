@@ -22,8 +22,8 @@ names.house = new Names("the homestead", "the house");
 
 // ACTORS
 
-names.john = new ProperNames("Joan", "", pronoun.male, "", "that gent");
-names.doug = new ProperNames("Douglas", "", pronoun.male, "", "that gent");
+names.john = new ProperNames("Joan", "", pronoun.masculine, "", "that gent");
+names.doug = new ProperNames("Douglas", "", pronoun.masculine, "", "that gent");
 
 // THINGS
 

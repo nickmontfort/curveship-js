@@ -19,7 +19,7 @@ names = {};
 names.farmyard = new Names("garden");
 names.cave = new Names("Fox Lox's den");
 
-names.henny = new Names("Hen","Pen", pronoun.female, "a chicken");
+names.henny = new Names("Hen","Pen", pronoun.feminine, "a chicken");
 names.rooster = new Names( "Cocky Locky");
 names.duck = new Names("Ducky Luck");
 names.goose = new Names("Goose Loose");

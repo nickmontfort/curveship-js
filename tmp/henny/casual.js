@@ -19,8 +19,8 @@ names = {};
 names.farmyard = new Names("that idyllic farmyard", "the farmyard");
 names.cave = new Names("the cave");
 
-names.henny = new ProperNames("Henny","Penny", pronoun.female, "a chicken");
-names.rooster = new ProperNames( "Cocky","Locky",pronoun.male,"a rooster");
+names.henny = new ProperNames("Henny","Penny", pronoun.feminine, "a chicken");
+names.rooster = new ProperNames( "Cocky","Locky",pronoun.masculine,"a rooster");
 //If I try to use proper names it here creashes, why?
 //names.duck = new ProperNames("Ducky Lucky",pronoun.masculine,"a duck" );
 names.duck = new Names("Ducky Lucky","a duck" );

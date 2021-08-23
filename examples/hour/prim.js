@@ -26,10 +26,10 @@ names.rail = new Names("a rail line");
 
 // ACTORS
 
-names.louise = new ProperNames("Louise", "Mallard", pronoun.female, "the wife", "Mrs.");
-names.brently = new ProperNames("Brently", "Mallard", pronoun.male, "the husband", "Mr.");
-names.richards = new ProperNames("Richards", null, pronoun.male, "the friend");
-names.josephine = new ProperNames("Josephine", null, pronoun.female, "the sister");
+names.louise = new ProperNames("Louise", "Mallard", pronoun.feminine, "the wife", "Mrs.");
+names.brently = new ProperNames("Brently", "Mallard", pronoun.masculine, "the husband", "Mr.");
+names.richards = new ProperNames("Richards", null, pronoun.masculine, "the friend");
+names.josephine = new ProperNames("Josephine", null, pronoun.feminine, "the sister");
 names.doctor1 = new Names("the doctor");
 names.doctor2 = new Names("the doctor");
 names.peddler = new Names("a peddler");
