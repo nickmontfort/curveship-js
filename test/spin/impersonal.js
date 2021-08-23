@@ -7,11 +7,9 @@
 // without any warranty.
 
 var spin = {
-  i: "john",
-  you: "mary",
 };
 
-var told_by = "John";
+var told_by = "someone not involved in the events";
 
 names = {};
 

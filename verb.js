@@ -43,7 +43,7 @@ class Verb {
     }
     conjugatedVP(person, number, tenseER, tenseRS, event) { // FIXME Include posterior!
         // Produce the entire conjugated verb phrase, main word and appropriate helpers.
-        var i = 0, mainWord, helperWords, helperArray = [];
+        let i = 0, mainWord, helperWords, helperArray = [];
         if (person > 0) { i = (24 * person) - 23; } // Covers tenseRS === "present"
         if (tenseER === "past") { i += 8; }
         if (tenseER === "future") { i += 16; }
@@ -85,6 +85,13 @@ class Verb {
         }
         return helperWords + mainWord;
     }
+}
+
+class GenericVerbPh extends VerbPh {
+  constructor(transitivity) {
+    let phrase = (transitivity === "trans") ? "act on" : "act";
+    super(phrase);
+  }
 }
 
 // A convenience, so people can, e.g., put "is" in their templates

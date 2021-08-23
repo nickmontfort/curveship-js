@@ -34,10 +34,6 @@ class Noun {
   }
 }
 
-const irregularNouns = { // To contain a list generated from a dictionary.
-  "child" : ["children"]
-};
-
 // ### PRONOUNS ###
 
 class PronounSet {
@@ -89,6 +85,92 @@ pronoun.male = new PronounSet(["he", "him", "his", "his", "himself"]);
 pronoun.neuter = new PronounSet(["it", "it", "its", "its", "itself"]);
 pronoun.unknownBinary = new PronounSet(["he or she", "him or her", "his or her", "his or hers", "himself or herself"]);
 pronoun.nonBinary = new PronounSet(["they", "them", "their", "theirs", "themself"]); // If you prefer, you can make the last entry "themselves"
+
+class Names {
+  constructor(initial, subsequent = null, pronouns = null) {
+    this.initial = initial;
+    let bareName = initial;
+    let articles = new Set(["a", "an", "one", "some", "the"]);
+    if (articles.has(initial.split(" ")[0])) {
+      bareName = initial.substring(initial.indexOf(" "));
+    }
+    this.bareName = bareName;
+    if (subsequent === null) {
+      subsequent = "the " + bareName;
+    }
+    this.subsequent = subsequent;
+    this.pronouns = pronouns;
+    if (typeof this.possessive === "undefined") {
+      this.possessive = null;
+    }
+    this.nameByCategory = false;
+  }
+  setGenericPronouns(tag) {
+    let pronounSet = pronoun.neuter;
+    if (tag in actor && actor[tag].gender === "male") {
+      pronounSet = pronoun.male;
+    } else if (tag in actor && actor[tag].gender === "female") {
+      pronounSet = pronoun.female;
+    }
+    this.pronouns = pronounSet;
+  }
+}
+
+class ProperNames extends Names {
+  constructor(given, family = null, pronouns = null, common = null, title = null, possessive = null) {
+    let initial = given;
+    let subsequent = given;
+    if (family !== null) {
+      initial = (title !== null ? title + " " : "") + given + " " + family;
+      subsequent = title !== null ? title + " " + family : given;
+    }
+    super(initial, subsequent, pronouns);
+    this.title = title;
+    this.given = given;
+    this.family = family;
+    this.common = common;
+    this.possessive = possessive;
+  }
+}
+
+class CategoryNames extends Names {
+  constructor(name, proper = null) { // FIXME shuold be the plural of the name???
+    let initial = "some " + (proper !== null ? proper + " " : "") + name + "s";
+    let subsequent = "the " + (proper !== null ? proper + " " : "") + name + "s";
+    super(initial, subsequent, pronoun.neuter);
+    this.name = (proper !== null ? proper + " " : "") + name;
+    this.proper = proper;
+  }
+}
+
+class GenericNames extends Names {
+  constructor(tag) {
+    let name;
+    if (tag in actor && actor[tag].gender === "male") {
+      if (actor[tag].age == "adult") {
+        name = "man";
+      } else {
+        name = "boy";
+      }
+    } else if (tag in actor && actor[tag].gender === "female") {
+      if (actor[tag].age == "adult") {
+        name = "woman";
+      } else {
+        name = "girl";
+      }
+    } else if (tag in thing) {
+      name = "thing";
+    } else if (tag in place) {
+      name = "location";
+    }
+    super("a " + name, "the " + name);
+    this.nameByCategory = true;
+  }
+}
+
+const irregularNouns = { // FIXME: include enormous list generated from a dictionary.
+  "child" : ["children"]
+};
 
 var names = {
   cosmos: new Names(""),

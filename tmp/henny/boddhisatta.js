@@ -30,7 +30,7 @@ names.tree= new Names("a belli tree");
 names.nut = new Names("a ripe belli fruit");
 names.head = new Names("the head")
 names.head2 = new Names("the solid earth")
-
+names.king = new Names("the place where the noise started");
 names.crowd = new Names("The animals")
 vp = {};
 vp.hit = new VerbPh(["falls"," and whack"]);
