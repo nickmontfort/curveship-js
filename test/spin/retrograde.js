@@ -7,9 +7,11 @@
 // without any warranty.
 
 var spin = {
+  order: "retrograde",
+  timePhrases: true,
 };
 
-var toldBy = "someone not involved in the events";
+var toldBy = "a backwards-looking narrator";
 
 names = {};
 

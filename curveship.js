@@ -317,9 +317,9 @@ class Narrator {
     return pronounToUse;
   }
   name(e, spin, role) {
-    let usePronoun = false;
-    if (e === thing.cosmos || e.tag === spin.i || e.tag === e.you) {
-      usePronoun = true;  // FIXME makes no sense, has to be an array w/ 2 elements
+    let pro = false;
+    if (e === thing.cosmos) { // Always pronominzalize cosmos, as in "It rains."
+      return [role, 3];
     }
     if (e instanceof Event) {
       return "that " + this.represent(e, spin, false); // TODO "that" is language-specific, move out of curveship.js
@@ -339,17 +339,17 @@ class Narrator {
         this.names[e.getCategory().tag] = new GenericNames();
       }
     }
-    usePronoun = this.whatPronoun(e, spin, role);
-    if (usePronoun) {
-      switch (usePronoun[0]) { // FIXME no no! usePronoun isn't supposed to be the pronoun
+    pro = this.whatPronoun(e, spin, role);
+    if (pro) {
+      switch (pro[0]) {
         case "subject": {
-          return this.names[e.tag].pronouns.getSubject(usePronoun[1], e.number);
+          return this.names[e.tag].pronouns.getSubject(pro[1], e.number);
         }
         case "object": {
-          return this.names[e.tag].pronouns.getObject(usePronoun[1], e.number);
+          return this.names[e.tag].pronouns.getObject(pro[1], e.number);
         }
         case "reflexive": {
-          return this.names[e.tag].pronouns.getReflexive(usePronoun[1], e.number);
+          return this.names[e.tag].pronouns.getReflexive(pro[1], e.number);
         }
       }
     }
@@ -579,52 +579,50 @@ function narrate(title, toldBy, world, spin, names, reps) {
     }
     div = document.createElement("div");
     sentence = "";
-    if (spin.expression_numbers) {
+    if (spin.expressionNumbers) {
       sentence += "<b>Exp " + exp + ":</b> ";
     }
     exp = exp + 1;
-    if (spin.event_numbers) {
+    if (spin.eventNumbers) {
       sentence += "<span style='color:red'><b>[Ev " + i + "]</b></span> ";
     }
     if (lastNarratedTag !== "" &&
-      current.start < world.ev[lastNarratedTag].start) {
-      if (spin.time_markers) {
-        sentence += choice(["Before that, ", "Previously, ", "Earlier, ",
-          "Beforehand, "
-        ]);
-        fix = false;
-      } else {
-        fix = true;
-      }
-      oldSpeaking = spin.speaking;
-      oldReferring = spin.referring;
-      if (spin.speaking === "after") {
-        if (spin.referring === "posterior") {
-          spin.referring = "simple";
-        } else if (spin.referring === "simple") {
-          spin.referring = "anterior";
+      world.evSeq.indexOf(current) < world.evSeq.indexOf(world.ev[lastNarratedTag])) {
+        oldSpeaking = spin.speaking;
+        oldReferring = spin.referring;
+        if (spin.speaking === "after") {
+          if (spin.referring === "posterior") {
+            spin.referring = "simple";
+          } else if (spin.referring === "simple") {
+            spin.referring = "anterior";
+          }
         }
+        if (spin.speaking === "during") {
+          spin.speaking = "after";
+        }
+        if (spin.speaking === "before") {
+          spin.speaking = "during";
+        }
+        if (spin.timePhrases) {
+          sentence += choice(["Before that, ", "Previously, ", "Earlier, ",
+            "Beforehand, "]);
+          sentence += narr.represent(current, spin, false) + ".";
+        } else {
+          sentence += narr.represent(current, spin);
+        }
+        spin.speaking = oldSpeaking;
+        spin.referring = oldReferring;
+      } else {
+        sentence += narr.represent(current, spin);
       }
-      if (spin.speaking === "during") {
-        spin.speaking = "after";
-      }
-      if (spin.speaking === "before") {
-        spin.speaking = "during";
-      }
-      sentence += narr.represent(current, spin);
-      spin.speaking = oldSpeaking;
-      spin.referring = oldReferring;
-    } else {
-      sentence += narr.represent(current, spin);
+      div.innerHTML = sentence;
+      element.appendChild(div);
+      lastNarratedTag = current.tag;
     }
-    div.innerHTML = sentence;
+    div = document.createElement("div");
+    div.innerHTML = "The end.";
     element.appendChild(div);
-    lastNarratedTag = current.tag;
   }
-  div = document.createElement("div");
-  div.innerHTML = "The end.";
-  element.appendChild(div);
-}
 
 // ### PREPOSITIONS ###
 
