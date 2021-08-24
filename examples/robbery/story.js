@@ -14,19 +14,20 @@ var title = "The Simulated Bank Robbery";
 
 place.vestibule = new Place();
 place.lobby = new Place();
-place.guard_post = new Place();
+place.guardPost = new Place();
 place.street = new Place();
 
 actor.teller = new Actor(place.vestibule, "female");
 actor.robber = new Actor(place.street, "male");
-actor.guard = new Actor(place.guard_post, "male");
+actor.guard = new Actor(place.guardPost, "male");
 
 thing.slip = new Thing(place.vestibule);
-thing.fake_money = new Thing(place.vestibule);
+thing.fakeMoney = new Thing(place.vestibule);
 thing.bag = new Thing(place.vestibule);
 thing.mask = new Thing(actor.robber);
-thing.fake_gun = new Thing(actor.robber);
-thing.pistol = new Thing(actor.guard, actor.guard);
+thing.fakeGun = new Thing(actor.robber);
+thing.pistol = new Thing(actor.guard);
+thing.fakeGun.setOwner(actor.robber);
 thing.pistol.setOwner(actor.guard);
 
 // EVENTS
@@ -51,7 +52,7 @@ ev.shoot2 = new Event(actor.guard, actor.robber);
 ev.fall = new Event(actor.robber);
 ev.die = new Event(actor.robber);
 ev.dropGun = new Event(actor.guard, thing.pistol);
-ev.dropGun.reconfigures(thing.pistol, "parent", actor.guard, actor.cosmos);
+ev.dropGun.reconfigures(thing.pistol, "owner", actor.guard, actor.cosmos);
 ev.regret = new Event(actor.guard, ev.shoot1);
 ev.cry = new Event(actor.teller);
 ev.stare = new Event(actor.guard, thing.pistol);

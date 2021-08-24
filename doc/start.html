@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-type" content="text/html;charset=utf-8" />
+    <title>Getting Started in Curveship-js</title>
+<link rel="StyleSheet" href="../curve.css"/>
+
+</head>
+<body>
+<div style="text-align:right"><a href="../index.html#py"><img src="../small_logotype.png" alt="Curveship" style="border-style: none" /></a></div>
+
+<div class="links">
+<ul>
+  <li><a href="concepts.html">Concepts</a></li>
+  <li>Getting Started</li>
+  <li><a href="reference.html">Technical Reference</a></li>
+  <li><a href="thanks.html">Thanks & Publications List</a></li>
+  <li><a href="https://github.com/nickmontfort/curveship-js">GitHub</a></li>
+</ul>
+</div>
+
+<div id="main">
+
+<h1>Getting Started</h1>
+<h2>in Curveship-js</h2>
+
+<p>The first step in getting started is to read about <a href="concepts.html">Curveship-js concepts.</a> The essential concepts, and their associated terms, are referred to throughout this guide.</p>
+
+<p>The recommended way to write a new Curveship-js story file, narrator files, and the corresponding HTML pages is by modifying existing files. In this guide, however, we’ll pretend that we’re writing a <a href="#story"><i>story</i></a> called “The Simulated Bank Robbery” from scratch, and then, we’ll pretend that we’re writing a <a href="#narrator"><i>narrator</i></a> who is casual and oblique, again from scratch. Finally, we’ll see quickly how to <a href="#connect"><i>connect</i></a> these two files with a Web page.</p>
+
+<h2 id="story">The Story File</h2>
+
+<p>Easy things are meant to be easy to do in Curveship-js. For instance, it should be easy to define a story that is like a folk tale, with straightforward story elements and little underlying complexity in terms of what fundamentally happens. See <a href="examples/robbery/story.js" target="_blank">robbery/story.js</a> for one reasonably simple example, with only a few special nuances; even simpler is <a href="examples/waiting/story.js" target="_blank">waiting/story.js.</a></p>
+
+<p>To write a Curveship-js story file ending in ".js" one needs only define the title, define <b>Places, Actors, and Things,</b> specify a sequence of <b>Events,</b> and then conclude with a final, standard line.</p>
+
+<p>For clarity, put the title right up top, after any comments you would like to add with your (the author’s) name, a copyright message, and license information:</p>
+
+<pre>
+  var title = "The Simulated Bank Robbery";
+</pre>
+
+<h2>Defining Existents</h2>
+
+<p>After specifying the title, list your Places. Each time you add a line, you’re creating a new Place, and the required JavaScript syntax helps to indicate that:</p>
+
+<pre>
+place.vestibule = new Place();
+place.lobby = new Place();
+place.guardPost = new Place();
+place.street = new Place();
+</pre>
+
+<p>These four places have four <i>tags,</i> “vestibule”, “lobby”, “guardPost”, and “street”. The tags are <i>not</i> what these places end up being called. Nothing in the story file indicates what they will be called. Tags are just the way to refer to these places within the story and narrator files. Tags need to be unique across all Existents. For instance, not only can there only be one Place with the tag “street” — once that tag has been used for a Place, it also cannot be used for an Actor or a Thing.</p>
+
+<p>After this, list your Actors. You use the same syntax, but this time arguments are included to indicate where the Actor is and (optionally) what gender the actor is:</p>
+
+<pre>
+actor.teller = new Actor(place.vestibule, "female");
+actor.robber = new Actor(place.street, "male");
+actor.guard = new Actor(place.guard_post, "male");
+</pre>
+
+<p>Of the three sorts of Existenets, Things come last. They are also each located somewhere. Their location can be a Place, an Actor (if an Actor is carrying them), or even another Thing (if that other Thing is a container, for instance).</p>
+
+<pre>
+thing.slip = new Thing(place.vestibule);
+thing.fake_money = new Thing(place.vestibule);
+thing.bag = new Thing(place.vestibule);
+thing.mask = new Thing(actor.robber);
+thing.fake_gun = new Thing(actor.robber);
+thing.pistol = new Thing(actor.guard);
+</pre>
+
+<p>At the end of this sequence we can (optionally) provide some additional information, for instance, information about Actors owning Things. This can end up having implications for the generation of possessive noun phrases, eventually:</p>
+
+<pre>
+thing.fake_gun.setOwner(actor.robber);
+thing.pistol.setOwner(actor.guard);
+</pre>
+
+<h2>The Event Sequence</h2>
+
+<p>What remains is to provide a sequence of Events, describing what <i>happens.</i> Events are given tags, just like Existents. They always have an agent (who is performing the action, the first argument). For “intransitive” actions, that’s usually all there is. But they can also have an object (what is acted upon). If they do, that's the second argument. Here’s the beginning of the Event sequence, where events 1, 3, 4, and 8 have direct objects:</p>
+
+<pre>
+ev.read = new Event(actor.teller, thing.slip);
+ev.snooze = new Event(actor.guard);
+ev.reread = new Event(actor.teller, thing.slip);
+ev.coverFace = new Event(actor.robber, thing.mask);
+ev.type = new Event(actor.teller);
+ev.play = new Event(actor.teller);
+ev.beginRobbing = new Event(actor.robber);
+ev.wave = new Event(actor.teller, actor.robber);
+</pre>
+
+<p>If an Event also has an indirect object (something indirectly affected by the action), a temporal relationship needs to be specified as the third argument. Then the indirect object is the fourth argument, as seen in the next event:</p>
+
+<pre>
+ev.threaten = new Event(actor.robber, actor.teller, temporal.using, thing.fakeGun);
+ev.laugh = new Event(actor.teller);
+ev.wake = new Event(actor.guard);
+ev.seeThreat = new Event(actor.guard, actor.robber);
+ev.leavePost = new Event(actor.guard, place.guardPost);
+ev.grabFake = new Event(actor.teller, thing.fakeMoney, temporal.into, thing.bag);
+ev.turn = new Event(actor.robber, actor.guard);
+ev.shoot1 = new Event(actor.guard, actor.robber);
+ev.shoot2 = new Event(actor.guard, actor.robber);
+ev.fall = new Event(actor.robber);
+ev.die = new Event(actor.robber);
+ev.dropGun = new Event(actor.guard, thing.pistol);
+</pre>
+
+<p>Events can <i>reconfigure</i> Existents. When the guard drops the gun, for instance, according to this story, he “disowns” it. It no longer belongs to him:</p>
+
+<pre>
+ev.dropGun.reconfigures(thing.pistol, "owner", actor.guard, actor.cosmos);
+</pre>
+
+<p>Here’s the rest of the Event sequence:</p>
+
+<pre>
+ev.regret = new Event(actor.guard, ev.shoot1);
+ev.cry = new Event(actor.teller);
+ev.stare = new Event(actor.guard, thing.pistol);
+</pre>
+
+<h2>Wrapping Up the Story File</h2>
+
+<p>In a standard story file, the final line is:</p>
+
+<pre>
+  var world = new World(place, actor, category, thing, ev);
+</pre>
+
+<p>Categories, by the way, are an advanced, experimental, and definitely optional feature. There are none in “The Simulated Bank Robbery” and their use is not supported in this release. But formula nevertheless requires that this last line, exactly as it appears above, is included. This builds a new storyworld with all the components that have been previously defined.</p>
+
+<h2 id="narrator">A Narrator File</h2>
+
+<b>Documentation needed here...</b>
+
+<h2 id="connecting">Connecting Story and Narrator with a Web Page</h2>
+
+<b>Documentation needed here...</b>
+
+<div class="homeward" style="text-align:center">
+<a href="../index.html">Curveship-js</a>
+</div>
+
+</div>
+</body>
+</html>

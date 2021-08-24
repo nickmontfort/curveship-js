@@ -10,7 +10,7 @@ h1, h2, h3 {
 h1 {
  font-size: 50px;
  color: #d44;
- margin: 6px auto 0px auto;
+ margin: 6px auto 0 auto;
  text-align: center;
 }
 h2, .links, .homeward {
