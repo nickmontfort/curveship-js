@@ -45,6 +45,9 @@ vp.stop_music = new VerbPh("muffle");
 vp.talk_3 = new VerbPh("say 'It would've destroyed the whole building if it had moved more! I have been tolerating this filth and flesh in my house for a month. Enough is enough!'");
 vp.stab = new VerbPh("stab");
 vp.enter = new VerbPh("enter");
+
+vp.sub_test = new VerbPh("test");
+
 vp.out = new VerbPh("come out covered in blood");
 vp.card = new VerbPh("have");
 vp.stare_3 = new VerbPh("stare at");
