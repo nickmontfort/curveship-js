@@ -12,7 +12,7 @@ var spin = {
    order:"retrograde"
 };
 
-var told_by = "a modern storyteller";
+var toldBy = "a modern storyteller";
 
 names = {};
 
@@ -43,4 +43,4 @@ vp.cry6 = new VerbPh("cry 'The sky's a-falling! We must tell the king.'");
 vp.refute= new VerbPh("say 'Oh, the sky is not falling! A pea fell on your head. Let's run home'");
 vp.laugh= new VerbPh("snap");
 
-function run() { narrate(title, told_by, world, spin, names, vp); }
+function run() { narrate(title, toldBy, world, spin, names, vp); }

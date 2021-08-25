@@ -13,7 +13,7 @@ var spin = {
    you:"henny"
 };
 
-var told_by = "a Fox";
+var toldBy = "a Fox";
 
 names = {};
 
@@ -44,4 +44,4 @@ vp.cry6 = new VerbPh("cry 'The sky's a-falling! We must tell the king.'");
 vp.refute= new VerbPh("say 'Oh, the sky is not falling! A pea fell on your head. Let's run home'");
 vp.laugh= new VerbPh("snap");
 
-function run() { narrate(title, told_by, world, spin, names, vp); }
+function run() { narrate(title, toldBy, world, spin, names, vp); }

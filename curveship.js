@@ -43,10 +43,10 @@ function shuffle(array) {
  * Examples of sequences:  1-4;7;9-12   18;2-16   2;4;6;8
  */
 function selectMain(telling, order) {
-  var order_list = order.split(";");
+  var orderList = order.split(";");
   var indices = [];
-  var new_telling = [];
-  for (let i of order_list) {
+  var newTelling = [];
+  for (let i of orderList) {
     if (i.includes("-")) {
       let ends = i.split("-");
       for (let j = parseInt(ends[0]); j <= parseInt(ends[1]); j++) {
@@ -57,9 +57,9 @@ function selectMain(telling, order) {
     }
   }
   for (let i of indices) {
-    new_telling.push(telling[i]);
+    newTelling.push(telling[i]);
   }
-  return new_telling;
+  return newTelling;
 }
 
 class Existent {
@@ -217,12 +217,12 @@ class Event {
   hasParticipant(actor) {
     return ((this.agent === actor) || (this.direct === actor) || (this.indirect === actor));
   }
-  reconfigures(ex, property, val_1, val_2) {
+  reconfigures(ex, property, val1, val2) {
     var alteration = {
       existent: ex,
       property: property,
-      before: val_1,
-      after: val_2
+      before: val1,
+      after: val2
     };
     this.alterations.push(alteration);
   }
@@ -232,7 +232,7 @@ var ev = {};
 
 class VerbPh {
   constructor(phrase) {
-    this.verb_phrase = phrase;
+    this.verbPhrase = phrase;
   }
 }
 
@@ -253,10 +253,10 @@ class Narrator {
     }
     for (let vp in vps) {
       this.representation[vp] = {};
-      let verb = vps[vp].verb_phrase, rest = "";
+      let verb = vps[vp].verbPhrase, rest = "";
       if (verb.includes(' ')) {
-        verb = vps[vp].verb_phrase.substr(0, vps[vp].verb_phrase.indexOf(' '));
-        rest = vps[vp].verb_phrase.substr(vps[vp].verb_phrase.indexOf(' '));
+        verb = vps[vp].verbPhrase.substr(0, vps[vp].verbPhrase.indexOf(' '));
+        rest = vps[vp].verbPhrase.substr(vps[vp].verbPhrase.indexOf(' '));
       }
       this.representation[vp].verb = new Verb(verb);
       this.representation[vp].template = "[SUB] [V]";
@@ -639,7 +639,7 @@ var temporal = { // Maps an abstract temporal relationship to a preposition
   through: "through",
   to: "to",
   up: "up",
-  up_to: "up to",
+  upTo: "up to",
   using: "using",
   with: "with",
 };

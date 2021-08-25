@@ -13,7 +13,7 @@ var spin = {
    order:"random"
 };
 
-var told_by = "Buddhist monks";
+var toldBy = "Buddhist monks";
 
 names = {};
 
@@ -44,4 +44,4 @@ vp.cry6 = new VerbPh("say 'Don't be afraid! The frightening noise is from a fall
 vp.refute= new VerbPh("say 'You are right, we won't be afraid. Let's return home'");
 vp.laugh= new VerbPh("bow respectfully");
 
-function run() { narrate(title, told_by, world, spin, names, vp); }
+function run() { narrate(title, toldBy, world, spin, names, vp); }

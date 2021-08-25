@@ -58,24 +58,24 @@ place.street = new Place();
 <pre>
 actor.teller = new Actor(place.vestibule, "female");
 actor.robber = new Actor(place.street, "male");
-actor.guard = new Actor(place.guard_post, "male");
+actor.guard = new Actor(place.guardPost, "male");
 </pre>
 
 <p>Of the three sorts of Existenets, Things come last. They are also each located somewhere. Their location can be a Place, an Actor (if an Actor is carrying them), or even another Thing (if that other Thing is a container, for instance).</p>
 
 <pre>
 thing.slip = new Thing(place.vestibule);
-thing.fake_money = new Thing(place.vestibule);
+thing.fakeMoney = new Thing(place.vestibule);
 thing.bag = new Thing(place.vestibule);
 thing.mask = new Thing(actor.robber);
-thing.fake_gun = new Thing(actor.robber);
+thing.fakeGun = new Thing(actor.robber);
 thing.pistol = new Thing(actor.guard);
 </pre>
 
 <p>At the end of this sequence we can (optionally) provide some additional information, for instance, information about Actors owning Things. This can end up having implications for the generation of possessive noun phrases, eventually:</p>
 
 <pre>
-thing.fake_gun.setOwner(actor.robber);
+thing.fakeGun.setOwner(actor.robber);
 thing.pistol.setOwner(actor.guard);
 </pre>
 
