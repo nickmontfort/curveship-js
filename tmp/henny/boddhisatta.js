@@ -9,13 +9,8 @@
 // Adapted from the original Curveship, now called Curveship-py 0.6.
 // Adapted from the Buddhist source story for Henny Penny
 // https://www.accesstoinsight.org/lib/authors/kawasaki/bl142.html#jat322
-var spin = {
-   //i: actor.henny,
-};
 
 var toldBy = "Buddhist monks";
-
-names = {};
 
 names.farmyard = new Names("grove");
 names.cave = new Names("the lion's den");
@@ -31,8 +26,9 @@ names.nut = new Names("a ripe belli fruit");
 names.head = new Names("the head")
 names.head2 = new Names("the solid earth")
 names.king = new Names("the place where the noise started");
-names.crowd = new Names("animals")
-vp = {};
+names.crowd = new Names("The animals","they",pronoun.nonBinary,"a group");
+
+
 vp.hit = new VerbPh(["falls"," and whack"]);
 vp.decides = new VerbPh("flee and does not look back");
 vp.ranc = new VerbPh("run along in a panic");

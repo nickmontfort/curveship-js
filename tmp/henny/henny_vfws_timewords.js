@@ -8,6 +8,7 @@
 //
 // Adapted from the original Curveship, now called Curveship-py 0.6.
 // Mixed with text from Vivian French and William Stubbs versions
+spin.timewords = true;
 
 var toldBy = "a modern storyteller";
 
@@ -22,7 +23,7 @@ names.turkey = new Names("Turkey Lurkey");
 names.fox = new Names("Fox Lox");
 names.tree= new Names("a pea-stack");
 names.nut = new Names("a pea");
-names.head = new Names("head");
+names.head = new Names("the head");
 names.head2 = new Names("head");
 names.king = new Names("the king");
 names.crowd = new Names("The animals","they",pronoun.nonBinary,"a group");
