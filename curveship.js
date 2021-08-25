@@ -303,7 +303,9 @@ class Narrator {
      *   if (role === "object") return ["reflexive", person];
      * }
      */
-    if (person !== 3) {
+    if (person !== 3 || ex == world.thing.cosmos) {
+      // Always pronominzalize if in second or third person.
+      // Always pronominzalize cosmos, as in "It rains."
       pronounToUse = [role, person];
     } else
     // if (this.owner) return false; TODO with possessives
@@ -323,9 +325,6 @@ class Narrator {
   }
   name(e, spin, role) {
     let pro = false;
-    if (e === thing.cosmos) { // Always pronominzalize cosmos, as in "It rains."
-      return [role, 3];
-    }
     if (e instanceof Event) {
       return "that " + this.represent(e, spin, false); // TODO "that" is language-specific, move out of curveship.js
     }
