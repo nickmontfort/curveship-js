@@ -8,14 +8,11 @@
 //
 // Adapted from the original Curveship, now called Curveship-py 0.6.
 // Mixed with text from Vivian French and William Stubbs versions
-var spin = {
-   i:"fox",
-   you:"henny"
-};
+spin.i="fox";
+spin.you="henny";
 
 var toldBy = "a Fox";
 
-names = {};
 
 names.farmyard = new Names("garden");
 names.cave = new Names("Fox Lox's den");
@@ -28,14 +25,15 @@ names.turkey = new Names("Turkey Lurkey");
 names.fox = new Names("Fox Lox","Fox Lox", pronoun.male, "a fox");
 names.tree= new Names("a pea-stack");
 names.nut = new Names("a pea");
-names.head = new Names("the head");
-names.head2 = new Names("his head");
+names.head = new Names("head");
+names.head2 = new Names("head");
 names.king = new Names("the king");
-names.crowd = new Names("The group","they")
-vp = {};
+names.crowd = new Names("The animals","they",pronoun.nonBinary,"a group");
+
+
 vp.hit = new VerbPh("whack");
-vp.decides = new VerbPh("decide to tell it");
-vp.ranc = new VerbPh("went along");
+vp.decides = new VerbPh("decide to tell");
+vp.ranc = new VerbPh("pass");
 vp.meetf= new VerbPh("meet");
 vp.cry = new VerbPh("cry 'The sky's a-falling! I must go to tell the king.'");
 vp.invite= new VerbPh("say 'I will show you the way.'");

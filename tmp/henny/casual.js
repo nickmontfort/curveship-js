@@ -8,13 +8,8 @@
 //
 // Adapted from the original Curveship, now called Curveship-py 0.6.
 // Adapted from text https://archive.org/stream/HennyPenny/Henny%20Penny_djvu.txt
-var spin = {
-   //i: actor.henny,
-};
 
 var toldBy = "a classic storyteller";
-
-names = {};
 
 names.farmyard = new Names("that idyllic farmyard", "the farmyard");
 names.cave = new Names("the cave");
@@ -28,13 +23,13 @@ names.turkey = new Names("Turkey Lurkey");
 names.fox = new Names("Foxey Loxey","the fox");
 names.tree= new Names("a tree");
 names.nut = new Names("an acorn", "a nut");
-names.head = new Names("the head")
-names.head2 = new Names("his head")
-names.king = new Names("the king");
-names.crowd = new Names("animals")
-vp = {};
+names.head = new Names("head")
+names.head2 = new Names("head")
+names.king = new Names("king");
+names.crowd = new Names("The animals","they",pronoun.nonBinary,"a group");
+
 vp.hit = new VerbPh("hit");
-vp.decides = new VerbPh("decide to tell it");
+vp.decides = new VerbPh("decide to tell");
 vp.ranc = new VerbPh("run");
 vp.meetf= new VerbPh("meet");
 vp.cry = new VerbPh("cry 'The sky is falling! I must go to tell the king. Come with me'");
