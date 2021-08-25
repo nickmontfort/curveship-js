@@ -46,7 +46,7 @@ vp.talk_3 = new VerbPh("say 'It would've destroyed the whole building if it had 
 vp.stab = new VerbPh("stab");
 vp.enter = new VerbPh("enter");
 
-vp.sub_test = new VerbPh("test");
+//vp.sub_test = new VerbPh("test");
 
 vp.out = new VerbPh("come out covered in blood");
 vp.card = new VerbPh("have");
