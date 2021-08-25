@@ -7,7 +7,7 @@
 // without any warranty.
 
 var spin = {
-  main: 1;3
+  main: "0;2-3"
 };
 
 var toldBy = "a proper narrator";

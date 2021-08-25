@@ -42,7 +42,7 @@ function shuffle(array) {
  * ellipsis, reordering, and repetition in the telling.
  * Examples of sequences:  1-4;7;9-12   18;2-16   2;4;6;8
  */
-function select_main(telling, order) {
+function selectMain(telling, order) {
   var order_list = order.split(";");
   var indices = [];
   var new_telling = [];
@@ -548,7 +548,7 @@ function narrate(title, toldBy, world, spin, names, reps) {
     telling.push(i);
   }
   if (spin.main) {
-    telling = select_main(telling, spin.main);
+    telling = selectMain(telling, spin.main);
   }
   if (spin.order === "retrograde") {
     telling.reverse();
