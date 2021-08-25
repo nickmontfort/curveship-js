@@ -89,7 +89,7 @@ class Names {
   constructor(initial, subsequent = null, pronouns = null) {
     this.initial = initial;
     let bareName = initial;
-    let articles = new Set(["a", "an", "one", "some", "the"]);
+    let articles = new Set(["a", "an", "one", "some", "that", "this", "the"]);
     if (articles.has(initial.split(" ")[0])) {
       bareName = initial.substring(initial.indexOf(" "));
     }

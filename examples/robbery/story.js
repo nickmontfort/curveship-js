@@ -52,7 +52,7 @@ ev.shoot2 = new Event(actor.guard, actor.robber);
 ev.fall = new Event(actor.robber);
 ev.die = new Event(actor.robber);
 ev.dropGun = new Event(actor.guard, thing.pistol);
-ev.dropGun.reconfigures(thing.pistol, "owner", actor.guard, actor.cosmos);
+ev.dropGun.reconfigures(thing.pistol, "owner", actor.guard, null);
 ev.regret = new Event(actor.guard, ev.shoot1);
 ev.cry = new Event(actor.teller);
 ev.stare = new Event(actor.guard, thing.pistol);

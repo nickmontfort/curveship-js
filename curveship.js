@@ -231,7 +231,7 @@ class Event {
       existent: ex,
       property: property,
       before: val1,
-      after: val2
+      after: val2,
     };
     this.alterations.push(alteration);
   }
@@ -387,7 +387,9 @@ class Narrator {
         possessive = this.names[parent.tag].initial + "’s";
       }
       this.givens.add(parent.tag);
-      return possessive + " " + this.names[e.tag].bareName;
+      let possessivePhrase = possessive + " " + this.names[e.tag].bareName;
+      this.givens.add(e.tag);
+      return possessivePhrase;
     }
     if (this.givens.has(e.tag)) {
       return this.names[e.tag].subsequent;
@@ -599,7 +601,7 @@ function narrate(title, toldBy, world, spin, names, reps) {
     // "before" state of all chronologially later must be applied.
     // That's becasue we could be narrating this event in any order.
     for (e of world.evSeq) {
-      if (e.start < current.start) {
+      if (world.evSeq.indexOf(e) < world.evSeq.indexOf(current)) {
         for (alt of e.alterations) {
           alt.existent[alt.property] = alt.after;
         }

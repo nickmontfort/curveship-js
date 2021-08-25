@@ -21,6 +21,8 @@ actor.jimmy = new Actor(place.room, "male", "child");
 
 ev.lookAround = new Event(actor.john);
 ev.play = new Event(actor.jimmy);
+ev.noticeJimmy = new Event(actor.john, actor.jimmy);
+ev.noticeMary = new Event(actor.john, actor.mary);
 ev.greet = new Event(actor.john, actor.mary);
 ev.interrupt = new Event(actor.bill, [actor.john, actor.mary]);
 
