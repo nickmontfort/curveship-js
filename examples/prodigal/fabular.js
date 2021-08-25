@@ -8,10 +8,6 @@
 //
 // Adapted from the original Curveship, now called Curveship-py 0.6.
 
-var spin = {
-  // i: teller,
-};
-
 var toldBy = "a teller of parables";
 
 // PLACES
@@ -43,10 +39,6 @@ names.shoes = new Names("some shoes");
 names.calf = new Names("a fatted calf");
 names.riotous = new Names("riotous living");
 names.music = new Names("the music");
-
-// EVENTS
-
-vp = {};
 
 vp.withOlder = new VerbPh("inhabit");
 vp.requestInheritance = new VerbPh("request");

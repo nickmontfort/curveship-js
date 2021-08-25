@@ -1,14 +1,8 @@
-var spin = {
-  groupings: "properties",
-};
+var toldBy = "a narrator unaware of specifics";
 
-var toldBy = "a narrator";
-
-names = {};
+spin.groupings = "properties";
 
 names.apple = new Names(""); // always use a pronoun to refer to the apple
-
-vp = {};
 
 vp.see = new VerbPh("see");
 vp.taunt = new VerbPh("pester");

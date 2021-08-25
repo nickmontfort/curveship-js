@@ -8,13 +8,7 @@
 //
 // Adapted from the original Curveship, now called Curveship-py 0.6.
 
-var spin = {
-  // i: teller,
-};
-
 var toldBy = "a casual, very oblique narrator";
-
-names = {};
 
 names.vestibule = new Names("that bulletproof booth", "the vestibule");
 names.lobby = new Names("the lobby");
@@ -31,8 +25,6 @@ names.bag = new Names("a black bag", "the bag");
 names.mask = new Names("a Dora the Explorer mask", "the mask");
 names.fakeGun = new Names("a gunShaped object", "the fake gun");
 names.pistol = new Names("a pistol");
-
-vp = {};
 
 vp.read = new VerbPh("read");
 vp.snooze = new VerbPh("snooze");

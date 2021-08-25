@@ -7,6 +7,8 @@
 // Noun class, along with English-language irregular plurals. These are for
 // all but -s and -es plurals.
 
+var names = {};
+
 class Noun {
   constructor(base) {
     this.base = base;

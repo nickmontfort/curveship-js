@@ -10,11 +10,9 @@
 
 // TODO change all the names to very specific (proper) ones
 
-var spin = {
-  i: "citizen",
-};
-
 var toldBy = "a “proper” narrator"; // FIXME eventually! Needs work
+
+spin.i = "citizen";
 
 // PLACES
 
@@ -47,8 +45,6 @@ names.riotous = new Names("riotous living");
 names.music = new Names("the music");
 
 // EVENTS
-
-vp = {};
 
 vp.withOlder = new VerbPh("inhabit");
 vp.requestInheritance = new VerbPh("request");

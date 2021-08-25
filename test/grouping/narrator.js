@@ -1,10 +1,6 @@
-var spin = {
-  groupings: "properties",
-};
-
 var toldBy = "a narrator";
 
-names = {};
+spin.groupings = "properties";
 
 names.room = new Names("a room");
 names.john = new Names("John");
@@ -28,8 +24,6 @@ names.blueberry = new Names("a blueberry");
 // names.berries = new CategoryNames("berry");
 // names.humans = new CategoryNames("human");
 
-vp = {};
-
 vp.dismount = new VerbPh("get off");
 vp.inspect = new VerbPh("examine");
 vp.touch = new VerbPh("palpates");
@@ -37,8 +31,5 @@ vp.ogle = new VerbPh("eye"); // TODO seems like we should only need to
 vp.lick = new VerbPh("lick");       // define the action to VP mapping once
 vp.sniff = new VerbPh("smell");
 vp.eat = new VerbPh("eat");
-
-
-// SET UP for narrating
 
 function run() { narrate(title, toldBy, world, spin, names, vp); }

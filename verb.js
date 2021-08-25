@@ -13,6 +13,8 @@
 // These do not do any consonant doubling, so verbs whose consontants
 // are doubled have to be included here.
 
+var vp = {};
+
 class Verb {
     constructor(base) { this.base = base; }
     thirdPersonSingular() {

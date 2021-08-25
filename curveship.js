@@ -62,6 +62,11 @@ function selectMain(telling, order) {
   return newTelling;
 }
 
+var spin = {
+  speaking: "during",
+  referring: "simple",
+};
+
 class Existent {
   constructor() {
     if (new.target === Existent) {
@@ -481,13 +486,25 @@ class Narrator {
     }
     return result + " and " + this.name(ex.get(ex.length() - 1), spin, role);
   }
+  determineTenseER(ev, spin) {
+    let evNum = world.evSeq.indexOf(ev.tag);
+    let isNum = (typeof spin.speaking === "number");
+    if (spin.speaking === "during" || (isNum && spin.speaking == evNum)) {
+      return "present";
+    } else if (spin.speaking === "after" || (isNum && spin.speaking > evNum)) {
+      return "past";
+    } else if (spin.speaking === "before" || (isNum && spin.speaking < evNum)) {
+      return "future";
+    }
+  }
   represent(ev, spin, fixOrthography = true) {
     let result = this.representation[ev.tag].template;
     let number = world.ev[ev.tag].agent instanceof ExistentGroup ? 2 : 1;
     let person = 3;
     person = (ev.agent.tag === spin.i) ? 1 : person;
     person = (ev.agent.tag === spin.you) ? 2 : person;
-    let verbString = this.representation[ev.tag].verb.conjugatedVP(person, number, "present", "", ev); // FIXME different persons, tenseER, tenseRS
+    let tenseER = this.determineTenseER(ev, spin);
+    let verbString = this.representation[ev.tag].verb.conjugatedVP(person, number, tenseER, spin.referring, ev);
     let vp = verbString + (this.representation[ev.tag].rest ? ' ' + this.representation[ev.tag].rest : '');
     result = result.replace("\[SUB\]", this.name(world.ev[ev.tag].agent, spin, "subject"));
     result = result.replace("\[V\]", vp);

@@ -6,16 +6,10 @@
 // notice and this notice are preserved. This file is offered as-is,
 // without any warranty.
 
-var spin = {
-  order: "retrograde",
-  timePhrases: true,
-};
-
 var toldBy = "a backwards-looking narrator";
 
-names = {};
-
-vp = {};
+spin.order = "retrograde";
+spin.timePhrases = true;
 
 vp.lookAround = new VerbPh("look around");
 vp.play = new VerbPh("play");

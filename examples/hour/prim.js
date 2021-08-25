@@ -8,12 +8,7 @@
 //
 // Adapted from the original Curveship, now called Curveship-py 0.6.
 
-var spin = {
-};
-
 var toldBy = "a prim narrator";
-
-names = {};
 
 // PLACES
 
@@ -57,10 +52,6 @@ names.song = new Names("the notes of a distant song");
 names.sparrow = new Names("countless sparrows twittering");
 names.elixir = new Names("the very elixir of life");
 names.window = new Names("the open window");
-
-// EVENTS
-
-vp = {};
 
 vp.shudder = new VerbPh("shudder to think that life might be long");
 vp.crash = new VerbPh("crash");
