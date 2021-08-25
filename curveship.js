@@ -67,6 +67,8 @@ var spin = {
   referring: "simple",
 };
 
+var endingPunctuation = new Set(".…?!‽".split(""));
+
 class Existent {
   constructor() {
     if (new.target === Existent) {
@@ -209,6 +211,8 @@ class Event {
     this.continuous = false;
     if (direct) {
       this.direct = Array.isArray(direct) ? new ExistentGroup(direct) : direct;
+      // this.direct ends up as either an Existent, an ExistentGroup, or
+      // (if it represents direct discourse) a string
     }
     if (temporalRelation) {
       this.temporal = temporalRelation;
@@ -234,12 +238,6 @@ class Event {
 }
 
 var ev = {};
-
-class VerbPh {
-  constructor(phrase) {
-    this.verbPhrase = phrase;
-  }
-}
 
 class Narrator {
   constructor(world, names, vps) {
@@ -508,7 +506,11 @@ class Narrator {
     result = result.replace("\[SUB\]", this.name(world.ev[ev.tag].agent, spin, "subject"));
     result = result.replace("\[V\]", vp);
     if (world.ev[ev.tag].hasOwnProperty("direct")) {
-      result = result.replace("\[DO\]", this.name(world.ev[ev.tag].direct, spin, "object"));
+      if (typeof world.ev[ev.tag].direct === "string") {
+        result = result.replace("\[DO\]", "“" + world.ev[ev.tag].direct + "”");
+      } else {
+        result = result.replace("\[DO\]", this.name(world.ev[ev.tag].direct, spin, "object"));
+      }
     }
     if (world.ev[ev.tag].hasOwnProperty("temporal")) {
       result = result.replace("\[PREP\]", temporal[world.ev[ev.tag].temporal]);
@@ -517,7 +519,14 @@ class Narrator {
       result = result.replace("\[IO\]", this.name(world.ev[ev.tag].indirect, spin, "object"));
     }
     this.lastNarratedEvent = world.ev[ev.tag];
-    result = fixOrthography ? capitalize(result) + "." : result;
+    let addedPunctuation = ".";
+    if (result.slice(-1) == "”") {
+      addedPunctuation = "";
+      if (!endingPunctuation.has(result.slice(-2, -1))) {
+        result = result.slice(0, -1) + ".”";
+      }
+    }
+    result = fixOrthography ? (capitalize(result) + addedPunctuation) : result;
     return result;
   }
 }

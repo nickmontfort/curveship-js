@@ -89,6 +89,12 @@ class Verb {
     }
 }
 
+class VerbPh {
+  constructor(phrase) {
+    this.verbPhrase = phrase;
+  }
+}
+
 class GenericVerbPh extends VerbPh {
   constructor(transitivity) {
     let phrase = (transitivity === "trans") ? "act on" : "act";
