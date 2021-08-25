@@ -74,7 +74,7 @@ a:link {
 a:visited {
  color: #e22;
 }
-strong {
+dt {
  font-weight: bold;
  color: #666;
 }

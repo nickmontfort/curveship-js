@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-type" content="text/html;charset=utf-8" />
+    <title>Curveship-js Technical Reference</title>
+<link rel="StyleSheet" href="../curve.css"/>
+
+</head>
+<body>
+<div style="text-align:right"><a href="../index.html"><img src="../small_logotype.png" alt="Curveship" style="border-style: none" /></a></div>
+
+<div class="links">
+<ul>
+  <li><a href="reference.html">Concepts</a></li>
+  <li><a href="start.html">Getting Started</a></li>
+  <li>Technical Reference</li>
+  <li><a href="thanks.html">Thanks & Publications List</a></li>
+  <li><a href="https://github.com/nickmontfort/curveship-js">GitHub</a></li>
+</ul>
+</div>
+
+<div id="main">
+
+<h1>Technical Reference</h1>
+<h2>for Curveship-js</h2>
+
+<ul>
+  <li><a href="#spin">spin</a></li>
+</ul>
+
+<h2 id="spin">spin</h2>
+
+<p>An associative array representing the particular “spin” a narrator puts on a story, and thus defining several things about how it is told. spin is defined in narrator files with lines such as:</p>
+
+<pre>
+  spin.timeWords = true;
+</pre>
+
+<p>Valid keys and the type of data that can be assigned as values are:</p>
+
+<dl>
+<dt>spin.i = <i>STRING</i>;</dt>
+<dd>The “I” of the story. STRING is an Existent’s tag, e.g., "john" or "cinderella"</dd>
+
+<dt>spin.eventNumbers = <i>BOOLEAN</i>;</dt>
+<dd>Should the Events that are represented be numbered according to their position in the underlying sequence? Setting this to true can be useful during the authoring/development of a variable narrative.</dd>
+
+<dt>spin.expressionNumbers = <i>BOOLEAN</i>;</dt>
+<dd>Should the expressions (the representations of Events as they end up in the final narrative) be numbered? Setting this to true can be useful during the authoring/development of a variable narrative.</dd>
+
+<dt>spin.groupings = <i>STRING</i>;</dt>
+<dd>How should Existents be grouped when several of them are represented at once? The string consists of zero or more of “categories” “properties” and “parts” with a space between words if there are two or three.</dd>
+
+<dt>spin.main = <i>STRING</i>;</dt>
+<dd>What Events will be included in the main narrative sequence? This key/value pair allows ellipsis. Values can be lists of numbers or number ranges placed in a string and with each element separated by semicolons, e.g., "0,5,7-12" or "3-8". Note that the first Event in the sequence is numbered 0.</dd>
+
+<dt>spin.order = <i>STRING</i>;</dt>
+<dd>What is the order in which those underlying Events that are included in the main narrative sequence will be narrated? Values can be "chronological" "random" or "retrograde" (meaning to tell the last event first and proceed backwards through them).</dd>
+
+<dt>spin.timeWords = <i>BOOLEAN</i>;</dt>
+<dd>Should phrases like “Previously, ” be prepended when an Event is narrated that happens earlier than the last narrated Event?</dd>
+
+<dt>spin.referring = <i>STRING</i>;</dt>
+<dd>This key/value pair is used internally and should not be set. It indicates (in Hans Reichenbach’s theory of tense and aspect) the time of reference.</dd>
+
+<dt>spin.speaking = <i>STRING || NUMBER</i>;</dt>
+<dd>What is the time of speaking or time of narrating? Values can be "before" "during" or "after" for the narrator to speak from a point in time before the Events, to follow along through each of the events (in “vivid narrative”), or to speak from a point in time after the Events. A number can be specified if the narrator should be speaking from some point in the middle of the underlying action. This number can be an integer or can end in “.5” if the narrator. For instance, if 6.5 is given the narrator will speak from a point in time between events 6 and 7.</dd>
+
+<dt>spin.you = <i>STRING</i>;</dt>
+<dd>The “you” of the story. STRING is an Existent’s tag, e.g., "john" or "cinderella"</dd>
+</dl>
+
+<div class="homeward" style="text-align:center">
+<a href="../index.html">Curveship-js</a>
+</div>
+
+</div>
+</body>
+</html>
