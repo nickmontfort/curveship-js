@@ -327,7 +327,7 @@ class Narrator {
     let pro = false;
     if (e instanceof Event) {
       let eventRepresentation;
-      [spin, oldSpeaking, oldReferring] = shiftTime(spin); {
+      [spin, oldSpeaking, oldReferring] = shiftBack(spin); {
         eventRepresentation = this.represent(e, spin, false);
       }
       spin.speaking = oldSpeaking;
@@ -570,8 +570,8 @@ function narrate(title, toldBy, world, spin, names, reps) {
     h2 = document.createElement("h2"),
     div, telling = [],
     sentence, fix, oldSpeaking,
-    oldReferring, exp = 0,
-    i, leftPart, narr;
+    oldReferring, justShiftedBack = false,
+    exp = 0, i, leftPart, narr;
   narr = new Narrator(world, names, reps);
   document.title = title;
   h1.innerHTML = title;
@@ -622,7 +622,13 @@ function narrate(title, toldBy, world, spin, names, reps) {
     }
     if (lastNarratedTag !== "" &&
       world.evSeq.indexOf(current) < world.evSeq.indexOf(world.ev[lastNarratedTag])) {
-      [spin, oldSpeaking, oldReferring] = shiftTime(spin);
+      [spin, oldSpeaking, oldReferring] = shiftBack(spin);
+      if (justShiftedBack) {
+        // We went back one tense already the last time we represented an
+        // event. Since we're going further into the past we shift again.
+        let j, k; // Throw-away variables, we want to keep the original spin
+        [spin, j, k] = shiftBack(spin);
+      }
       if (spin.timePhrases) {
         sentence += choice(["Before that, ", "Previously, ", "Earlier, ",
           "Beforehand, "
@@ -633,8 +639,10 @@ function narrate(title, toldBy, world, spin, names, reps) {
       }
       spin.speaking = oldSpeaking;
       spin.referring = oldReferring;
+      justShiftedBack = true;
     } else {
       sentence += narr.represent(current, spin);
+      justShiftedBack = false;
     }
     div.innerHTML = sentence;
     element.appendChild(div);
@@ -645,7 +653,7 @@ function narrate(title, toldBy, world, spin, names, reps) {
   element.appendChild(div);
 }
 
-function shiftTime(spin) {
+function shiftBack(spin) {
   oldSpeaking = spin.speaking;
   oldReferring = spin.referring;
   if (spin.speaking === "after") {
