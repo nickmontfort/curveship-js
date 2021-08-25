@@ -117,7 +117,11 @@ class ProperNames extends Names {
   constructor(given, family = null, pronouns = null, common = null, title = null, possessive = null) {
     let initial = given;
     let subsequent = given;
-    if (family !== null) {
+    if (given === null || given === "") {
+      initial = (title !== null ? title + " " : "") + family;
+      subsequent = initial;
+    }
+    if (family !== null && family !== "") {
       initial = (title !== null ? title + " " : "") + given + " " + family;
       subsequent = title !== null ? title + " " + family : given;
     }
