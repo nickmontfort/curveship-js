@@ -252,11 +252,13 @@ class Narrator {
     this.representation = {};
     for (let ev in world.ev) {
       if (!(ev in vps)) {
-        vps[ev] = new GenericVerbPh(world.ev[ev].hasOwnProperty("direct") ? "trans" : "intrans"); }
+        vps[ev] = new GenericVerbPh(world.ev[ev].hasOwnProperty("direct") ? "trans" : "intrans");
+      }
     }
     for (let vp in vps) {
       this.representation[vp] = {};
-      let verb = vps[vp].verbPhrase, rest = "";
+      let verb = vps[vp].verbPhrase,
+        rest = "";
       if (verb.includes(' ')) {
         verb = vps[vp].verbPhrase.substr(0, vps[vp].verbPhrase.indexOf(' '));
         rest = vps[vp].verbPhrase.substr(vps[vp].verbPhrase.indexOf(' '));
@@ -306,14 +308,14 @@ class Narrator {
       // Always pronominzalize cosmos, as in "It rains."
       pronounToUse = [role, person];
     } else
-    // if (this.owner) return false; TODO with possessives
-    if (this.names[ex.tag].initial === "") {
-      // Existents that have been given blank initial names are always
-      // pronominalized. To have existents referred to by generic
-      // common names based on the type of existent they are, simply
-      // don't include a Names for them at all in narrator.js.
-      pronounToUse = [role, 3];
-    } else if (this.givens.has(exTag) && (typeof this.lastNarratedEvent !== "undefined" && this.lastNarratedEvent.hasParticipant(ex))) {
+      // if (this.owner) return false; TODO with possessives
+      if (this.names[ex.tag].initial === "") {
+        // Existents that have been given blank initial names are always
+        // pronominalized. To have existents referred to by generic
+        // common names based on the type of existent they are, simply
+        // don't include a Names for them at all in narrator.js.
+        pronounToUse = [role, 3];
+      } else if (this.givens.has(exTag) && (typeof this.lastNarratedEvent !== "undefined" && this.lastNarratedEvent.hasParticipant(ex))) {
       // In this case the Existent has already been mentioned in the
       // discourse, and indeed in the previous representation of an
       // Event.
@@ -324,7 +326,13 @@ class Narrator {
   name(e, spin, role) {
     let pro = false;
     if (e instanceof Event) {
-      return "that " + this.represent(e, spin, false); // TODO "that" is language-specific, move out of curveship.js
+      let eventRepresentation;
+      [spin, oldSpeaking, oldReferring] = shiftTime(spin); {
+        eventRepresentation = this.represent(e, spin, false);
+      }
+      spin.speaking = oldSpeaking;
+      spin.referring = oldReferring;
+      return "that " + eventRepresentation;
     }
     if (e instanceof ExistentGroup) {
       return this.nameGroup(e, spin, role);
@@ -365,14 +373,14 @@ class Narrator {
         this.names[parent.tag].setGenericPronouns(parent.tag);
       }
       if (typeof this.lastNarratedEvent !== "undefined" && this.lastNarratedEvent.hasParticipant(parent)) {
-         let person = 3;
-         if (parent.tag === spin.i) {
-           person = 1;
-         }
-         if (parent.tag === spin.you) {
-           person = 2;
-         }
-         possessive = this.names[parent.tag].pronouns.getPossessivePronoun(person);
+        let person = 3;
+        if (parent.tag === spin.i) {
+          person = 1;
+        }
+        if (parent.tag === spin.you) {
+          person = 2;
+        }
+        possessive = this.names[parent.tag].pronouns.getPossessivePronoun(person);
       } else if (this.names[parent.tag].possessive !== null) {
         possessive = this.names[parent.tag].possessive;
       } else {
@@ -398,8 +406,7 @@ class Narrator {
           current = current.partOf;
           above.push(current);
         }
-      }
-      else if (method === "by category") {
+      } else if (method === "by category") {
         let cat = current.getCategory();
         while (cat !== category.entity) {
           cat = cat.parent;
@@ -560,7 +567,7 @@ function narrate(title, toldBy, world, spin, names, reps) {
     h1 = document.createElement("h1"),
     h2 = document.createElement("h2"),
     div, telling = [],
-    sentence, fix,
+    sentence, fix, oldSpeaking,
     oldReferring, exp = 0,
     i, leftPart, narr;
   narr = new Narrator(world, names, reps);
@@ -580,7 +587,7 @@ function narrate(title, toldBy, world, spin, names, reps) {
   } else if (spin.order === "random") {
     shuffle(telling);
   }
-  let groupingSet = spin.hasOwnProperty("groupings") ? new  Set(spin.groupings.split(" ")) : spin.groupings = new Set();
+  let groupingSet = spin.hasOwnProperty("groupings") ? new Set(spin.groupings.split(" ")) : spin.groupings = new Set();
   spin.groupings = groupingSet;
   div = document.createElement("div");
   element.appendChild(div);
@@ -613,41 +620,47 @@ function narrate(title, toldBy, world, spin, names, reps) {
     }
     if (lastNarratedTag !== "" &&
       world.evSeq.indexOf(current) < world.evSeq.indexOf(world.ev[lastNarratedTag])) {
-        oldSpeaking = spin.speaking;
-        oldReferring = spin.referring;
-        if (spin.speaking === "after") {
-          if (spin.referring === "posterior") {
-            spin.referring = "simple";
-          } else if (spin.referring === "simple") {
-            spin.referring = "anterior";
-          }
-        }
-        if (spin.speaking === "during") {
-          spin.speaking = "after";
-        }
-        if (spin.speaking === "before") {
-          spin.speaking = "during";
-        }
-        if (spin.timePhrases) {
-          sentence += choice(["Before that, ", "Previously, ", "Earlier, ",
-            "Beforehand, "]);
-          sentence += narr.represent(current, spin, false) + ".";
-        } else {
-          sentence += narr.represent(current, spin);
-        }
-        spin.speaking = oldSpeaking;
-        spin.referring = oldReferring;
+      [spin, oldSpeaking, oldReferring] = shiftTime(spin);
+      if (spin.timePhrases) {
+        sentence += choice(["Before that, ", "Previously, ", "Earlier, ",
+          "Beforehand, "
+        ]);
+        sentence += narr.represent(current, spin, false) + ".";
       } else {
         sentence += narr.represent(current, spin);
       }
-      div.innerHTML = sentence;
-      element.appendChild(div);
-      lastNarratedTag = current.tag;
+      spin.speaking = oldSpeaking;
+      spin.referring = oldReferring;
+    } else {
+      sentence += narr.represent(current, spin);
     }
-    div = document.createElement("div");
-    div.innerHTML = "The end.";
+    div.innerHTML = sentence;
     element.appendChild(div);
+    lastNarratedTag = current.tag;
   }
+  div = document.createElement("div");
+  div.innerHTML = "The end.";
+  element.appendChild(div);
+}
+
+function shiftTime(spin) {
+  oldSpeaking = spin.speaking;
+  oldReferring = spin.referring;
+  if (spin.speaking === "after") {
+    if (spin.referring === "posterior") {
+      spin.referring = "simple";
+    } else if (spin.referring === "simple") {
+      spin.referring = "anterior";
+    }
+  }
+  if (spin.speaking === "during") {
+    spin.speaking = "after";
+  }
+  if (spin.speaking === "before") {
+    spin.speaking = "during";
+  }
+  return [spin, oldSpeaking, oldReferring];
+}
 
 // ### PREPOSITIONS ###
 
