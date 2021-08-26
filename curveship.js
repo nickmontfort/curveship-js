@@ -370,7 +370,7 @@ class Narrator {
       if (this.names[parent.tag].pronouns === null) {
         this.names[parent.tag].setGenericPronouns(parent.tag);
       }
-      if (typeof this.lastNarratedEvent !== "undefined" && this.lastNarratedEvent.hasParticipant(parent)) {
+      if ((ev.agent === e.owner) || (typeof this.lastNarratedEvent !== "undefined" && this.lastNarratedEvent.hasParticipant(parent))) {
         let person = 3;
         if (parent.tag === spin.i) {
           person = 1;
