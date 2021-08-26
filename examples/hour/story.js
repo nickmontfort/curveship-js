@@ -40,6 +40,7 @@ thing.patches = new Thing(place.outside);
 thing.clouds = new Thing(place.outside);
 thing.unknown = new Thing(null);
 thing.pulses = new Thing(actor.louise);
+thing.pulses.setOwner(actor.louise);
 thing.rain = new Thing(place.outside);
 thing.air = new Thing(place.outside);
 thing.street = new Thing(place.outside);
