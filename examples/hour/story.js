@@ -23,24 +23,25 @@ actor.louise = new Actor(place.downstairs, "female");
 actor.brently = new Actor(place.rail, "male");
 actor.richards = new Actor(place.office, "male");
 actor.josephine = new Actor(place.downstairs, "female");
-actor.doctor1 = new Actor(null, "male");
-actor.doctor2 = new Actor(null, "male");
+actor.doctorSmith = new Actor(null, "male");
+actor.doctorJones = new Actor(null, "male");
 actor.peddler = new Actor(null, "male");
 
 thing.train = new Thing(place.rail);
 thing.josephinesArms = new Thing(actor.josephine);
 thing.josephinesArms.owner = actor.josephine;
-  // FIXME should really a part, and two singular parts!
+  // Should really be singular somehow...
+actor.josephine.setParts([thing.josephinesArms]);
 thing.louisesArms = new Thing(actor.louise);
-thing.louisesArms.owner = actor.louise;
-  // FIXME should really a part, and two singular parts!
+  // Should really be singular somehow...
 thing.chair = new Thing(place.room);
 thing.trees = new Thing(place.outside);
 thing.patches = new Thing(place.outside);
 thing.clouds = new Thing(place.outside);
 thing.unknown = new Thing(null);
-thing.pulses = new Thing(actor.louise);
-thing.pulses.setOwner(actor.louise);
+thing.pulse = new Thing(actor.louise);
+actor.louise.setParts([thing.louisesArms, thing.pulse]);
+  // FIXME should be a part...
 thing.rain = new Thing(place.outside);
 thing.air = new Thing(place.outside);
 thing.street = new Thing(place.outside);
@@ -54,6 +55,8 @@ thing.door = new Thing(thing.room);
 thing.frontDoor = new Thing(thing.room);
 thing.latchkey = new Thing(actor.brently);
 
+category.doctor = new Category([actor.doctorSmith, actor.doctorJones]);
+
 // EVENTS
 
 ev.shudder = new Event(actor.louise);
@@ -65,11 +68,11 @@ ev.listedAsDead = new Event(actor.brently);
 ev.gasp = new Event(actor.richards);
 ev.confirmDeath = new Event(actor.richards, ev.listedAsDead);
 ev.hasten = new Event(actor.richards, null, temporal.to, place.downstairs);
-ev.tellJosephine = new Event(actor.richards, ev.crash, temporal.to, actor.josephine); // EngRel
+ev.tellJosephine = new Event(actor.richards, ev.crash, temporal.to, actor.josephine);
 ev.tellMrsMallard = new Event(actor.josephine, actor.louise);
 ev.isNotParalyzed = new Event(actor.louise);
-ev.weep = new Event(actor.louise, null, temporal.into, thing.josephinesArms); //ing form
-ev.finishWeeping = new Event(actor.louise); // arms were supposed to be part of J?
+ev.weep = new Event(actor.louise, null, temporal.into, thing.josephinesArms);
+ev.finishWeeping = new Event(actor.louise);
 ev.goToRoom = new Event(actor.louise, null, temporal.to, place.room);
 ev.sitInChair = new Event(actor.louise, null, temporal.in, thing.chair);
 ev.seeTrees = new Event(actor.louise, thing.trees, temporal.outside, place.room);
@@ -83,7 +86,7 @@ ev.sob = new Event(actor.louise);
 ev.seeShow = new Event(actor.louise, thing.patches);
 ev.stareAtPatches = new Event(actor.louise, null, temporal.at, thing.patches);
 ev.wait = new Event(actor.louise, null, temporal.for, thing.unknown);
-ev.thinkWhat = new Event(actor.louise);
+ev.thinkWhat = new Event(actor.louise, "What is it?");
 ev.notUnderstand = new Event(actor.louise, thing.unknown);
 ev.feelsThing = new Event(actor.louise, thing.unknown);
 ev.reach = new Event(thing.unknown, actor.louise, temporal.through, thing.airFeatures);
@@ -92,7 +95,7 @@ ev.beginToRecognize = new Event(actor.louise, thing.unknown);
 ev.resist = new Event(actor.louise, thing.unknown);
 ev.sayFree = new Event(actor.louise, "Free! Free! Free!");
 ev.lookAhead = new Event(actor.louise);
-ev.beatFast = new Event(thing.pulses); // plural err
+ev.beatFast = new Event(thing.pulse);
 ev.seeYears = new Event(actor.louise, thing.procession);
 ev.openArms = new Event(actor.louise, thing.louisesArms);
 ev.whisperFree = new Event(actor.louise, "Free! Body and soul free!");
@@ -112,7 +115,7 @@ ev.tryToHide = new Event(actor.richards, actor.brently, temporal.from, actor.lou
 ev.standAmazedAtHide = new Event(actor.brently);
 ev.fallDown = new Event(actor.louise);
 ev.die = new Event(actor.louise);
-ev.arrive = new Event([actor.doctor1, actor.doctor2], null, temporal.at, place.downstairs); // TODO plural
-ev.sayCause = new Event([actor.doctor1, actor.doctor2], "Mrs. Mallard died of heart disease — of the joy that kills"); // TODO "they" for doctors
+ev.arrive = new Event([actor.doctorSmith, actor.doctorJones], null, temporal.at, place.downstairs);
+ev.sayCause = new Event([actor.doctorSmith, actor.doctorJones], "Mrs. Mallard died of heart disease — of the joy that kills"); // TODO "they" for doctors
 
 var world = new World(place, actor, category, thing, ev);

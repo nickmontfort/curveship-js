@@ -79,7 +79,7 @@ class PronounSet {
 }
 
 var pronoun = {};
-pronoun.feminine = new PronounSet(["she", "her", "her", "hers", "herself"]);
+pronoun.feminine = new PronounSet(["she", "her", "hers", "her", "herself"]);
 pronoun.masculine = new PronounSet(["he", "him", "his", "his", "himself"]);
 pronoun.neuter = new PronounSet(["it", "it", "its", "its", "itself"]);
 pronoun.unknownBinary = new PronounSet(["he or she", "him or her", "his or her", "his or hers", "himself or herself"]);

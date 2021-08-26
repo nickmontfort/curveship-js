@@ -10,6 +10,8 @@
 
 var toldBy = "a prim narrator";
 
+spin.groupings = "category";
+
 // PLACES
 
 names.downstairs = new Names("the Mallard house");
@@ -25,8 +27,8 @@ names.louise = new ProperNames("Louise", "Mallard", pronoun.feminine, "the wife"
 names.brently = new ProperNames("Brently", "Mallard", pronoun.masculine, "the husband", "Mr.");
 names.richards = new ProperNames("Richards", null, pronoun.masculine, "the friend");
 names.josephine = new ProperNames("Josephine", null, pronoun.feminine, "the sister");
-names.doctor1 = new Names("the doctor");
-names.doctor2 = new Names("the doctor");
+names.doctorSmith = new Names("the doctor");
+names.doctorJones = new Names("the doctor");
 names.peddler = new Names("a peddler");
 
 // THINGS
@@ -39,7 +41,7 @@ names.trees = new Names("some trees");
 names.patches = new Names("some patches of blue sky");
 names.clouds = new Names("the clouds");
 names.unknown = new Names("some unknown thing");
-names.pulses = new Names("pulses");
+names.pulse = new Names("pulse");
 names.rain = new Names("the delicious breath of rain");
 names.air = new Names("the air");
 names.airFeatures = new Names("the sounds, the scents, the colors of the air");
@@ -52,6 +54,8 @@ names.song = new Names("the notes of a distant song");
 names.sparrow = new Names("countless sparrows twittering");
 names.elixir = new Names("the very elixir of life");
 names.window = new Names("the open window");
+
+names.doctor = new Names("doctor");
 
 vp.shudder = new VerbPh("shudder to think that life might be long");
 vp.crash = new VerbPh("crash");
@@ -80,7 +84,7 @@ vp.sob = new VerbPh("sob");
 vp.seeShow = new VerbPh("see");
 vp.stareAtPatches = new VerbPh("stare");
 vp.wait = new VerbPh("wait");
-vp.thinkWhat = new VerbPh("think 'What is it?'");
+vp.thinkWhat = new VerbPh("think");
 vp.notUnderstand = new VerbPh("do not undertand");
 vp.feelsThing = new VerbPh("feel");
 vp.reach = new VerbPh("reach");

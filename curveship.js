@@ -78,15 +78,18 @@ class Existent {
     this.partOf = null;
     this.owner = null;
   }
-
   setCategory(obj) {
     this.category = obj;
   }
-
   getCategory() {
     return this.category;
   }
-
+  setParts(parts) {
+    for (var existent of parts) {
+      existent.location = this.location;
+      existent.partOf = this;
+    }
+  }
   includes(obj) {
     return obj === this;
   }
@@ -185,12 +188,6 @@ class Thing extends Existent {
   constructor(location = null) {
     super();
     this.location = location;
-  }
-  setParts(parts) {
-    for (var existent of parts) {
-      existent.location = this.location;
-      existent.partOf = this;
-    }
   }
   setOwner(actor) {
     this.owner = actor;
@@ -323,6 +320,10 @@ class Narrator {
   }
   name(e, spin, role, ev) {
     let pro = false;
+    if (role === "category") {
+      return "the " + new Noun(this.names[e.tag].initial).plural();
+    } // TODO we might want to narrate one thing being in a category
+    // So pluralizing might not always be right...
     if (e instanceof Event) {
       let eventRepresentation;
       [spin, oldSpeaking, oldReferring] = shiftBack(spin); {
@@ -409,8 +410,8 @@ class Narrator {
       } else if (method === "by category") {
         let cat = current.getCategory();
         while (cat !== category.entity) {
-          cat = cat.parent;
           above.push(cat);
+          cat = cat.parent;
         }
       }
       above.reverse();
@@ -419,7 +420,7 @@ class Narrator {
     let minLength = Math.min(...aboveArray.map(item => item.length));
     var join = null;
     for (var i = 0; i < minLength; i++) {
-      const j = i, current = aboveArray[0][j];
+      const j = i, current = aboveArray[0][i];
       if (aboveArray.every(item => item[j] === current)) {
         join = current;
       } else {
