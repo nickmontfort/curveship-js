@@ -44,8 +44,8 @@ class Verb {
         return this.base + "ing";
     }
     conjugatedVP(person, number, tenseER, tenseRS, event) { // FIXME Include posterior!
-        console.log(this.base, person, number, tenseER, tenseRS);
-        // Produce the entire conjugated verb phrase, main word and appropriate helpers.
+        // Produce the entire conjugated verb phrase, main word and
+        // any appropriate helpers
         let i = 0, mainWord, helperWords, helperArray = [];
         if (person > 0) { i = (24 * person) - 23; } // Covers tenseRS === "present"
         if (tenseER === "past") { i += 8; }

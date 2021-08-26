@@ -14,6 +14,7 @@ names.raft = new Names("a raft");
 
 vp.layDown = new VerbPh("lay down");
 vp.pickUp = new VerbPh("grab");
+vp.prepare = new VerbPh("ready");
 vp.inspect = new VerbPh("examine");
 vp.swivel = new VerbPh("turn");
 vp.sigh = new VerbPh("sigh");

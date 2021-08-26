@@ -31,6 +31,7 @@ thing.raft.owner = actor.odysseus;
 
 ev.layDown = new Event(actor.john, thing.bike);
 ev.pickUp = new Event(actor.john, thing.backpack);
+ev.prepare = new Event(actor.john, actor.john);
 ev.inspect = new Event(actor.john, [thing.tire, thing.seat]);
 ev.swivel = new Event(actor.john, thing.handlebar);
 ev.sigh = new Event(actor.mary);

@@ -289,7 +289,7 @@ class Narrator {
       }
     }
   }
-  whatPronoun(ex, spin, role) {
+  whatPronoun(ex, spin, role, ev) {
     let pronounToUse = false;
     // If this returned value is false, it means not to pronominalize.
     // Otherwise an array is returned, the first element the role,
@@ -298,11 +298,9 @@ class Narrator {
     let person = 3;
     if (spin.i === exTag) person = 1;
     if (spin.you === exTag) person = 2;
-    /** TODO restore reflexive
-     * if (ev.agent.includes(this)) {
-     *   if (role === "object") return ["reflexive", person];
-     * }
-     */
+    if ((ev.agent === ex) && (role === "object")) {
+      return ["reflexive", person];
+    }
     if (person !== 3 || ex == world.thing.cosmos) {
       // Always pronominzalize if in second or third person.
       // Always pronominzalize cosmos, as in "It rains."
@@ -323,7 +321,7 @@ class Narrator {
     }
     return pronounToUse;
   }
-  name(e, spin, role) {
+  name(e, spin, role, ev) {
     let pro = false;
     if (e instanceof Event) {
       let eventRepresentation;
@@ -335,7 +333,7 @@ class Narrator {
       return "that " + eventRepresentation;
     }
     if (e instanceof ExistentGroup) {
-      return this.nameGroup(e, spin, role);
+      return this.nameGroup(e, spin, role, ev);
     }
     if (!(e.tag in this.names)) {
       this.names[e.tag] = new GenericNames(e.tag);
@@ -349,7 +347,7 @@ class Narrator {
         this.names[e.getCategory().tag] = new GenericNames();
       }
     }
-    pro = this.whatPronoun(e, spin, role);
+    pro = this.whatPronoun(e, spin, role, ev);
     if (pro) {
       switch (pro[0]) {
         case "subject": {
@@ -430,7 +428,7 @@ class Narrator {
     }
     return join;
   }
-  whatAreWePartsOf(ex) {
+  whatAreWePartsOf(ex, role, ev) {
     var existents = [];
     for (let existent of ex.existentArray) {
       existents.push(existent);
@@ -438,7 +436,7 @@ class Narrator {
     var something = this.ascendTree(existents, "by part");
     // are they parts of something? find the most specific thing
     if (something === null || something === thing.cosmos) return "";
-    return (ex.length() == 1) ? "the part of " + this.name(something, spin) : " the parts of " + this.name(something, spin);
+    return (ex.length() == 1) ? "the part of " + this.name(something, spin, role, ev) : " the parts of " + this.name(something, spin, role, ev);
   }
   whatCategoryAreWeIn(ex) {
     var categories = [];
@@ -464,9 +462,9 @@ class Narrator {
     }
     return "";
   }
-  nameGroup(ex, spin, role) {
+  nameGroup(ex, spin, role, ev) {
     if (spin.groupings.has("parts")) {
-      var partOf = this.whatAreWePartsOf(ex);
+      var partOf = this.whatAreWePartsOf(ex, role, ev);
       if (partOf !== "") {
         return partOf;
       }
@@ -483,14 +481,14 @@ class Narrator {
         return sharedProperty;
       }
     }
-    if (ex.length() == 2) {
-      return this.name(ex.get(0), spin, role) + " and " + this.name(ex.get(1), spin, role);
+    if (ex.length() === 2) {
+      return this.name(ex.get(0), spin, role, ev) + " and " + this.name(ex.get(1), spin, role, ev);
     }
     let result = "";
     for (var i = 0; i < ex.length() - 1; i++) {
-      result += this.name(ex.get(i), spin, role) + ", ";
+      result += this.name(ex.get(i), spin, role, ev) + ", ";
     }
-    return result + " and " + this.name(ex.get(ex.length() - 1), spin, role);
+    return result + " and " + this.name(ex.get(ex.length() - 1), spin, role, ev);
   }
   determineTenseER(ev, spin) {
     let evNum = world.evSeq.indexOf(ev.tag);
@@ -512,20 +510,20 @@ class Narrator {
     let tenseER = this.determineTenseER(ev, spin);
     let verbString = this.representation[ev.tag].verb.conjugatedVP(person, number, tenseER, spin.referring, ev);
     let vp = verbString + (this.representation[ev.tag].rest ? ' ' + this.representation[ev.tag].rest : '');
-    result = result.replace("\[SUB\]", this.name(world.ev[ev.tag].agent, spin, "subject"));
+    result = result.replace("\[SUB\]", this.name(world.ev[ev.tag].agent, spin, "subject", ev));
     result = result.replace("\[V\]", vp);
     if (world.ev[ev.tag].hasOwnProperty("direct")) {
       if (typeof world.ev[ev.tag].direct === "string") {
         result = result.replace("\[DO\]", "“" + world.ev[ev.tag].direct + "”");
       } else {
-        result = result.replace("\[DO\]", this.name(world.ev[ev.tag].direct, spin, "object"));
+        result = result.replace("\[DO\]", this.name(world.ev[ev.tag].direct, spin, "object", ev));
       }
     }
     if (world.ev[ev.tag].hasOwnProperty("temporal")) {
       result = result.replace("\[PREP\]", temporal[world.ev[ev.tag].temporal]);
     }
     if (world.ev[ev.tag].hasOwnProperty("indirect")) {
-      result = result.replace("\[IO\]", this.name(world.ev[ev.tag].indirect, spin, "object"));
+      result = result.replace("\[IO\]", this.name(world.ev[ev.tag].indirect, spin, "object", ev));
     }
     this.lastNarratedEvent = world.ev[ev.tag];
     let addedPunctuation = ".";
