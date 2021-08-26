@@ -419,8 +419,8 @@ class Narrator {
     let minLength = Math.min(...aboveArray.map(item => item.length));
     var join = null;
     for (var i = 0; i < minLength; i++) {
-      let current = aboveArray[0][i];
-      if (aboveArray.every(item => iNametem[i] === current)) {
+      const j = i, current = aboveArray[0][j];
+      if (aboveArray.every(item => item[j] === current)) {
         join = current;
       } else {
         break;
@@ -455,7 +455,8 @@ class Narrator {
     // check for property relations
     var props = cat.getProperties();
     for (let property of props.keys()) {
-      let allShareAProperty = ex.existentArray.every(item => item.getCategory().getProperties().has(property));
+      const prop = property;
+      let allShareAProperty = ex.existentArray.every(item => item.getCategory().getProperties().has(prop));
       if (allShareAProperty) {
         return "the " + property + " things";
       }
