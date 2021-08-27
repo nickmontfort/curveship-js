@@ -40,14 +40,14 @@ names.hands = new Names("hand");
 vp = {};
 
 vp.play_violin = new VerbPh("start playing");
-vp.whisper = new VerbPh("whisper 'If Bach cannot persuade a mysterious, perhaps divine, messenger to come out of the whale's belly, nothing else can'");
+vp.whisper = new VerbPh("whisper");
 vp.stop_music = new VerbPh("muffle");
-vp.talk_3 = new VerbPh("say 'It would've destroyed the whole building if it had moved more! I have been tolerating this filth and flesh in my house for a month. Enough is enough!'");
+vp.talk_3 = new VerbPh("say");
 vp.stab = new VerbPh("stab");
 vp.enter = new VerbPh("enter");
 vp.out = new VerbPh("come out covered in blood");
 vp.card = new VerbPh("have");
 vp.stare_3 = new VerbPh("stare at");
-vp.card_content = new VerbPh("say 'If you had any problems or did not receive the messenger, call the number below: +1 (857) 204 0988'");
+vp.card_content = new VerbPh("say");
 
 function run() { narrate(title, toldBy, world, spin, names, vp); }
