@@ -48,17 +48,17 @@ class PronounSet {
     ]); // There is no 0th person or number
     this.pronoun.push([
       [],
-      ["I", "me", "my", "mine", "myself"],
-      ["we", "us", "our", "ours", "ourselves"]
+      ["I", "me", "mine", "my", "myself"],
+      ["we", "us", "ours", "our", "ourselves"]
     ]);
     this.pronoun.push([
       [],
-      ["you", "you", "your", "yours", "yourself"],
-      ["you", "you", "your", "yours", "yourselves"]
+      ["you", "you", "yours", "your", "yourself"],
+      ["you", "you", "yours", "your", "yourselves"]
     ]);
     this.pronoun.push([
       [], thirdPersonSingular,
-      ["they", "them", "their", "theirs", "themselves"]
+      ["they", "them", "theirs", "their", "themselves"]
     ]);
   }
   getSubject(person, number = 1) {
@@ -82,8 +82,8 @@ var pronoun = {};
 pronoun.feminine = new PronounSet(["she", "her", "hers", "her", "herself"]);
 pronoun.masculine = new PronounSet(["he", "him", "his", "his", "himself"]);
 pronoun.neuter = new PronounSet(["it", "it", "its", "its", "itself"]);
-pronoun.unknownBinary = new PronounSet(["he or she", "him or her", "his or her", "his or hers", "himself or herself"]);
-pronoun.nonBinary = new PronounSet(["they", "them", "their", "theirs", "themself"]); // If you prefer, you can make the last entry "themselves"
+pronoun.unknownBinary = new PronounSet(["he or she", "him or her", "his or hers", "his or her", "himself or herself"]);
+pronoun.nonBinary = new PronounSet(["they", "them", "theirs", "their", "themself"]); // If you prefer, you can make the last entry "themselves"
 
 class Names {
   constructor(initial, subsequent = null, pronouns = null) {
