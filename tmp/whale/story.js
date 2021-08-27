@@ -39,9 +39,6 @@ ev.stop_music = new Event(thing.sound, thing.music);
 ev.talk_3 = new Event(actor.doug);
 ev.stab = new Event(actor.doug, thing.whale);
 ev.enter = new Event(actor.doug, thing.whale);
-
-//ev.sub_test = new Event(thing.whale);
-
 ev.out = new Event(actor.doug);
 ev.card = new Event(actor.doug, thing.card, temporal.in, thing.hands);
 ev.stare_3 = new Event([actor.doug, actor.john], thing.card);

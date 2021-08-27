@@ -10,11 +10,11 @@
 
 // TODO change all the names to very specific (proper) ones
 
-var spin = {
-  // i: teller,
-};
 
-var toldBy = "a “proper” narrator";
+var toldBy = "John";
+
+spin.i = "john";
+spin.you = "doug";
 
 // PLACES
 
@@ -22,8 +22,8 @@ names.house = new Names("the apartment", "the house");
 
 // ACTORS
 
-names.john = new ProperNames("John", "", pronoun.masculine);
-names.doug = new ProperNames("Doug", "", pronoun.masculine);
+names.john = new ProperNames("John", null, pronoun.masculine);
+names.doug = new ProperNames("Doug", null, pronoun.masculine);
 
 // THINGS
 
@@ -45,9 +45,6 @@ vp.stop_music = new VerbPh("muffle");
 vp.talk_3 = new VerbPh("say 'It would've destroyed the whole building if it had moved more! I have been tolerating this filth and flesh in my house for a month. Enough is enough!'");
 vp.stab = new VerbPh("stab");
 vp.enter = new VerbPh("enter");
-
-//vp.sub_test = new VerbPh("test");
-
 vp.out = new VerbPh("come out covered in blood");
 vp.card = new VerbPh("have");
 vp.stare_3 = new VerbPh("stare at");
