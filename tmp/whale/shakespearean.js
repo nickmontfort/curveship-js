@@ -10,10 +10,6 @@
 
 // TODO change all the names to very specific (proper) ones
 
-var spin = {
-  // i: teller,
-};
-
 var toldBy = "a “shakespeare enthusiast” narrator";
 
 // PLACES
@@ -40,14 +36,14 @@ names.hands = new Names("handeth");
 vp = {};
 
 vp.play_violin = new VerbPh("play");
-vp.whisper = new VerbPh("whisp'r 'If Bach cannot persuade a mysterious, perhaps divine, messenger to come out of the whale's belly, nothing else can'");
+vp.whisper = new VerbPh("whisp'r");
 vp.stop_music = new VerbPh("muffle");
-vp.talk_3 = new VerbPh("sayeth 'It would've destroyed the whole building if it had moved more! I have been tolerating this filth and flesh in my house for a month. Enough is enough!'");
+vp.talk_3 = new VerbPh("sayeth");
 vp.stab = new VerbPh("stab");
 vp.enter = new VerbPh("ent'r");
 vp.out = new VerbPh("exit covered in blood");
 vp.card = new VerbPh("have");
 vp.stare_3 = new VerbPh("eye");
-vp.card_content = new VerbPh("sayeth 'If you had any problems or did not receive the messenger, call the number below: +1 (857) 204 0988'");
+vp.card_content = new VerbPh("sayeth");
 
 function run() { narrate(title, toldBy, world, spin, names, vp); }
