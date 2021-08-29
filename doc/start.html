@@ -139,8 +139,11 @@ ev.stare = new Event(actor.guard, thing.pistol);
 
 <p>Once the story elements are defined in story.js, it is time to create a 'narrator' file to instruct the system about the words to use to narrate the story. A story may be told by many different narrators. Thus, each narration should correspond to a descriptively named narrator file. For our example, if we want to create a casual spin on the story. We would name the narrator file "casual.js" to designate this from other narratives (other examples may be surprised.js, modern.js, fabular.js). Take a look at the html files in the example folders and note how different narrations can be told by different narrators reusing the same story contents. </p>
 
-<p>The narrator files defines names of the existents and the verbs used. After the commented frontmatter, the first line discloses the narrator.
+<p>The narrator files defines names of the existents and the verbs used. After the commented frontmatter, the first section defines the spin.</p>
 
+<b>todo talk about spin, refer to the spin documentation here</b>
+
+<p>Next, there should be a description of who is telling the story.The <b>toldBy</b> variable introduces the narrator.</p>
 <pre>var toldBy = "a casual storyteller";</pre>
 
 Then, the names corresponding to the existents are declared. These names should match the tags used in the content file (story.js). The convention is to order the names to the order in which they appear in the corresponding story file: places, then actors, then things.
@@ -175,9 +178,10 @@ Finally, end the file with the <b>run</b> function so that Curveship can realize
 <pre>
 function run() { narrate(title, toldBy, world, spin, names, vp); }
 </pre>
+<p>Now you are ready to view the output. In the next section you'll tell curveship how to link up the story and narrator files.
+</p>
 <h2 id="connecting">Connecting Story and Narrator with a Web Page</h2>
-
-Now you are ready to view the output. Curvsehip realizes the story as an HTML file by combining the story file with a narrator file.
+Curveship realizes the story as an HTML file by combining the story file with a narrator file.
 
 Create an html file that matches the filename of the narrator file. For example, if the narrator file is named "casual.js" then the html file should be named "casual.html".  Inside the html file, use "curve.css" in the main directory as the stylesheet, linking it as "../../curveship" Then, direct curveship to link the story.js and the corresponding narrator.js scripts. 
 
