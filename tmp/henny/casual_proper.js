@@ -1,0 +1,47 @@
+// Casual Narrator for the Henny Penny - a Curveship-js example
+//  Copyright 2021 Angela Chang
+//
+// Copying and distribution of this file, with or without modification,
+// are permitted in any medium without royalty provided the copyright
+// notice and this notice are preserved. This file is offered as-is,
+// without any warranty.
+//
+// Adapted from the original Curveship, now called Curveship-py 0.6.
+// Adapted from text https://archive.org/stream/HennyPenny/Henny%20Penny_djvu.txt
+
+var toldBy = "an upperclass storyteller";
+
+spin.i = "fox";
+spin.you="goose";
+spin.speaking = 3;
+spin.order = "retrograde";
+
+names.farmyard = new Names("that idyllic farmyard", "the farmyard");
+names.cave = new Names("the cave");
+
+names.henny = new ProperNames("Henny","Penny", pronoun.feminine, "a chicken","Ms.");
+names.rooster = new ProperNames( "Cocky","Locky",pronoun.masculine,"a rooster","Mr.");
+names.duck = new ProperNames("Ducky","Lucky",pronoun.masculine,"a duck","Sir" );
+names.goose = new ProperNames( "Goosey","Loosey",pronoun.feminine,"a goose","Miss");
+names.turkey = new ProperNames("Turkey","Lurkey",pronoun.masculine,"a turkey","Mr.");
+
+names.fox = new ProperNames("Foxey","Loxey",pronoun.masculine,"the fox","Esquire");
+names.tree= new Names("a tree");
+names.nut = new Names("an acorn", "a nut");
+names.head = new Names("head")
+names.head2 = new Names("head")
+names.king = new Names("king");
+names.crowd = new Names("The animals","they",pronoun.nonBinary,"a group");
+
+vp.hit = new VerbPh("hit");
+vp.decides = new VerbPh("decide to tell");
+vp.ranc = new VerbPh("run");
+vp.meetf= new VerbPh("meet");
+vp.cry = new VerbPh("cry 'The sky is falling! I must go to tell the king. Come with me'");
+vp.invite= new VerbPh("say 'I will, but first, rest in my cave. You must all be tired'");
+vp.hitfox = new VerbPh("fall out of the tree and hits")
+vp.cry6 = new VerbPh("cry 'The sky is falling! We must tell the king. Come with me'");
+vp.refute= new VerbPh("say 'Oh, the sky is not falling! A nut fell on your head. Let's go home'");
+vp.laugh= new VerbPh("laugh");
+
+function run() { narrate(title, toldBy, world, spin, names, vp); }

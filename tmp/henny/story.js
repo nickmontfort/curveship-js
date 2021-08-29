@@ -45,7 +45,7 @@ ev.cry = new Event(actor.henny);
 ev.invite = new Event(actor.fox);
 ev.hitfox= new Event(thing.nut,actor.fox,temporal.on,thing.head2);
 ev.cry6 = new Event(actor.fox);
-ev.refute = new Event(actor.henny);
+ev.refute = new Event(actor.henny,null,temporal.to,actor.fox);
 ev.laugh = new Event(category.crowd,null,temporal.at,actor.fox);
 
 var world = new World(place, actor, category, thing, ev);
