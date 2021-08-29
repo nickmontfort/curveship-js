@@ -137,38 +137,36 @@ ev.stare = new Event(actor.guard, thing.pistol);
 
 <h2 id="narrator">A Narrator File</h2>
 
-<p>Once the story elements are defined in story.js, it is time to create a 'narrator' file to instruct the system about the words to use to narrate the story. A story may be told by many different narrators. Thus, each narration should correspond to a descriptively named narrator file. For our example, if we want to create a casual spin on the story. We would name the narrator file "casual.js" to designate this from other narratives (other examples may be surprised.js, modern.js, fabular.js). Take a look at the html files in the example folders and note how different narrations can be told by different narrators reusing the same story contents. </p>
+<p>Once the story elements are defined in story.js, it is time to create a 'narrator' file to instruct the system about the words to use to narrate the story. A story may be told by many different narrators. Thus, each narration should correspond to a descriptively named narrator file. For our example, if we want to create a casual spin on the story. We would name the narrator file "casual.js" to designate this from other narratives (other examples may be surprised.js, modern.js, fabular.js). Take a look at the HTML files in the example folders and note how different narrations can be told by different narrators reusing the same story contents. </p>
 
-<p>The narrator files defines names of the existents and the verbs used. After the commented frontmatter, the first section defines the spin.</p>
+<p>The narrator files define the names of the existents and the verbs used. After the commented frontmatter, the first section sets the <a href="reference.html#spin">spin</a> parameters.</p>
 
-<b>todo talk about spin, refer to the spin documentation here</b>
-
-<p>Next, there should be a description of who is telling the story.The <b>toldBy</b> variable introduces the narrator.</p>
+<p>Next, there should be a description of who is telling the story. The <b>toldBy</b> variable introduces the narrator.</p>
 <pre>var toldBy = "a casual storyteller";</pre>
 
 Then, the names corresponding to the existents are declared. These names should match the tags used in the content file (story.js). The convention is to order the names according to the order in which they appear in the corresponding story file: Places first, then Actors, and lastly, Things.
 
-The most way to refer to an existent is to give one name (a string) to refer to that tag. Everytime the existent appears in the narration, that name will be used. More sophisticated naming, such as common or general names can be specified by adding an second argument. The first name is used the first time the existent is realized. The second argument is the common name to be used after the the first mention of that existent.  
+The most way to refer to an existent is to give one name (a string) to refer to that tag. Every time the existent appears in the narration, that name will be used. More sophisticated naming, such as common or general names can be specified by adding a second argument. The first name is used the first time the existent is realized. The second argument is the generic name to be used after that existent has been introduced.
 
 <pre>
 names.lobby = new Names("the lobby");
 names.street = new Names("the sidewalk outside the bank", "the sidewalk");
 </pre>
 
-<p>For existents that have proper names or gender pronouns, one can specify it using ProperNames. ProperNames consist of the First, then Last name, followed by the gender pronoun to use, the initial name, then the common name.</p>
+<p>For existents that have proper names or gender pronouns, one can specify it using ProperNames. ProperNames arguments consist of the First, then the Last name, followed by the gender pronoun, the initial name, then the common name.</p>
 <pre>
 names.louise = new ProperNames("Louise", "Mallard", pronoun.feminine, "the wife", "Mrs.");
 </pre>
 
-Next, the Verb Phrase (VP) are defined as verb to be used in the narration. The tag for each VP must correlate to the event tags listed in story file.  In Curveship, each VP defines the verb and the inflection that the system will use to realize the event.
+<p>Next, each line defines the Verb Phrase (VP) as a verb to be used in the narration. The tag for each VP must correlate to the event tags listed in the story file.  In Curveship, each VP defines the verb and the inflection that the system will use to realize the event.</p>
 
-For a casual narrator, the following VPs may be listed.
+<p>For a casual narrator, the following VPs may be listed.</p>
 <pre>
 vp.eat = new VerbPh("eat");
 vp.request = new VerbPh("ask");
 </pre>
 
-In contrast, an over-exaggerating narrator may use different verbs:
+In contrast, an exaggerating narrator uses more dramatic wording:
 <pre>
 vp.eat = new VerbPh("devour ravenously");
 vp.request = new VerbPh("implore desperately");
@@ -179,14 +177,14 @@ Finally, end the file with the <b>run</b> function so that Curveship can realize
 <pre>
 function run() { narrate(title, toldBy, world, spin, names, vp); }
 </pre>
-<p>Now you are ready to view the output. In the next section you'll tell curveship how to link up the story and narrator files.
+<p>Now you are ready to view the output. In the next section you'll tell Curveship how to link up the story and narrator files.
 </p>
 <h2 id="connecting">Connecting Story and Narrator with a Web Page</h2>
 Curveship realizes the story as an HTML file by combining the story file with a narrator file.
 
-Create an html file that matches the filename of the narrator file. For example, if the narrator file is named "casual.js" then the html file should be named "casual.html".  Inside the html file, use "curve.css" in the main directory as the stylesheet, linking it as "../../curveship" Then, direct curveship to link the story.js and the corresponding narrator.js scripts. 
+Create a .html file that matches the filename of the narrator file. For example, if the narrator file is named "casual.js" then the HTML file should be named "casual.html".  Inside the HTML file, use "curve.css" in the main directory as the stylesheet, linking it as "../../curveship" Then, direct Curveship to link the story.js and the corresponding narrator.js scripts. 
 
-To view the output, open this html file in a browser. See the html files in the examples director as a template.
+To view the output, open this HTML file in a browser. See the HTML files in the <a href="../examples">examples</a> directory as a template.
 
 <div class="homeward" style="text-align:center">
 <a href="../index.html">Curveship-js</a>
