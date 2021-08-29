@@ -146,20 +146,21 @@ ev.stare = new Event(actor.guard, thing.pistol);
 <p>Next, there should be a description of who is telling the story.The <b>toldBy</b> variable introduces the narrator.</p>
 <pre>var toldBy = "a casual storyteller";</pre>
 
-Then, the names corresponding to the existents are declared. These names should match the tags used in the content file (story.js). The convention is to order the names to the order in which they appear in the corresponding story file: places, then actors, then things.
+Then, the names corresponding to the existents are declared. These names should match the tags used in the content file (story.js). The convention is to order the names according to the order in which they appear in the corresponding story file: Places first, then Actors, and lastly, Things.
 
-The most basic name is to give one label to refer to that tag. More precise naming, such as proper or common names can be specified by adding an second argument. The first name is used the first time the existent is realized. The second argument is the common name to be used after the the first mention of that existent.  
+The most way to refer to an existent is to give one name (a string) to refer to that tag. Everytime the existent appears in the narration, that name will be used. More sophisticated naming, such as common or general names can be specified by adding an second argument. The first name is used the first time the existent is realized. The second argument is the common name to be used after the the first mention of that existent.  
 
 <pre>
 names.lobby = new Names("the lobby");
 names.street = new Names("the sidewalk outside the bank", "the sidewalk");
 </pre>
 
-<p>For existents that have proper names or titles, one can specify it using ProperNames. ProperNames consist of the First, then Last name, followed by the gender pronoun to use, the initial name, then the common name.</p>
+<p>For existents that have proper names or gender pronouns, one can specify it using ProperNames. ProperNames consist of the First, then Last name, followed by the gender pronoun to use, the initial name, then the common name.</p>
 <pre>
 names.louise = new ProperNames("Louise", "Mallard", pronoun.feminine, "the wife", "Mrs.");
 </pre>
-Next, the Verb Phrase (VP) are defined. The tag for each VP must correlate to the event tags listed in story file.  In curveship, each VerbPh defines the verb and the inflection that the system will use to realize the event.
+
+Next, the Verb Phrase (VP) are defined as verb to be used in the narration. The tag for each VP must correlate to the event tags listed in story file.  In Curveship, each VP defines the verb and the inflection that the system will use to realize the event.
 
 For a casual narrator, the following VPs may be listed.
 <pre>
@@ -167,10 +168,10 @@ vp.eat = new VerbPh("eat");
 vp.request = new VerbPh("ask");
 </pre>
 
-In contrast, a dramatic narrator may use different verbs:
+In contrast, an over-exaggerating narrator may use different verbs:
 <pre>
-vp.eat = new VerbPh("devour");
-vp.request = new VerbPh("beseech");
+vp.eat = new VerbPh("devour ravenously");
+vp.request = new VerbPh("implore desperately");
 </pre>
 
 Finally, end the file with the <b>run</b> function so that Curveship can realize the narration. The narrator file must end with the following line:</p>
