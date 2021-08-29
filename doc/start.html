@@ -145,7 +145,7 @@ ev.stare = new Event(actor.guard, thing.pistol);
 
 Then, the names corresponding to the existents are declared. These names should match the tags used in the content file (story.js). The convention is to order the names to the order in which they appear in the corresponding story file: places, then actors, then things.
 
-The most basic name is to give one label to refer to that tag. More granular naming can be achieved by proper or common names by specifying first an initial name and then a generic name. The initial name is used the first time the existent is realized. The common name is used thereafter.  
+The most basic name is to give one label to refer to that tag. More precise naming, such as proper or common names can be specified by adding an second argument. The first name is used the first time the existent is realized. The second argument is the common name to be used after the the first mention of that existent.  
 
 <pre>
 names.lobby = new Names("the lobby");
