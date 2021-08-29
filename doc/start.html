@@ -61,7 +61,7 @@ actor.robber = new Actor(place.street, "male");
 actor.guard = new Actor(place.guardPost, "male");
 </pre>
 
-<p>Of the three sorts of Existenets, Things come last. They are also each located somewhere. Their location can be a Place, an Actor (if an Actor is carrying them), or even another Thing (if that other Thing is a container, for instance).</p>
+<p>Of the three sorts of Existents, Things come last. They are also each located somewhere. Their location can be a Place, an Actor (if an Actor is carrying them), or even another Thing (if that other Thing is a container, for instance).</p>
 
 <pre>
 thing.slip = new Thing(place.vestibule);
@@ -137,11 +137,51 @@ ev.stare = new Event(actor.guard, thing.pistol);
 
 <h2 id="narrator">A Narrator File</h2>
 
-<b>Documentation needed here...</b>
+<p>Once the story elements are defined in story.js, it is time to create a 'narrator' file to instruct the system about the words to use to narrate the story. A story may be told by many different narrators. Thus, each narration should correspond to a descriptively named narrator file. For our example, if we want to create a casual spin on the story. We would name the narrator file "casual.js" to designate this from other narratives (other examples may be surprised.js, modern.js, fabular.js). Take a look at the html files in the example folders and note how different narrations can be told by different narrators reusing the same story contents. </p>
 
+<p>The narrator files defines names of the existents and the verbs used. After the commented frontmatter, the first line discloses the narrator.
+
+<pre>var toldBy = "a casual storyteller";</pre>
+
+Then, the names corresponding to the existents are declared. These names should match the tags used in the content file (story.js). The convention is to order the names to the order in which they appear in the corresponding story file: places, then actors, then things.
+
+The most basic name is to give one label to refer to that tag. More granular naming can be achieved by proper or common names by specifying first an initial name and then a generic name. The initial name is used the first time the existent is realized. The common name is used thereafter.  
+
+<pre>
+names.lobby = new Names("the lobby");
+names.street = new Names("the sidewalk outside the bank", "the sidewalk");
+</pre>
+
+<p>For existents that have proper names or titles, one can specify it using ProperNames. ProperNames consist of the First, then Last name, followed by the gender pronoun to use, the initial name, then the common name.</p>
+<pre>
+names.louise = new ProperNames("Louise", "Mallard", pronoun.feminine, "the wife", "Mrs.");
+</pre>
+Next, the Verb Phrase (VP) are defined. The tag for each VP must correlate to the event tags listed in story file.  In curveship, each VerbPh defines the verb and the inflection that the system will use to realize the event.
+
+For a casual narrator, the following VPs may be listed.
+<pre>
+vp.eat = new VerbPh("eat");
+vp.request = new VerbPh("ask");
+</pre>
+
+In contrast, a dramatic narrator may use different verbs:
+<pre>
+vp.eat = new VerbPh("devour");
+vp.request = new VerbPh("beseech");
+</pre>
+
+Finally, end the file with the <b>run</b> function so that Curveship can realize the narration. The narrator file must end with the following line:</p>
+
+<pre>
+function run() { narrate(title, toldBy, world, spin, names, vp); }
+</pre>
 <h2 id="connecting">Connecting Story and Narrator with a Web Page</h2>
 
-<b>Documentation needed here...</b>
+Now you are ready to view the output. Curvsehip realizes the story as an HTML file by combining the story file with a narrator file.
+
+Create an html file that matches the filename of the narrator file. For example, if the narrator file is named "casual.js" then the html file should be named "casual.html".  Inside the html file, use "curve.css" in the main directory as the stylesheet, linking it as "../../curveship" Then, direct curveship to link the story.js and the corresponding narrator.js scripts. 
+
+To view the output, open this html file in a browser. See the html files in the examples director as a template.
 
 <div class="homeward" style="text-align:center">
 <a href="../index.html">Curveship-js</a>
