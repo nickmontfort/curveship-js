@@ -8,9 +8,10 @@
 //
 // Adapted from the original Curveship, now called Curveship-py 0.6.
 // Mixed with text from Vivian French and William Stubbs versions
-spin.order="retrograde";
+var toldBy = "a retrograde storyteller";
 
-var toldBy = "a modern storyteller";
+spin.order="retrograde";
+spin.speaking=1;  
 
 names.farmyard = new Names("garden");
 names.cave = new Names("Fox Lox's den");
