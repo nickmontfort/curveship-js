@@ -8,14 +8,16 @@
 //
 // Adapted from the original Curveship, now called Curveship-py 0.6.
 
-var toldBy = "a casual, very oblique narrator";
+var toldBy = "a casual storyteller";
 
-names.vestibule = new Names("that bulletproof booth", "the vestibule");
 names.lobby = new Names("the lobby");
+names.street = new Names("a sidewalk outside the bank", "a sidewalk");
+names.vestibule = new Names("that bulletproof booth", "the vestibule");
 names.guardPost = new Names("the guard post");
-names.street = new Names("the sidewalk outside the bank", "the sidewalk");
 
-names.teller = new Names("a lady working for the bank", "the bank teller");
+// The narrator doesn’t know the bank teller’s name, and is not even going
+// to mention that she is a bank teller. So in this file, names.teller is not
+// assigned a value. This results in a generic term, “woman,” being used.
 names.robber = new Names("a nervous man", "the pretend robber");
 names.guard = new Names("this burly guard", "the guard");
 
