@@ -409,8 +409,8 @@ class Narrator {
         }
       } else if (method === "by category") {
         let cat = current.getCategory();
+        above.push(cat);
         while (cat !== category.entity) {
-          above.push(cat);
           cat = cat.parent;
         }
       }
