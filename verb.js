@@ -908,6 +908,7 @@ const irregularVerbs = {
     "repay": ["repaid", "repaid", "repaying"],
     "repel": ["repelled", "repelled", "repelling"],
     "repot": ["repotted", "repotted", "repotting"],
+    "reread": ["reread", "reread", "rereading"],
     "rerun": ["reran", "reran", "rerunning"],
     "resell": ["resold", "resold", "reselling"],
     "reset": ["reset", "reset", "resetting"],
