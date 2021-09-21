@@ -26,13 +26,12 @@
 
 <p>The first step in getting started is to read about <a href="concepts.html">Curveship-js concepts.</a> The essential concepts, and their associated terms, are referred to throughout this guide.</p>
 
-<p>The recommended way to write a new Curveship-js story file, narrator files, and the corresponding HTML pages is by modifying existing files. In this guide, however, we’ll pretend that we’re writing a <a href="#story"><i>story</i></a> called “The Simulated Bank Robbery” from scratch, and then, we’ll pretend that we’re writing a <a href="#narrator"><i>narrator</i></a> who is casual and oblique, again from scratch. Finally, we’ll see quickly how to <a href="#connect"><i>connect</i></a> these two files with a Web page.</p>
+<p>The recommended way to write a new Curveship-js story file, narrator files, and the corresponding HTML pages is by modifying existing files. In this guide, however, we’ll pretend that we’re writing a <a href="#story"><i>story</i></a> called “The Simulated Bank Robbery” from scratch, and then, we’ll pretend that we’re defining a <a href="#witness"><i>narrator.</i></a> We’ll then see quickly how to <a href="#connect"><i>connect</i></a> these two files with a Web page. Then we’ll turn briefly to <a href="#detached"><i>another narrator</i></a> is defined — one who, unlike the first one, is not a character in the story. And finally, you’ll be exhorted to <a href="#explore">explore</a> the other three examples.</p>
 
-<p>Take a look at the files in the <a href="../examples">example</a> folders. Open and read the different HTML narratives in a browser.  Note that every example project folder contains one story.js file. This story file defines the set of Events and Existents that make up a story. Each HTML file also has a matching narrator file, which we will revisit later.</p>
 
-<h2 id="story">The Story File</h2>
+<h2 id="story">Beginning the Story File</h2>
 
-<p>Easy things are meant to be easy to do in Curveship-js. For instance, it should be easy to define a story that is like a folk tale, with straightforward story elements and little underlying complexity in terms of what fundamentally happens. See <a href="examples/robbery/story.js" target="_blank">robbery/story.js</a> for one reasonably simple example, with only a few special nuances; even simpler is <a href="examples/waiting/story.js" target="_blank">waiting/story.js.</a></p>
+<p>Easy things are meant to be easy to do in Curveship-js. For instance, it should be easy to define a story that is like a folk tale, with straightforward story elements and little underlying complexity in terms of what fundamentally happens. This document goes line-by-line through <a href="../examples/robbery/story.js" target="_blank">robbery/story.js</a> — one reasonably simple example of an underlying story — and the associated narrator file <a href="../examples/robbery/witness.js" target="_blank">robbery/witness.js.</a></p>
 
 <p>To write a Curveship-js story file ending in ".js" one needs only define the title, define <b>Places, Actors, and Things,</b> specify a sequence of <b>Events,</b> and then conclude with a final, standard line.</p>
 
@@ -41,12 +40,10 @@
 <p>For clarity, put the title of your story right up top, after those comments:</p>
 
 <pre>
-  var title = "The Simulated Bank Robbery";
+var title = "The Simulated Bank Robbery";
 </pre>
 
-<h2>Defining Existents</h2>
-
-<p>After specifying the title, list your Places. Each time you add a line, you’re creating a new Place, and the required JavaScript syntax helps to indicate that:</p>
+<p><b>Defining Existents.</b> After specifying the title, list your Places. Each time you add a line, you’re creating a new Place, and the required JavaScript syntax helps to indicate that:</p>
 
 <pre>
 place.vestibule = new Place();
@@ -83,9 +80,7 @@ thing.fakeGun.setOwner(actor.robber);
 thing.pistol.setOwner(actor.guard);
 </pre>
 
-<h2>The Event Sequence</h2>
-
-<p>What remains is to provide a sequence of Events, describing what <i>happens.</i> Events are given tags, just like Existents. They always have an agent (who is performing the action, the first argument). For “intransitive” actions, that’s usually all there is. But they can also have an object (what is acted upon). If they do, that's the second argument. Here’s the beginning of the Event sequence, where events 1, 3, 4, and 8 have direct objects:</p>
+<p><b>The Event Sequence.</b> What remains is to provide a sequence of Events, describing what <i>happens.</i> Events are given tags, just like Existents. They always have an agent (who is performing the action, the first argument). For “intransitive” actions, that’s usually all there is. But they can also have an object (what is acted upon). If they do, that's the second argument. Here’s the beginning of the Event sequence, where events 1, 3, 4, and 8 have direct objects:</p>
 
 <pre>
 ev.read = new Event(actor.teller, thing.slip);
@@ -95,6 +90,19 @@ ev.coverFace = new Event(actor.robber, thing.mask);
 ev.type = new Event(actor.teller);
 ev.play = new Event(actor.teller);
 ev.beginRobbing = new Event(actor.robber);
+</pre>
+
+<p>Events can <i>alter</i> Existents. This means that, at the story or content level, Places, Actors, and Things can be different before and after certain events. Not every event will make such an alteration, because Curveship-js doesn’t model every detail of the world. But, for instance, Actors moving from one place to another, or handing Things to one another, or transferring ownership of Things, can be represented.</p>
+
+<p>The Event with the tag “beginRobbing” corresponds to the (fake) bank robber entering the bank lobby from the street. In Curveship-js 0.4 there are no actual implications, but in future versions the system should be automatically able to focalize different Actors, which will make use of the locations of Existents. For now, this is how to model the robber moving from the street to the lobby:</p>
+
+<pre>
+ev.beginRobbing.alters(actor.robber, "location", place.street, place.lobby);
+</pre>
+
+<p>The next event doesn’t have any associated alteration:</p>
+
+<pre>
 ev.wave = new Event(actor.teller, actor.robber);
 </pre>
 
@@ -107,6 +115,12 @@ ev.wake = new Event(actor.guard);
 ev.seeThreat = new Event(actor.guard, actor.robber);
 ev.leavePost = new Event(actor.guard, place.guardPost);
 ev.grabFake = new Event(actor.teller, thing.fakeMoney, temporal.into, thing.bag);
+</pre>
+
+<p>Note that Existents can not only be moved between Places, but also, for instance, into a Thing that is a container:</p>
+
+<pre>
+ev.grabFake.alters(thing.fakeMoney, "location", place.vestibule, thing.bag);
 ev.turn = new Event(actor.robber, actor.guard);
 ev.shoot1 = new Event(actor.guard, actor.robber);
 ev.shoot2 = new Event(actor.guard, actor.robber);
@@ -115,11 +129,13 @@ ev.die = new Event(actor.robber);
 ev.dropGun = new Event(actor.guard, thing.pistol);
 </pre>
 
-<p>Events can <i>reconfigure</i> Existents. When the guard drops the gun, for instance, according to this story, he “disowns” it. It no longer belongs to him:</p>
+<p>Events can alter other properties of Existents, not only their location. When the guard drops the gun, for instance, according to this underlying story, he “disowns” it. It no longer belongs to him:</p>
 
 <pre>
 ev.dropGun.reconfigures(thing.pistol, "owner", actor.guard, actor.cosmos);
 </pre>
+
+<p>This actually does have an implication in how the narrative is generated. The pistol is described using a possessive adjective before the guard drops and disowns it, using an article afterwards.</p>
 
 <p>Here’s the rest of the Event sequence:</p>
 
@@ -129,103 +145,97 @@ ev.cry = new Event(actor.teller);
 ev.stare = new Event(actor.guard, thing.pistol);
 </pre>
 
-<h2>Wrapping Up the Story File</h2>
-
-<p>In a standard story file, the final line is:</p>
+<p><b>Wrapping Up the Story File.</b> In a story file, the final line is always exactly this:</p>
 
 <pre>
-  var world = new World(place, actor, category, thing, ev);
+var world = new World(place, actor, category, thing, ev);
 </pre>
 
-<p>Categories, by the way, are an advanced, experimental, and definitely optional feature. There are none in “The Simulated Bank Robbery” and their use is not supported in this release. But formula nevertheless requires that this last line, exactly as it appears above, is included. This builds a new storyworld with all the components that have been previously defined.</p>
+<p>Categories, by the way, are an advanced, experimental, and definitely optional feature. There are none in “The Simulated Bank Robbery” and their use is not supported in the 0.4 release. But formula nevertheless requires that this last line, exactly as it appears above, is included. This builds a new storyworld with all the components that have been previously defined.</p>
 
-<h2 id="narrator">A Narrator File</h2>
+<h2 id="witness">Defining a Narrator</h2>
 
-<p>Once the story elements are defined in story.js, you will need at least one narrator file (ending in “.js”) in the same directory. The file should be given a descriptive name, for instance, “precise.js” when it defines a precise narrator and “vague.js” when it defines one who speaks generally and vaguely. This file specifies how the narrative discourse or expression is to be generated. This includes defining the way each Existent is named (what particular words are used to indicate it) as well as higher-level aspects of narration. A story file may have many narrator files. In fact, it’s the whole point of Curveship-js to show how the same underlying can be told in different ways. </p>
+<p>Once the story elements are defined in story.js, you will need at least one narrator file (ending in “.js”) in the same directory. The file should be given a descriptive name, for instance “precise.js” when it defines a precise narrator and “vague.js” when it defines one who speaks generally and vaguely. This file specifies how the narrative discourse or expression is to be generated. This includes defining the way each Existent is named (what particular words are used to indicate it) as well as higher-level aspects of narration. A story file may have many narrator files. In fact, it’s the whole point of Curveship-js to show how the same underlying can be told in different ways. </p>
 
+<p>Take a look at the HTML files in the <a href="../examples/robbery/">example/robbery</a> folder and note that there are two different narrator files ending with .js there. We’ll consider <a href="../examples/robbery/witness.js" target="_blank">witness.js</a> first.</p>
 
-<!-- TODO: Point to specific examples where there are two or more narrators for the same story. <p>Take a look at the HTML files in the <a href="../examples">example</a> folders and note how different narrations can result from a single story file. Other narrative examples you can find are <a href="../examples/hour/prim.js">prim.js</a>, <a href="../examples/prodigal/fabular.js">fabular.js.</a></p>-->
-
-<p>Like story files, narrator files begin with a comment about the title, creator, and license. If you are modifying an existing narrator file, be sure to modify this part to avoid confusion.</p>
+<p>Like story files, narrator files begins with a comment about the title, creator, and license. If you are modifying an existing narrator file, be sure to begin there and modify this part to avoid confusion.</p>
 
 <p>Then, give your narrator a name or short description. Who the story is “told by” will appear in a byline under the title in the generated narrative.</p>
 
-<pre>var toldBy = "a casual storyteller";</pre>
+<pre>var toldBy = "the bank teller";</pre>
 
-<h2 id="names">Names for Existents</h2>
+<p><b>Spin.</b> The next section of the narrator file sets any optional <a href="reference.html#spin">spin parameters (detailed in the Technical Reference).</a> These parameters allow a narrator to “spin” the overall narrative in different ways, somewhat like a journalist might put a particular “spin” on a news story. The particular parameters are based on narrative theory. In this narrator file, there are two spin parameters. The first one is pretty straightforward. It sets the “I” of the story to be the bank teller:</p>
 
-<p>The next section of the narrator file sets any optional <a href="reference.html#spin">spin parameters (detailed in the Technical Reference).</a> These parameters allow a narrator to “spin” the overall narrative in different ways, somewhat like a journalist might put a particular “spin” on a news story. The particular parameters are based in narrative theory.</p>
+<pre>spin.i = "teller";</pre>
 
-<p>Next, the <b>Names</b> corresponding to the existents are declared. These names mutch match the tags for Existents that are declared in the story file—that’s how Curveship-js knows to connect an Existent with Names. The convention is to order the Names the same way that they appear in the story file, so the Names for Places will be first, then for Actors, and lastly, for Things.</p>
+<p>The second one defines a main narrative sequence that includes only a subsequence of all the events. The bank teller is only going to tell us about what she saw. She isn’t going to narrate what happened out on the street or in the guard post, which is behind a one-way mirror. So we define a sequence that allows for the sort of <i>ellipsis</i> (leaving things out) that we are interested in:</p>
 
-<p>As you can see in casual.js and other examples, “Names” is written in the plural. That’s because, in general, there can be many names used by a narrator for a single Existent.</p>
+<pre>spin.main = "0;2;4;5-9;12-22";</pre>
+
+<p>This looks a little complex, but it’s the same sort of thing you would specify if you only want to print out a certain subsequence of pages from a document.</p>
+
+<p><b>Names: Naming Existents.</b> Next, the Names corresponding to the existents are declared. These names mutch match the tags for Existents that are declared in the story file—that’s how Curveship-js knows to connect an Existent with Names. The convention is to order the Names the same way that they appear in the story file, so the Names for Places will be first, then for Actors, and lastly, for Things.</p>
+
+<p>As you can see in witness.js and other examples, “Names” is written in the plural. That’s because, in general, there can be many names used by a narrator for a single Existent.</p>
 
 <p>The simplest way to name an Existent is to provide Names with one string, including an article and a noun (or noun phrase). The first time the Existent appears in the narration, that exact name will be used. After that, if the name begins with an indefinite article such as “a” or “an,” the system will use the definite article, “the.”</p>
 
-<pre>
-names.lobby = new Names("the lobby");
-</pre>
+<pre>names.lobby = new Names("the lobby");</pre>
 
 <p>If you provide two strings as arguments to Names, the first one will be used on first reference and the second one (exactly as it is specified) will be used on any subsequent references.</p>
 
-<pre>
-names.street = new Names("a sidewalk outside a bank", "the sidewalk");
-</pre>
+<pre>names.street = new Names("a sidewalk outside a bank", "the sidewalk");
+names.guardPost = new Names("the guard post");</pre>
 
-<!-- FIXME: Maybe add section in the technical reference regarding details of using ProperNames and Categories? 
+<p>You may notice that some Names are “missing” — Names are not defined for each Existent. That’s all right in many cases, for a few reasons. The bank teller never needs to refer to the vestibule that she’s in, so there is no need to define a name for that Place. Also, because the bank teller is the “I” of the story, she never gives her own name, and there is no need to have Names defined for the teller, either.</p>
 
-<p>ProperNames can be declared to refer to Existents having proper or formal names. Like Names, ProperNames will use the Existent's proper name when first introduced. In subsequent mentions, the generic name or gendered pronoun will be used in the subsequent narrative.</p> -->
+<p>When it comes to naming the (fake) robber, this narrator file uses a special means of naming. The bank teller is in on the fake robbery and knows the supposed robber personally, remember. So of course she knows his name. By defining ProperNames a first and last name for this Actor can be specified. As shown in <a href="../examples/hour/">The Story of an Hour,</a> a courtesey title can also be specified using ProperNames. But here, a first and last name is enough:</p>
 
-<p>One can specify proper names or gender pronouns using <b>ProperNames</b>. ProperNames arguments consist of the First, then the Last name, followed by the gender pronoun, the common name, then an honorific title.</p>
+<pre>names.robber = new ProperNames("Jimmy", "Smith", pronoun.masculine, "my friend");</pre>
 
-<!-- <pre>
-names.louise = new ProperNames("Louise", "Mallard", pronoun.feminine, "the wife", "Mrs.");
-</pre>
+<p>Pronouns can be specified whether you are using Names or ProperNames, and there are some interesting possibilities provided by being able to specify these at the narrative level. To get started, however, you don’t need to go into that in detail. The previous line also defines a common name for Jimmy, “my friend,” which will never get used by Curveship 0.4 but has been put in place for future versions of the system.</p>
 
-<p>In the above line, the Existent <b>louise</b> is referred to with the first and last name of "Louise Mallard" when she is introduced. Afterward, she is referred to by the feminine pronoun "she" or informally as "the wife."  However, the narrator can also use an honorific reference for this <b>Actor</b>, e.g. "Mrs. Mallard." See the example story and narration files in the <a href="../examples/hour/">Story of an Hour</a> where the narrator refers to Louise by different names.</p> -->
+<p>Actors don’t have to have ProperNames, of course. This narrator doesn’t happen to know the name of today’s guard:</p>
+
+<pre>names.guard = new Names("our guard", "the guard");</pre>
+
+<p>There shouldn’t be too many surprises about the Names assocated with Things. You will see that the bank teller, given her profession, does have a very specific name for the deposit slip:</p>
+
+<pre>names.slip = new Names("a completed Form D-22", "the deposit slip");
+names.fakeMoney = new Names("some fake money");
+names.bag = new Names("a black bag", "the bag");
+names.mask = new Names("a Dora the Explorer mask", "the mask");
+names.fakeGun = new Names("a gun-shaped object", "the fake gun");
+names.pistol = new Names("a pistol");</pre>
 
 <p>Note that there are experimental features of Curveship to allow the naming of Existents according to Categories, based on what Existents are parts of, and based on the properties Existents have. You are welcome to try them and to let us know what isn’t working about them. They are not supported in this 0.4 release, however.</p>
 
-<h2 id="vps">Verb Phrases</h2>
+<p><b>Verb Phrases: Representing Events.</b> Just a narrator has idiosyncratic ways of naming each Existent, that narrator also has a particular way of representing each Event. This is done using a VerbPh for each Event. The tag assigned each VerbPh must correspond to the Event tags from the story file. </p>
 
-<p>Just as a narrator has idiosyncratic ways of naming each Existent, that narrator also has a particular way of representing each Event. This is done using a VerbPh for each Event. The tag assigned each VerbPh must correspond to the Event tags from the story file. Note that there are 23 VerbPh tags matching the 23 Event tags: </p>
-
-<pre>
-vp.read = new VerbPh("read");
-vp.snooze = new VerbPh("snooze");
-vp.reread = new VerbPh("reread");
-vp.coverFace = new VerbPh("put on");
-vp.type = new VerbPh("type");
+<pre>vp.read = new VerbPh("glance at");
+vp.reread = new VerbPh("look over");
+vp.type = new VerbPh("do some data entry");
 vp.play = new VerbPh("play Solitaire");
 vp.beginRobbing = new VerbPh("pretend to rob");
 vp.wave = new VerbPh("wave to");
-vp.threaten = new VerbPh("threaten");
+vp.threaten = new VerbPh("pose for");
 vp.laugh = new VerbPh("laugh");
-vp.wake = new VerbPh("wake up");
-vp.seeThreat = new VerbPh("see");
-vp.leavePost = new VerbPh("leave");
-vp.grabFake = new VerbPh("bag");
-vp.turn = new VerbPh("turn");
+vp.leavePost = new VerbPh("pop out of");
+vp.grabFake = new VerbPh("place");
+vp.turn = new VerbPh("turn to");
 vp.shoot1 = new VerbPh("shoot");
-vp.shoot2 = new VerbPh("shoot");
+vp.shoot2 = new VerbPh("execute");
 vp.fall = new VerbPh("fall");
 vp.die = new VerbPh("die");
 vp.dropGun = new VerbPh("drop");
-vp.regret = new VerbPh("regret");
-vp.cry = new VerbPh("cry");
-vp.stare = new VerbPh("stare at");
-</pre>
+vp.regret = new VerbPh("recall");
+vp.cry = new VerbPh("weep");
+vp.stare = new VerbPh("stare at");</pre>
 
-<p>A VerbPh can contain prepositions, and so could be defined as "talk with" or "pick up". It can also include an infinitive after the main verb, as in "decide to tell." However, a VerbPh is not a full verb phrase in the linguistic sense. It doesn’t contain any direct or indirect objects. Nor does it hold adverbs indicating how an action is done.</p>
+<p>A VerbPh can contain prepositions, and so could be defined as “glance at” or “wave to”. It can also include an infinitive after the main verb, as in “pretend to rob.” There are a few other longer phrases that never need tobe inflected differently and can be baked into a VerbPh; “do some data entry” is one, which is the teller’s way of saying “type”. However, a VerbPh is not a full verb phrase in the linguistic sense. It doesn’t contain any direct or indirect objects that correspond to Existents. Nor does it hold adverbs indicating the manner in which an action is done.</p>
 
-<!-- FIXME: Adverbs aren't supported, and we must use real examples. <p>In contrast, an exaggerating narrator uses more dramatic wording:</p>
-
-<pre>
-vp.eat = new VerbPh("devour ravenously");
-vp.request = new VerbPh("implore desperately");
-</pre> -->
-
-<p>Finally, the file always ends with a standard incantation, invoking the <b>run</b> function so that Curveship can realize the narration. The narrator file must end with the following line:</p>
+<p>Finally, a narrator file always ends with a standard incantation, invoking the <b>run</b> function so that Curveship can realize the narration. The narrator file must end with the following line:</p>
 
 <pre>
 function run() { narrate(title, toldBy, world, spin, names, vp); }
@@ -237,35 +247,35 @@ function run() { narrate(title, toldBy, world, spin, names, vp); }
 
 <h2 id="connecting">Connecting Story and Narrator with a Web Page</h2>
 
-<p>Curveship outputs the narrative as an HTML file. Each HTML file requires a matching set of story and narrator files.  The simplest way to create this set is to name your narrator file to indicate the unique narrator (e.g. “casual.js”) . Then, reuse an existing curveship-js HTML file accordingly. For example, if the narrator file is named "casual.js" then the HTML file should be named "casual.html". </p>
+<p>Curveship realizes a narrative, in HTML, using the story file and a narrator file.</p>
 
-<p>Open the HTML file. If you would like your story to be styled in the same way that the examples are, link to the stylesheet "curve.css" in the main curveship directory:</p>
+<p>To link a story file to a particular narrator file, create (or modify) an HTML file that matches the descriptive filename of the narrator file created above. In the present case, the narrator file is named “witness.js” and so the corresponding HTML file is “witness.html”. </p>
 
-<pre>
-&lt;link rel="StyleSheet" href="../curve.css"/&gt;
-</pre>
-<p>The next lines include the Curveship source files. These lines must appear exactly as shown:</p>
-<pre>
-&lt;script src="../../curveship.js"&lt;/script&gt;
-&lt;script src="../../noun.js"&gt;&lt;script&gt;
-&lt;script src="../../verb.js"&gt;&lt;script&gt;
-</pre>
+<p>The crucial parts of your HTML file are the last two script elements. They connect your story file with a particular narrator file:</p>
 
-Then, specify the source files to be used for narration. First, include the story content file. Then, add the matching narrator file. So, if you are creating a casual narrator (casual.html), the final lines in the header should look like this:
 <pre>
 &lt;script src="story.js"&gt;&lt;script&gt;
-&lt;script src="casual.js"&gt;&lt;script&gt;
+&lt;script src="witness.js"&gt;&lt;script&gt;
 </pre>
-<p>
-After closing the header, the next section is the document body. Add a call to the <b>run()</b> function to run Curveship when the file is loaded. Inside the HTML body, add a div named "narrative" where Curveship will generate the discourse:
-</p>
-<pre>
-&lt;body onload="run()"&gt;
-&lt;div id="narrative"&gt;&lt;/div&gt;
-</pre>
-<p>End the file by closing the body and html tags so that it is a valid HTML file. Save the HTML file.
-</p>
-<p>To view this output, open the HTML file in a web browser.  Explore the HTML files in the <a href="../examples">examples</a> directory for some sample narratives.</p>
+
+<p>The rest of the HTML file is formulaic, and you don’t need to change the other references to files unless you move where those files are. Be sure, however, to change the title (in the title element) to reflect your particular story.</p>
+
+<p>To view the generated output, open the HTML file in a web browser.</p>
+
+
+<h2 id="detached">A Different, “Detached” Narrator</h2>
+
+<p>Now that you’ve seen how one narrator is defined, take a look at <a href="../examples/robbery/detached.js" target="_blank">examples/robbery/detached.js</a> to see how a different sort of narration can be accomplished. This file doesn’t have <code>spin.i</code> defined at all, because there is no “I” of the narrative. It’s told by someone who is not an Actor. There’s also no definition of <code>spin.main</code> because this narrator represents all of the Events. But there are spin parameters set. Check <a href="reference.html#spin">the Technical Reference entry on spin</a> to learn more about what these do and to learn other ways spin can be set.</p>
+
+<p>You can also see that this narrator has some different Names assocaited with Existents and different VerbPh specifications for Events. This narrator doesn’t have Names specified for the bank teller, but Curveship-js provides default names in this case. For an Actor who is female and an adult, “woman” is generated in the output text when Names are not specified.</p>
+
+<p>This narrator has more VerbPh definitions, because this one narrates all of the Events. Narrators have a “default” or “generic” way of representing events, too, using the verb “act.” That’s almost never a good way to represent an event! So you probably don’t want to leave any Event without a corresponding VerbPh.</p>
+
+
+<h2 id="explore">Further Explorations</h2>
+
+<p>This line-by-line explanation is meant to be of help for those new to Curveship-js, but another great way to understand the system is to study the existing examples <i>and modify them.</i> By seeing what your modifications do, you will be able to figure out more ways to get interesting narrative effects out of the system. Check out the other three examples in <a href="../examples/" target="_blank">examples/</a> — and noodle around with them, changing story and narrator files, to see how they work.</p>
+
 
 <div class="homeward" style="text-align:center">
 <a href="../index.html">Curveship-js</a>
