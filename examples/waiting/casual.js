@@ -29,7 +29,7 @@ names.man = new Names("a drug dealer");
 
 // THINGS
 
-names.money = new Names("twenty_six dollars");
+names.money = new Names("twenty-six dollars");
 names.hand = new Names("one hand");
 names.clothing = new Names("black clothes");
 names.hat = new Names("a straw hat");

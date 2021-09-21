@@ -310,10 +310,9 @@ class Narrator {
         // common names based on the type of existent they are, simply
         // don't include a Names for them at all in narrator.js.
         pronounToUse = [role, 3];
-      } else if (this.givens.has(exTag) && (typeof this.lastNarratedEvent !== "undefined" && this.lastNarratedEvent.hasParticipant(ex))) {
+      } else if (this.givens.has(exTag) && (typeof this.lastNarratedEvent !== "undefined" && this.lastNarratedEvent.agent === ex)) {
       // In this case the Existent has already been mentioned in the
-      // discourse, and indeed in the previous representation of an
-      // Event.
+      // discourse, and indeed is the subject of the previous sentence.
       pronounToUse = [role, 3];
     }
     return pronounToUse;
