@@ -223,7 +223,7 @@ class Event {
   hasParticipant(actor) {
     return ((this.agent === actor) || (this.direct === actor) || (this.indirect === actor));
   }
-  reconfigures(ex, property, val1, val2) {
+  alters(ex, property, val1, val2) {
     var alteration = {
       existent: ex,
       property: property,
@@ -601,13 +601,12 @@ function narrate(title, toldBy, world, spin, names, reps) {
     // "before" state of all chronologially later must be applied.
     // That's becasue we could be narrating this event in any order.
     for (e of world.evSeq) {
-      if (world.evSeq.indexOf(e) < world.evSeq.indexOf(current)) {
-        for (alt of e.alterations) {
-          alt.existent[alt.property] = alt.after;
-        }
-      } else {
-        for (alt of e.alterations) {
-          alt.existent[alt.property] = alt.before;
+      for (alt of e.alterations) {
+        let changeTo = (world.evSeq.indexOf(e) < world.evSeq.indexOf(current)) ? alt.after : alt.before;
+        if (alt.property === "location") {
+          alt.existent.location = changeTo;
+        } else {
+          alt.existent[alt.property] = changeTo;
         }
       }
     }
