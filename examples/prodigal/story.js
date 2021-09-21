@@ -38,6 +38,8 @@ thing.calf = new Thing();
 thing.riotous = new Thing();
 thing.music = new Thing();
 
+category.servant = new Category([actor.servant1, actor.servant2, actor.servant3]);
+
 // EVENTS
 
 ev.withOlder = new Event([actor.father, actor.older, actor.younger], place.house);

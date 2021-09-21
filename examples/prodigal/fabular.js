@@ -10,6 +10,8 @@
 
 var toldBy = "a teller of parables";
 
+spin.groupings = "category";
+
 // PLACES
 
 names.house = new Names("a large house", "the house");
@@ -39,6 +41,11 @@ names.shoes = new Names("some shoes");
 names.calf = new Names("a fatted calf");
 names.riotous = new Names("riotous living");
 names.music = new Names("the music");
+
+// CATEGORIES
+
+names.servant = new Names("servant");
+
 
 vp.withOlder = new VerbPh("inhabit");
 vp.requestInheritance = new VerbPh("request");
