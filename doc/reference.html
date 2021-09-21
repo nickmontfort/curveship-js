@@ -26,7 +26,10 @@
 
 <ul>
   <li><a href="#spin">Spin</a></li>
+  <li><a href="#names">Names and ProperNames for Existents</a></li>
+  <li><a href="#verbph">VerbPh Representations for Events</a></li>
 </ul>
+
 
 <h2 id="spin">spin</h2>
 
@@ -69,6 +72,44 @@
 <dt>spin.you = <i>STRING</i>;</dt>
 <dd>The “you” of the story. STRING is an Existent’s tag, e.g., "john" or "cinderella"</dd>
 </dl>
+
+
+<h2 id="names">Names and ProperNames for Existents</h2>
+
+<h3>Names(<b>initial,</b> <i>subsequent,</i> <i>pronouns</i>)</h3>
+
+<p><b>initial</b> is required and specifies the name used for a particular Existent on first reference.</p>
+
+<p><i>subsequent</i> is optional. If included, this name will be used on second reference and all other references. If omitted or if <code>null</code> is given as the value, Curveship-js will determine what noun phrase to use based on the initial name. If the initial name is “a chicken,” for instance, subsequent references will be to “the chicken.” The initial/subsequent distinction allows authors to include a longer, descriptive name on first reference and an abbreviated name thereafter — for instance, “a big bad wolf” and “the wolf.”</p>
+
+<p><i>pronouns</i> is an optional argument. A pronoun set such as pronouns.masculine or pronouns.nonBinary can be used here. If omitted or set to <code>null</code>, Curveship-js will use information from the underlying story (in the story file) to determine what pronouns should be used by the particular narrator.</p>
+
+<h3>ProperNames(<b>given,</b> <i>family,</i> <i>pronouns</i>, <i>common,</i> <i>title,</i> <i>possessive</i>)</h3>
+
+<p><b>given</b> is required and specifies the first name used for a particular Existent. This is an Actor’s first name or, if the actor has a mononym such as Sting, Logic, or Grimes, the Actor’s only name: <code>ProperNames("Grimes")</code>. A value must be provided, but an Actor who does not have a first name, or whose first name is unknown to a particular narrator, can have <code>null</code> set for this argument. Note, however, that it wouldn’t be sensible to use ProperNames without specifying any of the arguments. You would only set given to <code>null</code> if you were going to set family to a string value.</p>
+
+<p><i>family</i> is optional and specifies the family name used for a particular Existent.</p>
+
+<p><i>pronouns</i> is an optional argument. A pronoun set such as pronouns.masculine or pronouns.nonBinary can be used here. If omitted or set to <code>null</code>, Curveship-js will use information from the underlying story (in the story file) to determine what pronouns should be used by the particular narrator.</p>
+
+<p><i>common</i> is an optional argument. specifying the common name for an Actor who also has a proper name, e.g. “a butler” for an Actor whose given name is “Jeeves.” In the current version of Curveship, 0.4, is is not used, but it is provided for future versions of the system in which a narrator may switch between using proper and common names.</p>
+
+<p><i>title</i> is a courtesy title such as Ms. or Dr., which can be abbreviated or spelled out. The title can be used even if the Actor does not have a given name, as with Mr. Watt from Samuel Beckett’s second novel or Lady Gaga: <code>ProperNames(null, "Watt", null, null, "Mr.")</code> and <code>ProperNames(null, "Gaga", null, null, "Lady")</code>.</p>
+
+<p><i>possessive</i> will only be used in rare cases. It is for a custom possessive adjective, which in English only applies to certain Biblical and classical figures whose names end in ‘s’. To correctly produce the possessive of Moses, for instance, this needs to be set as “Moses’” — note, however, that most names ending in ‘s’, such as that of Jorge Luis Borges and Harry Mathews, do not follow this rule, and Curveship-js will correctly generate their possessive adjectives, “Borges’s” and “Mathews’s.”</p>
+
+
+<h2 id="verbph">VerbPh Representations for Events</h2>
+
+<h3>VerbPh(<b>base</b>)</h3>
+
+<p>In the simplest case the <b>base</b> argument is simply the uninflected base form of a verb, such as “sing” or “jump.”</p>
+
+<p>The <i>uninflected, base</i> form of a verb should always be the first word in base. If you use “looked,” “saw,” or some other form of the verb, Curveship-js won’t be able to conjugate it properly.</p>
+
+<p>The value <i>base</i> can also be set to be a longer phrase, such as a verb + preposition (“wake up,” “get down,” “talk to”) or a verb + infinitive (“decide to tell,” “fail to lift”). However the VerbPh should never include anything, other than the first word, that needs to be conjugated or otherwise inflected under any circumstances.</p>
+
+<p>It also should not include a direct or indirect object. If you use “notice the rabbit” as a VerbPh for one Event and “wave to the rabbit” as a VerbPh for the next one, Curveship-js won’t be able to do its natural language generation work. The rabbit should be introduced as “a rabbit” and might be pronominalized when the second event is represented. To allow Curveship-js to do its work, direct or indirect objects should be defined as Existents and the corresponding Events should be set up with the right number of arguments.</p>
 
 <div class="homeward" style="text-align:center">
 <a href="../index.html">Curveship-js</a>
