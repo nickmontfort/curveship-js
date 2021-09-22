@@ -132,7 +132,7 @@ ev.dropGun = new Event(actor.guard, thing.pistol);
 <p>Events can alter other properties of Existents, not only their location. When the guard drops the gun, for instance, according to this underlying story, he “disowns” it. It no longer belongs to him:</p>
 
 <pre>
-ev.dropGun.reconfigures(thing.pistol, "owner", actor.guard, actor.cosmos);
+ev.dropGun.alters(thing.pistol, "owner", actor.guard, null);
 </pre>
 
 <p>This actually does have an implication in how the narrative is generated. The pistol is described using a possessive adjective before the guard drops and disowns it, using an article afterwards.</p>
