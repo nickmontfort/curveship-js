@@ -202,10 +202,11 @@ var evSeq = [];
 var lastNarratedTag = "";
 
 class Event {
-  constructor(agent, direct, temporalRelation, indirect) {
+  constructor(agent, direct, temporalRelation, indirect, negated = false, progressive = false) {
     this.agent = Array.isArray(agent) ? new ExistentGroup(agent) : agent;
     this.agent = (typeof this.agent === "object") ? this.agent : thing.cosmos;
-    this.continuous = false;
+    this.negated = negated;
+    this.progressive = progressive;
     if (direct) {
       this.direct = Array.isArray(direct) ? new ExistentGroup(direct) : direct;
       // this.direct ends up as either an Existent, an ExistentGroup, or

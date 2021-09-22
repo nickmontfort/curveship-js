@@ -10,6 +10,10 @@
 
 var toldBy = "someone even more sedate than Lou Reed";
 
+// Uncomment this to create a confusing jumble of events in the telling.
+//
+// spin.order = "random";
+spin.order = "retrograde";
 spin.groupings = "category";
 
 // PLACES
@@ -51,17 +55,17 @@ vp.reply1 = new VerbPh("reply");
 vp.reply2 = new VerbPh("reply");
 vp.arrive = new VerbPh("arrive");
 vp.know = new VerbPh("know");
-vp.care = new VerbPh("do not care");
+vp.notCare = new VerbPh("care", false);
 vp.goBrownstone = new VerbPh("go up");
 vp.goUpstairs = new VerbPh("go up");
 vp.taste = new VerbPh("taste");
 vp.buy = new VerbPh("buy");
-vp.lack = new VerbPh("do not have time to waste");
+vp.notHaveTime = new VerbPh("have time to waste", false);
 vp.goDownstairs = new VerbPh("go down");
 vp.split = new VerbPh("split");
-vp.holler = new VerbPh("do not holler");
-vp.bawl = new VerbPh("do not bawl");
-vp.shout = new VerbPh("do not shout");
+vp.notHoller = new VerbPh("holler", false);
+vp.notBawl = new VerbPh("bawl", false);
+vp.notShout = new VerbPh("shout", false);
 vp.feel2 = new VerbPh("feel good");
 vp.fine = new VerbPh("feel fine");
 

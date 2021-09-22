@@ -91,8 +91,12 @@ class Verb {
 }
 
 class VerbPh {
-  constructor(phrase) {
+  constructor(phrase, affirmed = true, progressive = false, intensive = false, futureStyle = "will") {
     this.verbPhrase = phrase;
+    this.negated = !affirmed;
+    this.progressive = progressive;
+    this.intensive = intensive;
+    this.futureStyle = futureStyle;
   }
 }
 
