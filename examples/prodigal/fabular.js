@@ -11,6 +11,7 @@
 var toldBy = "a teller of parables";
 
 spin.groupings = "category";
+spin.order = "retrograde";
 
 // PLACES
 
