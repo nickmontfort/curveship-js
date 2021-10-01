@@ -493,8 +493,9 @@ class Narrator {
     return result + " and " + this.name(ex.get(ex.length() - 1), spin, role, ev);
   }
   determineTenseER(ev, spin) {
-    let evNum = world.evSeq.indexOf(ev.tag);
+    let evNum = world.evSeq.indexOf(ev);
     let isNum = (typeof spin.speaking === "number");
+    console.log(evNum, isNum, spin.speaking);
     if (spin.speaking === "during" || (isNum && spin.speaking == evNum)) {
       return "present";
     } else if (spin.speaking === "after" || (isNum && spin.speaking > evNum)) {
