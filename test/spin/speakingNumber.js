@@ -1,6 +1,6 @@
-var toldBy = "a narrator who leaves one thing out";
+var toldBy = "a narrator (temporally) in the middle of the events";
 
-spin.main = "0;3-5";
+spin.speaking = 3;
 
 vp.lookAround = new VerbPh("look around");
 vp.play = new VerbPh("is playing");

@@ -495,7 +495,6 @@ class Narrator {
   determineTenseER(ev, spin) {
     let evNum = world.evSeq.indexOf(ev);
     let isNum = (typeof spin.speaking === "number");
-    console.log(evNum, isNum, spin.speaking);
     if (spin.speaking === "during" || (isNum && spin.speaking == evNum)) {
       return "present";
     } else if (spin.speaking === "after" || (isNum && spin.speaking > evNum)) {
@@ -682,6 +681,7 @@ var temporal = { // Maps an abstract temporal relationship to a preposition
   from: "from",
   in: "in",
   into: "into",
+  of: "of", // This one isn't temporal, really, but ...
   on: "on",
   outside: "outside",
   through: "through",
