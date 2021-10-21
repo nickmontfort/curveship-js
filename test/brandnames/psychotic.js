@@ -6,7 +6,7 @@
 // notice and this notice are preserved. This file is offered as-is,
 // without any warranty.
 
-var toldBy = "a Patrick Lecter";
+var toldBy = "Patrick Lecter";
 
 //spin.order = "retrograde";
 //spin.timePhrases = true;
@@ -15,7 +15,7 @@ names.soda = new BrandNames(
   "soda",
   null,
   "Sprite",
-  "bought from Trader Joe's",
+  "bought from Trader Joe’s",
   "cold"
 );
 
@@ -24,7 +24,7 @@ names.car = new BrandNames(
   "1980",
   "Audi",
   null,
-  "convertable"
+  "convertible"
 );
 
 names.cloth = new BrandNames(
@@ -52,7 +52,7 @@ names.knife = new BrandNames(
 );
 
 names.meat = new BrandNames(
-  "meat",
+  "steak",
   null,
   null,
   null,
@@ -65,6 +65,6 @@ vp.wear = new VerbPh("wear");
 vp.grab = new VerbPh("grab");
 vp.stab = new VerbPh("stab");
 vp.cook = new VerbPh("cook");
-vp.enjoy = new VerbPh("enjoy");
+vp.enjoy = new VerbPh("hunger for");
 
 function run() { narrate(title, toldBy, world, spin, names, vp); }

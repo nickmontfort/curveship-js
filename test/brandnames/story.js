@@ -1,4 +1,4 @@
-// Curveship-js test of spin changes
+// Curveship-js test of BrandNames changes
 //  Copyright 2021 Nick Montfort
 //
 // Copying and distribution of this file, with or without modification,
