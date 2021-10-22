@@ -372,23 +372,20 @@ class Narrator {
         this.names[parent.tag].setGenericPronouns(parent.tag);
       }
       if ((ev.agent === e.owner) || (typeof this.lastNarratedEvent !== "undefined" && this.lastNarratedEvent.hasParticipant(parent))) {
-        let person = 3;
-        if (parent.tag === spin.i) {
-          person = 1;
-        }
-        if (parent.tag === spin.you) {
-          person = 2;
-        }
-        possessive = this.names[parent.tag].pronouns.getPossessivePronoun(person);
+        possessive = this.names[parent.tag].pronouns.getPossessivePronoun(3);
       } else if (this.names[parent.tag].possessive !== null) {
         possessive = this.names[parent.tag].possessive;
-      } else {
-        if (this.givens.has(parent.tag)) {
+      } else if (this.names[parent.tag].possessive !== null) {
+        possessive = this.names[parent.tag].possessive;
+      } else if (parent.tag === spin.i) {
+        possessive = this.names[parent.tag].pronouns.getPossessivePronoun(1);
+      } else if (parent.tag === spin.you) {
+        possessive = this.names[parent.tag].pronouns.getPossessivePronoun(2);
+      } else if (this.givens.has(parent.tag)) {
           possessive = this.names[parent.tag].subsequent + "’s";
-        } else {
-          this.givens.add(parent.tag);
-          possessive = this.names[parent.tag].initial + "’s";
-        }
+      } else {
+        this.givens.add(parent.tag);
+        possessive = this.names[parent.tag].initial + "’s";
       }
       this.givens.add(parent.tag);
       let possessivePhrase = possessive + " " + this.names[e.tag].bareName;
