@@ -383,7 +383,12 @@ class Narrator {
       } else if (this.names[parent.tag].possessive !== null) {
         possessive = this.names[parent.tag].possessive;
       } else {
-        possessive = this.names[parent.tag].initial + "’s";
+        if (this.givens.has(parent.tag)) {
+          possessive = this.names[parent.tag].subsequent + "’s";
+        } else {
+          this.givens.add(parent.tag);
+          possessive = this.names[parent.tag].initial + "’s";
+        }
       }
       this.givens.add(parent.tag);
       let possessivePhrase = possessive + " " + this.names[e.tag].bareName;
@@ -674,6 +679,7 @@ function shiftBack(spin) {
 // ### PREPOSITIONS ###
 
 var temporal = { // Maps an abstract temporal relationship to a preposition
+  against: "against",
   at: "at",
   by: "by",
   down: "down",
