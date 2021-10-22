@@ -371,16 +371,16 @@ class Narrator {
       if (this.names[parent.tag].pronouns === null) {
         this.names[parent.tag].setGenericPronouns(parent.tag);
       }
-      if ((ev.agent === e.owner) || (typeof this.lastNarratedEvent !== "undefined" && this.lastNarratedEvent.hasParticipant(parent))) {
+      if (parent.tag === spin.i) {
+        possessive = this.names[parent.tag].pronouns.getPossessivePronoun(1);
+      } else if (parent.tag === spin.you) {
+        possessive = this.names[parent.tag].pronouns.getPossessivePronoun(2);
+      } else if ((ev.agent === e.owner) || (typeof this.lastNarratedEvent !== "undefined" && this.lastNarratedEvent.hasParticipant(parent))) {
         possessive = this.names[parent.tag].pronouns.getPossessivePronoun(3);
       } else if (this.names[parent.tag].possessive !== null) {
         possessive = this.names[parent.tag].possessive;
       } else if (this.names[parent.tag].possessive !== null) {
         possessive = this.names[parent.tag].possessive;
-      } else if (parent.tag === spin.i) {
-        possessive = this.names[parent.tag].pronouns.getPossessivePronoun(1);
-      } else if (parent.tag === spin.you) {
-        possessive = this.names[parent.tag].pronouns.getPossessivePronoun(2);
       } else if (this.givens.has(parent.tag)) {
           possessive = this.names[parent.tag].subsequent + "’s";
       } else {

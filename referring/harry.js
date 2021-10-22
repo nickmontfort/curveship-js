@@ -1,18 +1,21 @@
-var toldBy = "a parable teller";
+var toldBy = "Harry Styles";
+
+spin.i = "celebrity";
 
 names.gate = new Names("the gate");
-names.firstClass = new Names("the first class seating area");
+names.firstClass = new Names("first class");
 
-names.gateOfficial = new Names("an airline employee");
+names.gateOfficial = new Names("a lady working for the airline");
 names.flightAttendant = new Names("a flight attendant");
+names.passenger = new Names("a young female executive");
 
 names.boardingPass = new Names("a boarding pass");
 names.scanner = new Names("a scanner");
 names.seat1A = new Names("seat 1A");
 names.seat1B = new Names("seat 1B");
 
-names.jacket = new Names("a jacket");
-names.sneakers = new Names("sneakers");
+names.jacket = new Names("a sportscoat");
+names.sneakers = new Names("kicks");
 names.pen = new Names("a pen");
 names.notepad = new Names("a notepad");
 
@@ -23,13 +26,13 @@ vp.pocket = new VerbPh("place");
 vp.depart = new VerbPh("depart");
 vp.board = new VerbPh("walk");
 vp.sit = new VerbPh("sit");
-vp.beSurprised = new VerbPh("express a bit of surprise");
+vp.beSurprised = new VerbPh("react");
 vp.see = new VerbPh("notice");
-vp.confront = new VerbPh("say");
-vp.withdraw = new VerbPh("take");
+vp.confront = new VerbPh("sneer");
+vp.withdraw = new VerbPh("get");
 vp.show = new VerbPh("show");
 vp.apologize = new VerbPh("mutter");
-vp.obtain = new VerbPh("procure");
+vp.obtain = new VerbPh("grab");
 vp.request = new VerbPh("say");
 
 function run() { narrate(title, toldBy, world, spin, names, vp); }
