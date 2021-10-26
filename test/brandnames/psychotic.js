@@ -66,7 +66,7 @@ vp.wear = new VerbPh("wear");
 vp.grab = new VerbPh("grab");
 vp.stab = new VerbPh("stab");
 vp.cook = new VerbPh("cook");
-vp.enjoy = new VerbPh("enjoy");
+vp.enjoy = new VerbPh("hungers for");
 
 function run() {
   narrate(title, toldBy, world, spin, names, vp);
