@@ -154,16 +154,20 @@ class ProperNames extends Names {
 
 class BrandNames extends Names {
   constructor(
+    article = "",
     product,
     year = null,
     model = null,
     source = null,
     attributes = null,
+    // generic: if true the product name will be included, if false the product name will be
+    generic = true,
     pronouns = "it",
     possessive = "its"
   ) {
-    let initial = product;
-    let subsequent = product;
+    article = article === null ? "" : article;
+    let initial = generic ? product : "";
+    let subsequent = initial;
 
     if (source !== null && source !== "") {
       initial += " " + source;
@@ -190,8 +194,23 @@ class BrandNames extends Names {
     //   subsequent = source + "'s " + subsequent;
     // }
 
-    let signifier = "aeiuo".includes(initial[0]) ? "an " : "a ";
-    super(signifier + initial, "the " + subsequent, pronouns);
+    // let signifier = "aeiuo".includes(initial[0]) ? "an " : "a ";
+    let subsequent_article = "the";
+
+    // removing the extra space at the end
+    subsequent =
+      subsequent[[subsequent.length - 1]] === " "
+        ? subsequent.slice(0, [subsequent.length - 1])
+        : subsequent;
+    initial =
+      initial[[initial.length - 1]] === " "
+        ? initial.slice(0, [initial.length - 1])
+        : initial;
+    super(
+      article + " " + initial,
+      subsequent_article + " " + subsequent,
+      pronouns
+    );
     this.year = year;
     this.model = model;
     this.source = source;

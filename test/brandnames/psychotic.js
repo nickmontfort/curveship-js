@@ -12,22 +12,27 @@ var toldBy = "Patrick Lecter";
 //spin.timePhrases = true;
 
 names.soda = new BrandNames(
+  "a",
   "soda",
   null,
   "Sprite",
   "bought from Trader Joe’s",
-  "cold"
+  "cold",
+  false
 );
 
 names.car = new BrandNames(
+  null,
   "car",
   "1980",
   "Audi",
   null,
-  "convertible"
+  "convertible",
+  false
 );
 
 names.cloth = new BrandNames(
+  null,
   "shirt",
   null,
   "Gucci",
@@ -36,6 +41,7 @@ names.cloth = new BrandNames(
 );
 
 names.chair = new BrandNames(
+  null,
   "chair",
   null,
   "wooden",
@@ -44,6 +50,7 @@ names.chair = new BrandNames(
 );
 
 names.knife = new BrandNames(
+  null,
   "knife",
   null,
   "Wusthof classic",
@@ -51,13 +58,7 @@ names.knife = new BrandNames(
   "skymetal"
 );
 
-names.meat = new BrandNames(
-  "steak",
-  null,
-  null,
-  null,
-  "juicy dark"
-);
+names.meat = new BrandNames("a", "meat", null, null, null, "juicy dark");
 
 vp.drink = new VerbPh("drink");
 vp.dream = new VerbPh("dream");
@@ -65,6 +66,8 @@ vp.wear = new VerbPh("wear");
 vp.grab = new VerbPh("grab");
 vp.stab = new VerbPh("stab");
 vp.cook = new VerbPh("cook");
-vp.enjoy = new VerbPh("hunger for");
+vp.enjoy = new VerbPh("enjoy");
 
-function run() { narrate(title, toldBy, world, spin, names, vp); }
+function run() {
+  narrate(title, toldBy, world, spin, names, vp);
+}
