@@ -67,7 +67,7 @@ names.knife = new BrandNames(
 
 names.meat = new BrandNames(
   "a",
-  "pair of sneakers",
+  "pair of sneaker",
   null,
   null,
   null,
