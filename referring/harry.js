@@ -1,12 +1,13 @@
 var toldBy = "Harry Styles";
 
-spin.i = "celebrity";
+// spin.i = "celebrity";
 
 names.gate = new Names("the gate");
 names.firstClass = new Names("first class");
 
 names.gateOfficial = new Names("a lady working for the airline");
 names.flightAttendant = new Names("a flight attendant");
+names.celebrity = new ProperNames("Harry", "Styles");
 names.passenger = new Names("a young female executive");
 
 names.boardingPass = new Names("a boarding pass");

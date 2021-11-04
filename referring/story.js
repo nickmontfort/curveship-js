@@ -11,10 +11,9 @@ place.firstClass = new Place();
 actor.celebrity = new Actor(place.gate, "male");
 actor.gateOfficial = new Actor(place.gate, "female");
 actor.flightAttendant = new Actor(place.firstClass, "male");
-
-thing.seat1A = new Thing(place.firstClass);
 actor.passenger = new Actor(thing.seat1A, "female");
 
+thing.seat1A = new Thing(place.firstClass);
 thing.femaleUniform = new Thing(actor.gateOfficial);
 thing.femaleUniform.owner = actor.gateOfficial;
 thing.maleUniform = new Thing(actor.flightAttendant);
