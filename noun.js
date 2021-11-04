@@ -95,7 +95,12 @@ pronoun.nonBinary = new PronounSet([
 ]); // If you prefer, you can make the last entry "themselves"
 
 class Names {
-  constructor(initial, subsequent = null, pronouns = null) {
+  constructor(
+    initial,
+    subsequent = null,
+    pronouns = null,
+    multiple_plurality = true
+  ) {
     this.initial = initial;
     let bareName = initial;
     let articles = new Set(["a", "an", "one", "some", "that", "this", "the"]);
@@ -157,13 +162,15 @@ class BrandNames extends Names {
     article = "",
     product,
     year = null,
+    make = null,
     model = null,
     source = null,
     attributes = null,
-    // generic: if true the product name will be included, if false the product name will be
+    // generic: if true the product name will be included, if false the product name will be excluded
     generic = true,
-    pronouns = "it",
-    possessive = "its"
+    pronouns = pronoun.neuter,
+    possessive = "its",
+    plural = false
   ) {
     article = article === null ? "" : article;
     let initial = generic ? product : "";
@@ -177,6 +184,11 @@ class BrandNames extends Names {
     if (model !== null && model !== "") {
       initial = model + " " + initial;
       // subsequent = model + " " + subsequent;
+    }
+
+    if (make !== null && make !== "") {
+      initial = make + " " + initial;
+      // subsequent = make + " " + subsequent;
     }
 
     if (year !== null && year !== "") {
@@ -209,14 +221,18 @@ class BrandNames extends Names {
     super(
       article + " " + initial,
       subsequent_article + " " + subsequent,
-      pronouns
+      pronouns,
+      plural
     );
+
     this.year = year;
+    this.make = make;
     this.model = model;
     this.source = source;
     this.pronouns = pronouns;
     this.attributes = attributes;
     this.possessive = possessive;
+    this.plural = plural;
   }
 }
 

@@ -28,8 +28,8 @@ ev.dream = new Event(actor.jack, null, temporal.of, thing.car);
 ev.wear = new Event(actor.jack, thing.cloth);
 ev.stab = new Event(actor.jack, thing.meat);
 ev.cook = new Event(actor.jack, thing.meat);
+ev.tie = new Event(thing.meat, thing.meat);
 ev.grab = new Event(actor.jack, thing.chair);
 ev.enjoy = new Event(actor.jack, actor.molly);
-
 
 var world = new World(place, actor, category, thing, ev);
