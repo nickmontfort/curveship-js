@@ -76,7 +76,7 @@ names.meat = new BrandNames(
   true,
   pronoun.neuter,
   "its",
-  false
+  true
 );
 
 vp.drink = new VerbPh("drink");
