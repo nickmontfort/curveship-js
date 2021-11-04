@@ -169,7 +169,7 @@ class BrandNames extends Names {
     // generic: if true the product name will be included, if false the product name will be excluded
     generic = true,
     pronouns = pronoun.neuter,
-    possessive = null,
+    possessive = "its",
     plural = false
   ) {
     article = article === null ? "" : article;
