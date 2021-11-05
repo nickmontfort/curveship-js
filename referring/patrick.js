@@ -8,14 +8,14 @@ names.flightAttendant = new Names("a male flight attendant");
 names.passenger = new Names("a woman");
 
 names.boardingPass = new Names("a boarding pass");
-names.scanner = new BrandNames("a", "barcode scanner", null, "Zebra MS471", null, "fixed-mount");
+names.scanner = new BrandNames("a", "barcode scanner", null, "Zebra", "MS471", null, "fixed-mount");
 names.seat1A = new Names("seat 1A");
 names.seat1B = new Names("seat 1B");
 
-names.jacket = new BrandNames("a", "sportscoat", null, null, "Michael Andrews", "bespoke");
-names.sneakers = new BrandNames("", "sneakers", null, "Nike Air Jordan 4 Retro Kaws", "Flight Club");
-names.pen = new BrandNames("a", "pen", null, "BIC", "K-Mart on Astor Place");
-names.notepad = new BrandNames("a", "memo pad", null, "Mead", "some bodega");
+names.jacket = new BrandNames("a", "sportscoat", null, "Michael Andrews", null, null, "bespoke");
+names.sneakers = new BrandNames("", "sneakers", null, "Nike", "Air Jordan 4 Retro Kaws", null, "Flight Club");
+names.pen = new BrandNames("a", "pen", null, "BIC", null, "from K-Mart on Astor Place", null, false);
+names.notepad = new BrandNames("a", "memo pad", null, "Mead", null, "of some bodega");
 
 vp.scan = new VerbPh("hold");
 vp.beep = new VerbPh("beep");
