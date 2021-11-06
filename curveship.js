@@ -422,7 +422,7 @@ class Narrator {
         possessive = this.names[parent.tag].initial + "’s";
       }
       this.givens.add(parent.tag);
-      let possessivePhrase = possessive + " " + this.names[e.tag].bareName;
+      let possessivePhrase = possessive + " " + bareName(this.names[e.tag].initial);
       this.givens.add(e.tag);
       return possessivePhrase;
     }

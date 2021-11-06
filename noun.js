@@ -94,6 +94,12 @@ pronoun.nonBinary = new PronounSet([
   "themself",
 ]); // If you prefer, you can make the last entry "themselves"
 
+const articles = new Set(["a", "an", "one", "some", "that", "this", "the"]);
+
+function bareName(np) {
+  return articles.has(np.split(" ")[0]) ? np = np.substring(np.indexOf(" ") + 1) : np;
+}
+
 class Names {
   constructor(
     initial,
@@ -102,16 +108,8 @@ class Names {
     multiple_plurality = true
   ) {
     this.initial = initial;
-    let bareName = initial;
-    let articles = new Set(["a", "an", "one", "some", "that", "this", "the"]);
-    if (articles.has(initial.split(" ")[0])) {
-      bareName = initial.substring(initial.indexOf(" "));
-    }
-    this.bareName = bareName;
-    if (subsequent === null) {
-      subsequent = "the " + bareName;
-    }
-    this.subsequent = subsequent;
+    this.subsequent = subsequent ? subsequent : "the " + bareName(initial);
+    console.log(initial, subsequent, this.subsequent);
     this.pronouns = pronouns;
     if (typeof this.possessive === "undefined") {
       this.possessive = null;
@@ -159,80 +157,35 @@ class ProperNames extends Names {
 
 class BrandNames extends Names {
   constructor(
-    article = "",
-    product,
-    year = null,
-    make = null,
-    model = null,
-    source = null,
+    generic, // if left out by default, it is wrapped in parens by the author
+             // "(a soda)" means it is referred to *only* by brand name,
+             // e.g. “a Sprite” whereas "a cola" means the generic term is
+             // included, e.g. “a Royal Crown cola”
+    make, // if an article is ever used it must be included: "a Honda"
+    model, // if an article is ever used it must be included: "an Accord"
+    source = null, // where it was purchased from, with connecting language, e.g.
+                   // "purchased from K-Mart" "won at a state fair"
     attributes = null,
-    // generic: if true the product name will be included, if false the product name will be excluded
-    generic = true,
     pronouns = pronoun.neuter,
-    possessive = "its",
     plural = false
   ) {
-    article = article === null ? "" : article;
-    let initial = generic ? product : "";
+    let initial;
+    if (make) {
+      initial = model ? make + bareName(model) : make;
+    } else {
+      initial = model ? model : "";
+    }
+    console.log(generic, initial);
+    initial += (generic[0] === "(") ? "" : " " + bareName(generic);
     let subsequent = initial;
-
-    if (source !== null && source !== "") {
-      initial += " " + source;
-      // subsequent += " " + source;
-    }
-
-    if (model !== null && model !== "") {
-      initial = model + " " + initial;
-      // subsequent = model + " " + subsequent;
-    }
-
-    if (make !== null && make !== "") {
-      initial = make + " " + initial;
-      // subsequent = make + " " + subsequent;
-    }
-
-    if (year !== null && year !== "") {
-      initial = year + " " + initial;
-      // subsequent = year + " " + subsequent;
-    }
-
-    if (attributes !== null && attributes !== "") {
-      initial = attributes + " " + initial;
-      // subsequent = attributes + " " + subsequent;
-    }
-
-    // if (source !== null && source !== "") {
-    //   initial = source + "'s " + initial;
-    //   subsequent = source + "'s " + subsequent;
-    // }
-
-    // let signifier = "aeiuo".includes(initial[0]) ? "an " : "a ";
-    let subsequent_article = "the";
-
-    // removing the extra space at the end
-    subsequent =
-      subsequent[[subsequent.length - 1]] === " "
-        ? subsequent.slice(0, [subsequent.length - 1])
-        : subsequent;
-    initial =
-      initial[[initial.length - 1]] === " "
-        ? initial.slice(0, [initial.length - 1])
-        : initial;
-    super(
-      article + " " + initial,
-      subsequent_article + " " + subsequent,
-      pronouns,
-      plural
-    );
-
-    this.year = year;
+    console.log(generic, initial, subsequent);
+    initial += source ? " " + source : "";
+    initial = attributes ? attributes + " " + bareName(initial) : initial;
+    super(initial, subsequent, pronouns, plural);
     this.make = make;
     this.model = model;
     this.source = source;
-    this.pronouns = pronouns;
     this.attributes = attributes;
-    this.possessive = possessive;
-    this.plural = plural;
   }
 }
 

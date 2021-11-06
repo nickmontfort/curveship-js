@@ -16,7 +16,8 @@ actor.molly = new Actor(null, "female");
 thing.soda = new Thing();
 thing.car = new Thing();
 thing.car.setOwner(actor.molly);
-thing.cloth = new Thing();
+thing.shirt = new Thing();
+thing.shirt.setOwner(actor.jack);
 thing.chair = new Thing();
 thing.knife = new Thing();
 thing.meat = new Thing();
@@ -25,11 +26,10 @@ thing.meat = new Thing();
 
 ev.drink = new Event(actor.jack, thing.soda);
 ev.dream = new Event(actor.jack, null, temporal.of, thing.car);
-ev.wear = new Event(actor.jack, thing.cloth);
+ev.putOn = new Event(actor.jack, thing.shirt);
 ev.stab = new Event(actor.jack, thing.meat);
 ev.cook = new Event(actor.jack, thing.meat);
-ev.tie = new Event(thing.meat, thing.meat);
 ev.grab = new Event(actor.jack, thing.chair);
-ev.enjoy = new Event(actor.jack, actor.molly);
+ev.thinkOf = new Event(actor.jack, actor.molly);
 
 var world = new World(place, actor, category, thing, ev);

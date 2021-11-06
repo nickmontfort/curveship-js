@@ -13,17 +13,17 @@ var toldBy = "a horny man";
 
 names.soda = new Names("a soda");
 names.car = new Names("a car");
-names.cloth = new Names("a shirt");
+names.shirt = new Names("a shirt");
 names.chair = new Names("a chair");
 names.knife = new Names("a knife");
 names.meat = new Names("meat");
 
 vp.drink = new VerbPh("drink");
 vp.dream = new VerbPh("dream");
-vp.wear = new VerbPh("put on");
+vp.putOn = new VerbPh("put on");
 vp.grab = new VerbPh("grab");
-vp.stab = new VerbPh("cut");
+vp.stab = new VerbPh("spear");
 vp.cook = new VerbPh("cook");
-vp.enjoy = new VerbPh("yearn for");
+vp.thinkOf = new VerbPh("yearn for");
 
 function run() { narrate(title, toldBy, world, spin, names, vp); }

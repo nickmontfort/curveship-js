@@ -12,81 +12,46 @@ var toldBy = "Patrick Lecter";
 //spin.timePhrases = true;
 
 names.soda = new BrandNames(
-  "a",
-  "soda",
+  "(a soda)",
   null,
-  null,
-  "Sprite",
-  "bought from Trader Joe’s",
-  "cold",
-  false,
-  pronoun.neuter,
-  "its",
-  true
+  "a Sprite",
+  "bought from Westside Market",
+  "a cold",
 );
 
 names.car = new BrandNames(
-  null,
-  "car",
-  "1980",
-  "Audi",
-  null,
-  null,
-  "convertible"
+  "(an automobile)",
+  "an Audi",
+  "an A4 Avant"
 );
 
-names.cloth = new BrandNames(
+names.shirt = new BrandNames(
+  "a shirt",
+  "a Gucci",
   null,
-  "shirt",
-  null,
-  null,
-  "Gucci",
   "purchased from Saks Fifth Avenue",
-  "blindingly pink"
+  "a blindingly pink"
 );
 
-names.chair = new BrandNames(
-  null,
-  "chair",
-  null,
-  null,
-  "wooden",
-  null,
-  "scarlet swivel"
-);
+names.chair = new Names("a scarlet wooden swivel chair", "the chair");
 
 names.knife = new BrandNames(
+  "a knife",
   null,
-  "knife",
+  "a Wusthof Classic",
   null,
-  null,
-  "Wusthof classic",
-  null,
-  "skymetal"
+  "a skymetal"
 );
 
-names.meat = new BrandNames(
-  "a",
-  "pair of sneaker",
-  null,
-  null,
-  null,
-  null,
-  "juicy dark",
-  true,
-  pronoun.neuter,
-  "its",
-  true
-);
+names.meat = new Names("a juicy steak", "the steak");
 
 vp.drink = new VerbPh("drink");
 vp.dream = new VerbPh("dream");
-vp.wear = new VerbPh("wear");
+vp.putOn = new VerbPh("button up");
 vp.grab = new VerbPh("grab");
-vp.tie = new VerbPh("tie");
 vp.stab = new VerbPh("stab");
 vp.cook = new VerbPh("cook");
-vp.enjoy = new VerbPh("hunger for");
+vp.thinkOf = new VerbPh("hunger for");
 
 function run() {
   narrate(title, toldBy, world, spin, names, vp);
