@@ -109,7 +109,6 @@ class Names {
   ) {
     this.initial = initial;
     this.subsequent = subsequent ? subsequent : "the " + bareName(initial);
-    console.log(initial, subsequent, this.subsequent);
     this.pronouns = pronouns;
     if (typeof this.possessive === "undefined") {
       this.possessive = null;
@@ -136,15 +135,16 @@ class ProperNames extends Names {
     title = null,
     possessive = null
   ) {
-    let initial = given;
-    let subsequent = given;
-    if (given === null || given === "") {
+    let initial, subsequent;
+    if (given === null) {
       initial = (title !== null ? title + " " : "") + family;
       subsequent = initial;
-    }
-    if (family !== null && family !== "") {
+    } else if (family !== null && family !== "") {
       initial = (title !== null ? title + " " : "") + given + " " + family;
       subsequent = title !== null ? title + " " + family : given;
+    } else {
+      initial = given;
+      subsequent = given;
     }
     super(initial, subsequent, pronouns);
     this.title = title;
@@ -171,7 +171,7 @@ class BrandNames extends Names {
   ) {
     let initial;
     if (make) {
-      initial = model ? make + bareName(model) : make;
+      initial = model ? make + " " + bareName(model) : make;
     } else {
       initial = model ? model : "";
     }

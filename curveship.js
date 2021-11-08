@@ -644,7 +644,7 @@ class World {
 }
 
 function narrate(title, toldBy, world, spin, names, reps) {
-  var element = document.getElementById("narrative"),
+  let element = document.getElementById("narrative"),
     h1 = document.createElement("h1"),
     h2 = document.createElement("h2"),
     div,
@@ -664,6 +664,11 @@ function narrate(title, toldBy, world, spin, names, reps) {
   element.appendChild(h1);
   h2.innerHTML = "as told by " + toldBy;
   element.appendChild(h2);
+  if (spin.preface) {
+    div = document.createElement("div");
+    div.innerText = spin.preface;
+    element.appendChild(div);
+  }
   for (i = 0; i < world.evSeq.length; i++) {
     telling.push(i);
   }
@@ -744,9 +749,11 @@ function narrate(title, toldBy, world, spin, names, reps) {
     element.appendChild(div);
     lastNarratedTag = current.tag;
   }
-  div = document.createElement("div");
-  div.innerHTML = "The end.";
-  element.appendChild(div);
+  if (spin.postface) {
+    div = document.createElement("div");
+    div.innerText = spin.postface;
+    element.appendChild(div);
+  }
 }
 
 function shiftBack(spin) {
