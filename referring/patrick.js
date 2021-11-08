@@ -1,14 +1,11 @@
-var toldBy = "Patrica Bateman";
-
-spin.i = "passenger";
-spin.main = "6-14"
+var toldBy = "Patrick Bateman";
 
 names.gate = new Names("gate 23");
 names.firstClass = new Names("first class");
 
 names.gateOfficial = new Names("this woman working for the airline");
-names.flightAttendant = new Names("a male flight attendant", "the airline employee");
-names.celebrity = new Names("the type of guy who can get a reservation at Le Bernardin", "the famous guy");
+names.flightAttendant = new Names("a male flight attendant");
+names.passenger = new Names("a woman");
 
 names.boardingPass = new Names("a boarding pass");
 names.scanner = new BrandNames("a barcode scanner", "a Zebra", "an MS471", null, "a fixed-mount");
@@ -27,13 +24,13 @@ vp.pocket = new VerbPh("place");
 vp.depart = new VerbPh("depart");
 vp.board = new VerbPh("walk");
 vp.sit = new VerbPh("sit");
-vp.beSurprised = new VerbPh("notice rather coolly");
-vp.see = new VerbPh("glare at");
+vp.beSurprised = new VerbPh("react");
+vp.see = new VerbPh("notice");
 vp.confront = new VerbPh("sneer");
 vp.withdraw = new VerbPh("get");
 vp.show = new VerbPh("show");
-vp.apologize = new VerbPh("mumble");
-vp.obtain = new VerbPh("pull out");
+vp.apologize = new VerbPh("mutter");
+vp.obtain = new VerbPh("grab");
 vp.request = new VerbPh("say");
 
 function run() { narrate(title, toldBy, world, spin, names, vp); }
