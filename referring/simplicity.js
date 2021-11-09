@@ -8,7 +8,7 @@ names.firstClass = new Names("the first class seating area");
 
 names.gateOfficial = new Names("the airline employee");
 names.flightAttendant = new Names("a flight attendant");
-names.celebrity = new ProperNames("Harry", "Styles");
+names.celebrity = new Names("Harry", "the celebrity");
 
 names.boardingPass = new Names("a boarding pass");
 names.scanner = new Names("the scanner");
