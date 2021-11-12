@@ -1,7 +1,7 @@
 var toldBy = "Jane Austen";
 
 spin.speaking = "after";
-spin.main = "2;0,3-14";
+spin.main = "2;0;3-14";
 
 names.gate = new Names("the turnstile");
 names.firstClass = new Names("the first class cabin");
