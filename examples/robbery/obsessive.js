@@ -10,8 +10,7 @@
 
 var toldBy = "an obsessed-with-brand-names storyteller";
 
-//spin.order = "retrograde";
-//spin.timePhrases = true;
+spin.focalize = place.guardPost;
 
 names.lobby = new Names("the lobby");
 names.street = new Names("a sidewalk outside the bank", "a sidewalk");

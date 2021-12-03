@@ -39,6 +39,35 @@ function shuffle(array) {
 }
 
 /**
+ * Decides if the focalizer can narrate a each event
+ */
+function focalize(array, actor, world) {
+    var toRemove = [];
+    currentLocation = (actor instanceof Actor) ? actor.location : actor;
+    for (var i=0 ; i<world.evSeq.length ; i++ ) {
+        currentEv = world.evSeq[i];
+        for (var j=0 ; j<currentEv.alterations.length ; j++ ) {
+            currentActor = currentEv.alterations[j].existent;
+            if (actor == currentActor) {
+                currentLocation = currentEv.alterations[j].after;
+            }
+            currentActor.location = currentEv.alterations[j].after;
+        }
+        // decide if we should remove the current event from narration, if any of the conditions is not met, the focalizer will narrate the event
+        if (currentEv.agent.location != currentLocation                    // if the current event takes place elsewhere
+            && currentEv.agent != actor                                    // and the current event's agent is not the focalizer
+            && currentEv.direct != actor                                   // and the current event's direct is not the focalizer
+            && !currentLocation.views.includes(currentEv.agent.location)) {  // and the focalizer's location has no view of current event's location
+                toRemove.push(i)
+              }
+    }
+    for (var i=0 ; i<toRemove.length ; i++ ) {
+        array.splice(array.indexOf(toRemove[i]), 1); // remove item, actor did not see it or do it
+    }
+    return array;
+}
+
+/**
  * Specifies a new main sequence of expressions to enable
  * ellipsis, reordering, and repetition in the telling.
  * Examples of sequences:  1-4;7;9-12   18;2-16   2;4;6;8
@@ -161,7 +190,12 @@ class Place extends Existent {
   constructor() {
     super();
     this.location = thing.cosmos;
+    this.views = [];
   }
+  addViewTo(to) {
+    this.views = this.views.concat(to);
+  }
+
 }
 
 var place = {};
@@ -674,6 +708,9 @@ function narrate(title, toldBy, world, spin, names, reps) {
   }
   if (spin.main) {
     telling = selectMain(telling, spin.main);
+  }
+  if (spin.focalize) {
+    telling = focalize(telling, spin.focalize, world);
   }
   if (spin.order === "retrograde") {
     telling.reverse();

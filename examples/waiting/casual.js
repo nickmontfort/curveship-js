@@ -12,8 +12,10 @@ var toldBy = "someone even more sedate than Lou Reed";
 
 // Uncomment this to create a confusing jumble of events in the telling.
 //
-// spin.order = "random";
-spin.order = "retrograde";
+spin.timePhrases = true;
+
+spin.order = "random";
+// spin.order = "retrograde";
 spin.groupings = "category";
 
 // PLACES
