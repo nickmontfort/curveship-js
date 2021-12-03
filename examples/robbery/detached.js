@@ -12,7 +12,6 @@ var toldBy = "a detached storyteller";
 
 spin.order = "retrograde";
 spin.timePhrases = true;
-spin.focalize = actor.teller
 
 names.lobby = new Names("the lobby");
 names.street = new Names("a sidewalk outside the bank", "a sidewalk");

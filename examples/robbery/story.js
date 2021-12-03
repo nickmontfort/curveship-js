@@ -17,8 +17,6 @@ place.lobby = new Place();
 place.guardPost = new Place();
 place.street = new Place();
 
-place.vestibule.addViewTo(place.lobby);
-
 actor.teller = new Actor(place.vestibule, "female");
 actor.robber = new Actor(place.street, "male");
 actor.guard = new Actor(place.guardPost, "male");

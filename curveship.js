@@ -41,7 +41,7 @@ function shuffle(array) {
 /**
  * Decides if the focalizer can narrate a each event
  */
-function focalize(array, actor, world) {
+function focalize(array, actor, main, world) {
     var toRemove = [];
     currentLocation = (actor instanceof Actor) ? actor.location : actor;
     for (var i=0 ; i<world.evSeq.length ; i++ ) {
@@ -53,13 +53,19 @@ function focalize(array, actor, world) {
             }
             currentActor.location = currentEv.alterations[j].after;
         }
-        // decide if we should remove the current event from narration, if any of the conditions is not met, the focalizer will narrate the event
-        if (currentEv.agent.location != currentLocation                    // if the current event takes place elsewhere
-            && currentEv.agent != actor                                    // and the current event's agent is not the focalizer
-            && currentEv.direct != actor                                   // and the current event's direct is not the focalizer
-            && !currentLocation.views.includes(currentEv.agent.location)) {  // and the focalizer's location has no view of current event's location
-                toRemove.push(i)
-              }
+        if (currentLocation != null) {
+          // decide if we should remove the current event from narration, if all conditions are met, the event will not be narrated
+          if (currentEv.agent.location != currentLocation                    // if the current event takes place elsewhere
+              && currentEv.agent != actor                                    // and the current event's agent is not the focalizer
+              && currentEv.direct != actor                                   // and the current event's direct is not the focalizer
+              && !currentLocation.views.includes(currentEv.agent.location)) {  // and the focalizer's location has no view of current event's location
+            toRemove.push(i)
+          }
+        } else if (main != null) {
+          if (main.indexOf(i) != -1) {
+            toRemove.push(i)
+          }
+        }
     }
     for (var i=0 ; i<toRemove.length ; i++ ) {
         array.splice(array.indexOf(toRemove[i]), 1); // remove item, actor did not see it or do it
@@ -706,11 +712,11 @@ function narrate(title, toldBy, world, spin, names, reps) {
   for (i = 0; i < world.evSeq.length; i++) {
     telling.push(i);
   }
-  if (spin.main) {
-    telling = selectMain(telling, spin.main);
-  }
+  // if (spin.main) {
+  //   telling = selectMain(telling, spin.main);
+  // }
   if (spin.focalize) {
-    telling = focalize(telling, spin.focalize, world);
+    telling = focalize(telling, spin.focalize, spin.main, world);
   }
   if (spin.order === "retrograde") {
     telling.reverse();
