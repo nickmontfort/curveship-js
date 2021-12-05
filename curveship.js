@@ -48,19 +48,19 @@ function focalize(array, focalizer, main, world) {
   for (var i = 0; i < world.evSeq.length; i++) {
     currentEv = world.evSeq[i];
     for (var j = 0; j < currentEv.alterations.length; j++) {
-      currentActor = currentEv.alterations[j].existent;
-      if (actor === currentActor) {
+      currentEx = currentEv.alterations[j].existent;
+      if (focalizer === currentEx) {
         currentPlace = currentEv.alterations[j].after;
       }
-      currentActor.location = currentEv.alterations[j].after;
+      currentEx.location = currentEv.alterations[j].after;
     }
     if (currentPlace != cosmos) { // TODO shouldn’t be necessary, as cosmos should have a view onto every Place
       // decide if we should remove the current event from narration, if all conditions are met, the event will not be narrated
       if (currentEv.agent.location != currentPlace // if the agent of the current event is elsewhere
         &&
-        currentEv.agent != actor // and the current event's agent is not the focalizer
+        currentEv.agent != focalizer // and the current event's agent is not the focalizer
         &&
-        currentEv.direct != actor // and the current event's direct is not the focalizer
+        currentEv.direct != focalizer // and the current event's direct is not the focalizer
         &&
         !currentPlace.views.includes(currentEv.agent.location)) { // and the focalizer's location has no view of where the current event’s agent is
         toRemove.push(i)
