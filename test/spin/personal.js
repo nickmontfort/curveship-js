@@ -1,7 +1,7 @@
 var toldBy = "John";
 
-spin.i = "john";
-spin.you = "mary";
+spin.i = actor.john;
+spin.you = actor.mary;
 
 vp.lookAround = new VerbPh("look around");
 vp.play = new VerbPh("is playing");

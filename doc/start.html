@@ -167,7 +167,7 @@ var world = new World(place, actor, category, thing, ev);
 
 <p><b>Spin.</b> The next section of the narrator file sets any optional <a href="reference.html#spin">spin parameters (detailed in the Technical Reference).</a> These parameters allow a narrator to “spin” the overall narrative in different ways, somewhat like a journalist might put a particular “spin” on a news story. The particular parameters are based on narrative theory. In this narrator file, there are two spin parameters. The first one is pretty straightforward. It sets the “I” of the story to be the bank teller:</p>
 
-<pre>spin.i = "teller";</pre>
+<pre>spin.i = actor.teller;</pre>
 
 <p>The second one defines a main narrative sequence that includes only a subsequence of all the events. The bank teller is only going to tell us about what she saw. She isn’t going to narrate what happened out on the street or in the guard post, which is behind a one-way mirror. So we define a sequence that allows for the sort of <i>ellipsis</i> (leaving things out) that we are interested in:</p>
 

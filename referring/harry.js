@@ -1,6 +1,6 @@
 var toldBy = "Harry Styles";
 
-// spin.i = "celebrity";
+// spin.i = actor.celebrity;
 
 names.gate = new Names("the gate");
 names.firstClass = new Names("first class");

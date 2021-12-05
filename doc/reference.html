@@ -43,13 +43,17 @@
 
 <dl>
 <dt>spin.i = <i>STRING</i>;</dt>
-<dd>The “I” of the story. STRING is an Existent’s tag, e.g., "john" or "cinderella"</dd>
+<dd>The “I” of the story. STRING is an Existent, e.g., actor.john or actor.cinderella.</dd>
 
 <dt>spin.eventNumbers = <i>BOOLEAN</i>;</dt>
 <dd>Should the Events that are represented be numbered according to their position in the underlying sequence? Setting this to true can be useful during the authoring/development of a variable narrative.</dd>
 
 <dt>spin.expressionNumbers = <i>BOOLEAN</i>;</dt>
 <dd>Should the expressions (the representations of Events as they end up in the final narrative) be numbered? Setting this to true can be useful during the authoring/development of a variable narrative.</dd>
+
+<dt>spin.focalizer = <i>STRING</i>;</dt>
+<dd>The focalizer of the story. Only those Events the focalizer can see will be included in narration. STRING is an Existent, e.g., actor.john or actor.cinderella.</dd>
+</dl>
 
 <dt>spin.groupings = <i>STRING</i>;</dt>
 <dd>How should Existents be grouped when several of them are represented at once? The string consists of zero or more of “categories” “properties” and “parts” with a space between words if there are two or three.</dd>
@@ -70,7 +74,7 @@
 <dd>What is the time of speaking or time of narrating? Values can be "before" "during" or "after" for the narrator to speak from a point in time before the Events, to follow along through each of the events (in “vivid narrative”), or to speak from a point in time after the Events. A number can be specified if the narrator should be speaking from some point in the middle of the underlying action. This number can be an integer or can end in “.5” if the narrator. For instance, if 6.5 is given the narrator will speak from a point in time between events 6 and 7.</dd>
 
 <dt>spin.you = <i>STRING</i>;</dt>
-<dd>The “you” of the story. STRING is an Existent’s tag, e.g., "john" or "cinderella"</dd>
+<dd>The “you” of the story. STRING is an Existent, e.g., actor.john or actor.cinderella.</dd>
 </dl>
 
 

@@ -1,6 +1,6 @@
 var toldBy = "Patrica Bateman";
 
-spin.i = "passenger";
+spin.i = actor.passenger;
 spin.main = "5-14"
 
 names.gate = new Names("gate 23");

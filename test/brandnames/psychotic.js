@@ -8,15 +8,15 @@
 
 var toldBy = "Patrick Lecter";
 
-//spin.order = "retrograde";
-//spin.timePhrases = true;
+// spin.order = "retrograde";
+// spin.timePhrases = true;
 
 names.soda = new BrandNames(
   "(a soda)",
   null,
   "a Sprite",
   "bought from Westside Market",
-  "a cold",
+  "a cold"
 );
 
 names.car = new BrandNames(
