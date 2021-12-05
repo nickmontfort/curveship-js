@@ -41,40 +41,31 @@ function shuffle(array) {
 /**
  * Decides if the focalizer can see each event
  */
-function focalize(array, focalizer, main, world) {
-  var toRemove = [];
-  currentPlace = cosmos;
-  currentPlace = (focalizer instanceof Actor) ? focalizer.location : focalizer;
-  for (var i = 0; i < world.evSeq.length; i++) {
+function focalize(telling, focalizer, world) {
+  var currentLocation = thing.cosmos;
+  currentLocation = (focalizer instanceof Place) ? focalizer : focalizer.location;
+  newTelling = [];
+  for (i in telling) {
     currentEv = world.evSeq[i];
     for (var j = 0; j < currentEv.alterations.length; j++) {
       currentEx = currentEv.alterations[j].existent;
       if (focalizer === currentEx) {
-        currentPlace = currentEv.alterations[j].after;
+        currentLocation = currentEv.alterations[j].after;
       }
       currentEx.location = currentEv.alterations[j].after;
     }
-    if (currentPlace != cosmos) { // TODO shouldn’t be necessary, as cosmos should have a view onto every Place
-      // decide if we should remove the current event from narration, if all conditions are met, the event will not be narrated
-      if (currentEv.agent.location != currentPlace // if the agent of the current event is elsewhere
-        &&
-        currentEv.agent != focalizer // and the current event's agent is not the focalizer
-        &&
-        currentEv.direct != focalizer // and the current event's direct is not the focalizer
-        &&
-        !currentPlace.views.includes(currentEv.agent.location)) { // and the focalizer's location has no view of where the current event’s agent is
-        toRemove.push(i)
-      }
-    } else if (main != null) {
-      if (main.indexOf(i) != -1) {
-        toRemove.push(i)
-      }
+    console.log(currentLocation.tag);
+    if (currentEv.agent.location === currentLocation // if the agent of the current event is here
+      ||
+      currentEv.agent === focalizer // or the current event’s agent is the focalizer
+      ||
+      currentEv.direct === focalizer // or the current event’s direct object is the focalizer
+      ||
+      currentLocation.views.includes(currentEv.agent.location)) { // or the focalizer’s location has a view of where the current event’s agent is
+      newTelling.push(i) // add the index of this Event to the telling
     }
   }
-  for (var i = 0; i < toRemove.length; i++) {
-    array.splice(array.indexOf(toRemove[i]), 1); // remove item, actor did not see it or do it
-  }
-  return array;
+  return newTelling;
 }
 
 /**
@@ -358,10 +349,9 @@ class Narrator {
     // If this returned value is false, it means not to pronominalize.
     // Otherwise an array is returned, the first element the role,
     // the second the person.
-    let exTag = ex.tag;
     let person = 3;
-    if (spin.i === exTag) person = 1;
-    if (spin.you === exTag) person = 2;
+    if (spin.i === ex) person = 1;
+    if (spin.you === ex) person = 2;
     if (ev.agent === ex && role === "object") {
       return ["reflexive", person];
     }
@@ -378,7 +368,7 @@ class Narrator {
       // don't include a Names for them at all in narrator.js.
       pronounToUse = [role, 3];
     } else if (
-      this.givens.has(exTag) &&
+      this.givens.has(ex.tag) &&
       typeof this.lastNarratedEvent !== "undefined" &&
       this.lastNarratedEvent.agent === ex
     ) {
@@ -444,9 +434,9 @@ class Narrator {
       if (this.names[parent.tag].pronouns === null) {
         this.names[parent.tag].setGenericPronouns(parent.tag);
       }
-      if (parent.tag === spin.i) {
+      if (parent === spin.i) {
         possessive = this.names[parent.tag].pronouns.getPossessivePronoun(1);
-      } else if (parent.tag === spin.you) {
+      } else if (parent === spin.you) {
         possessive = this.names[parent.tag].pronouns.getPossessivePronoun(2);
       } else if (
         ev.agent === e.owner ||
@@ -610,8 +600,8 @@ class Narrator {
     let result = this.representation[ev.tag].template;
     let number = world.ev[ev.tag].agent instanceof ExistentGroup ? 2 : 1;
     let person = 3;
-    person = ev.agent.tag === spin.i ? 1 : person;
-    person = ev.agent.tag === spin.you ? 2 : person;
+    person = ev.agent === spin.i ? 1 : person;
+    person = ev.agent === spin.you ? 2 : person;
     let tenseER = this.determineTenseER(ev, spin);
     let verbString = this.representation[ev.tag].verb.conjugatedVP(
       person,
@@ -715,11 +705,11 @@ function narrate(title, toldBy, world, spin, names, reps) {
   for (i = 0; i < world.evSeq.length; i++) {
     telling.push(i);
   }
-  // if (spin.main) {
-  //   telling = selectMain(telling, spin.main);
-  // }
-  if (spin.focalize) {
-    telling = focalize(telling, spin.focalize, spin.main, world);
+  if (spin.main) {
+    telling = selectMain(telling, spin.main);
+  }
+  if (spin.focalizer) {
+    telling = focalize(telling, spin.focalizer, world);
   }
   if (spin.order === "retrograde") {
     telling.reverse();

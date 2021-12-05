@@ -10,18 +10,13 @@
 
 var toldBy = "the bank teller";
 
-spin.i = "teller";
+spin.i = actor.teller;
+spin.focalizer = actor.teller;
 
 // Uncomment this to see how events are numbered. Useful for development,
 // but you will want to keep it off in the final version.
 //
 // spin.eventNumbers = true;
-
-// In a future version of Curveship, we intend that focalization will be
-// directly supported. For now we “manually simulate” focalization by
-// selecting only those events that the teller has witnessed.
-//
-spin.main = "0;2;4;5-9;12-22";
 
 names.lobby = new Names("the lobby");
 names.street = new Names("a sidewalk outside the bank", "a sidewalk");
@@ -68,4 +63,6 @@ vp.regret = new VerbPh("recall");
 vp.cry = new VerbPh("weep");
 vp.stare = new VerbPh("stare at");
 
-function run() { narrate(title, toldBy, world, spin, names, vp); }
+function run() {
+    narrate(title, toldBy, world, spin, names, vp);
+}
