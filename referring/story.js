@@ -7,27 +7,27 @@ var title = "First Class";
 
 place.gate = new Place();
 place.firstClass = new Place();
+thing.seat1A = new Thing(place.firstClass);
+thing.seat1B = new Thing(place.firstClass);
 
 actor.celebrity = new Actor(place.gate, "male");
 actor.gateOfficial = new Actor(place.gate, "female");
 actor.flightAttendant = new Actor(place.firstClass, "male");
 actor.passenger = new Actor(thing.seat1A, "female");
 
-thing.seat1A = new Thing(place.firstClass);
+thing.boardingPass = new Thing(actor.celebrity);
+thing.boardingPass.owner = actor.celebrity;
+thing.scanner = new Thing(place.gate);
+thing.jacket = new Thing(actor.celebrity);
+thing.jacket.owner = actor.celebrity;
 thing.femaleUniform = new Thing(actor.gateOfficial);
 thing.femaleUniform.owner = actor.gateOfficial;
 thing.maleUniform = new Thing(actor.flightAttendant);
 thing.maleUniform.owner = actor.flightAttendant;
 thing.sneakers = new Thing(actor.celebrity);
 thing.sneakers.owner = actor.celebrity;
-thing.jacket = new Thing(actor.celebrity);
-thing.jacket.owner = actor.celebrity;
 thing.sunglasses = new Thing(actor.celebrity);
 thing.sunglasses.owner = actor.celebrity;
-thing.scanner = new Thing(place.gate);
-thing.boardingPass = new Thing(actor.celebrity);
-thing.boardingPass.owner = actor.celebrity;
-thing.seat1B = new Thing(place.firstClass);
 thing.notepad = new Thing();
 thing.pen = new Thing();
 
@@ -40,6 +40,7 @@ ev.pocket = new Event(actor.celebrity, thing.boardingPass, temporal.in, thing.ja
 ev.pocket.alters(thing.boardingPass, "location", actor.celebrity, thing.jacket);
 ev.depart = new Event(actor.celebrity, place.gate);
 ev.board = new Event(actor.celebrity, null, temporal.to, place.firstClass);
+ev.board.alters(actor.celebrity, "location", place.gate, place.firstClass);
 ev.sit = new Event(actor.celebrity, null, temporal.in, thing.seat1B);
 ev.beSurprised = new Event(actor.passenger);
 ev.see = new Event(actor.flightAttendant, thing.sneakers);

@@ -175,10 +175,8 @@ class BrandNames extends Names {
     } else {
       initial = model ? model : "";
     }
-    console.log(generic, initial);
     initial += (generic[0] === "(") ? "" : " " + bareName(generic);
     let subsequent = initial;
-    console.log(generic, initial, subsequent);
     initial += source ? " " + source : "";
     initial = attributes ? attributes + " " + bareName(initial) : initial;
     super(initial, subsequent, pronouns, plural);

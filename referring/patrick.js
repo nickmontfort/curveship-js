@@ -1,7 +1,7 @@
 var toldBy = "Patrica Bateman";
 
 spin.i = actor.passenger;
-spin.main = "5-14"
+spin.focalizer = actor.passenger;
 
 names.gate = new Names("gate 23");
 names.firstClass = new Names("first class");
@@ -36,5 +36,7 @@ vp.show = new VerbPh("show");
 vp.apologize = new VerbPh("mumble");
 vp.obtain = new VerbPh("pull out");
 vp.request = new VerbPh("say");
+delete ev.request.temporal; // TODO These “story level” alterations show some issues in
+delete ev.request.indirect; // separating story and discourse.
 
 function run() { narrate(title, toldBy, world, spin, names, vp); }

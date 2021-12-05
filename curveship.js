@@ -42,10 +42,14 @@ function shuffle(array) {
  * Decides if the focalizer can see each event
  */
 function focalize(telling, focalizer, world) {
-  var currentLocation = thing.cosmos;
-  currentLocation = (focalizer instanceof Place) ? focalizer : focalizer.location;
+  var currentLocation = focalizer;
+  while (!(currentLocation instanceof Place) && (currentLocation !== thing.cosmos)) {
+    currentLocation = currentLocation.location;
+  }
+  console.log(focalizer.tag);
   newTelling = [];
-  for (i in telling) {
+  console.log(currentLocation.tag);
+  for (var i = 0; i < world.evSeq.length; i++) {
     currentEv = world.evSeq[i];
     for (var j = 0; j < currentEv.alterations.length; j++) {
       currentEx = currentEv.alterations[j].existent;
@@ -54,15 +58,13 @@ function focalize(telling, focalizer, world) {
       }
       currentEx.location = currentEv.alterations[j].after;
     }
-    console.log(currentLocation.tag);
-    if (currentEv.agent.location === currentLocation // if the agent of the current event is here
-      ||
-      currentEv.agent === focalizer // or the current event’s agent is the focalizer
-      ||
-      currentEv.direct === focalizer // or the current event’s direct object is the focalizer
-      ||
-      currentLocation.views.includes(currentEv.agent.location)) { // or the focalizer’s location has a view of where the current event’s agent is
-      newTelling.push(i) // add the index of this Event to the telling
+    console.log(currentEv.tag, currentLocation.tag);
+    if ((i in telling) && // Only add the index if was in the existing array of events to be told, and...
+      (currentEv.agent.location === currentLocation || // If the agent of the current event is here
+        currentEv.agent === focalizer || // or the current event’s agent is the focalizer
+        currentEv.direct === focalizer || // or the current event’s direct object is the focalizer
+        currentLocation.views.includes(currentEv.agent.location))) { // or the focalizer’s location has a view of where the current event’s agent is
+      newTelling.push(i);
     }
   }
   return newTelling;
