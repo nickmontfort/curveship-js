@@ -39,38 +39,42 @@ function shuffle(array) {
 }
 
 /**
- * Decides if the focalizer can narrate a each event
+ * Decides if the focalizer can see each event
  */
-function focalize(array, actor, main, world) {
-    var toRemove = [];
-    currentLocation = (actor instanceof Actor) ? actor.location : actor;
-    for (var i=0 ; i<world.evSeq.length ; i++ ) {
-        currentEv = world.evSeq[i];
-        for (var j=0 ; j<currentEv.alterations.length ; j++ ) {
-            currentActor = currentEv.alterations[j].existent;
-            if (actor == currentActor) {
-                currentLocation = currentEv.alterations[j].after;
-            }
-            currentActor.location = currentEv.alterations[j].after;
-        }
-        if (currentLocation != null) {
-          // decide if we should remove the current event from narration, if all conditions are met, the event will not be narrated
-          if (currentEv.agent.location != currentLocation                    // if the current event takes place elsewhere
-              && currentEv.agent != actor                                    // and the current event's agent is not the focalizer
-              && currentEv.direct != actor                                   // and the current event's direct is not the focalizer
-              && !currentLocation.views.includes(currentEv.agent.location)) {  // and the focalizer's location has no view of current event's location
-            toRemove.push(i)
-          }
-        } else if (main != null) {
-          if (main.indexOf(i) != -1) {
-            toRemove.push(i)
-          }
-        }
+function focalize(array, focalizer, main, world) {
+  var toRemove = [];
+  currentPlace = cosmos;
+  currentPlace = (focalizer instanceof Actor) ? focalizer.location : focalizer;
+  for (var i = 0; i < world.evSeq.length; i++) {
+    currentEv = world.evSeq[i];
+    for (var j = 0; j < currentEv.alterations.length; j++) {
+      currentActor = currentEv.alterations[j].existent;
+      if (actor === currentActor) {
+        currentPlace = currentEv.alterations[j].after;
+      }
+      currentActor.location = currentEv.alterations[j].after;
     }
-    for (var i=0 ; i<toRemove.length ; i++ ) {
-        array.splice(array.indexOf(toRemove[i]), 1); // remove item, actor did not see it or do it
+    if (currentPlace != cosmos) { // TODO shouldn’t be necessary, as cosmos should have a view onto every Place
+      // decide if we should remove the current event from narration, if all conditions are met, the event will not be narrated
+      if (currentEv.agent.location != currentPlace // if the agent of the current event is elsewhere
+        &&
+        currentEv.agent != actor // and the current event's agent is not the focalizer
+        &&
+        currentEv.direct != actor // and the current event's direct is not the focalizer
+        &&
+        !currentPlace.views.includes(currentEv.agent.location)) { // and the focalizer's location has no view of where the current event’s agent is
+        toRemove.push(i)
+      }
+    } else if (main != null) {
+      if (main.indexOf(i) != -1) {
+        toRemove.push(i)
+      }
     }
-    return array;
+  }
+  for (var i = 0; i < toRemove.length; i++) {
+    array.splice(array.indexOf(toRemove[i]), 1); // remove item, actor did not see it or do it
+  }
+  return array;
 }
 
 /**
@@ -215,10 +219,10 @@ class Actor extends Existent {
     } else {
       throw new ValueError(
         "Given " +
-          gender +
-          "; Supported genders are: " +
-          genders.join(", ") +
-          "."
+        gender +
+        "; Supported genders are: " +
+        genders.join(", ") +
+        "."
       );
     }
     if (ages.includes(age)) {
@@ -272,9 +276,9 @@ class Event {
       this.temporal = temporalRelation;
     }
     if (indirect) {
-      this.indirect = Array.isArray(indirect)
-        ? new ExistentGroup(indirect)
-        : indirect;
+      this.indirect = Array.isArray(indirect) ?
+        new ExistentGroup(indirect) :
+        indirect;
     }
     this.alterations = [];
     evSeq.push(this);
@@ -395,8 +399,7 @@ class Narrator {
     // So pluralizing might not always be right...
     if (e instanceof Event) {
       let eventRepresentation;
-      [spin, oldSpeaking, oldReferring] = shiftBack(spin);
-      {
+      [spin, oldSpeaking, oldReferring] = shiftBack(spin); {
         eventRepresentation = this.represent(e, spin, false);
       }
       spin.speaking = oldSpeaking;
@@ -527,9 +530,9 @@ class Narrator {
     var something = this.ascendTree(existents, "by part");
     // are they parts of something? find the most specific thing
     if (something === null || something === thing.cosmos) return "";
-    return ex.length() == 1
-      ? "the part of " + this.name(something, spin, role, ev)
-      : " the parts of " + this.name(something, spin, role, ev);
+    return ex.length() == 1 ?
+      "the part of " + this.name(something, spin, role, ev) :
+      " the parts of " + this.name(something, spin, role, ev);
   }
   whatCategoryAreWeIn(ex) {
     var categories = [];
@@ -619,9 +622,9 @@ class Narrator {
     );
     let vp =
       verbString +
-      (this.representation[ev.tag].rest
-        ? " " + this.representation[ev.tag].rest
-        : "");
+      (this.representation[ev.tag].rest ?
+        " " + this.representation[ev.tag].rest :
+        "");
     result = result.replace(
       "[SUB]",
       this.name(world.ev[ev.tag].agent, spin, "subject", ev)
@@ -723,9 +726,9 @@ function narrate(title, toldBy, world, spin, names, reps) {
   } else if (spin.order === "random") {
     shuffle(telling);
   }
-  let groupingSet = spin.hasOwnProperty("groupings")
-    ? new Set(spin.groupings.split(" "))
-    : (spin.groupings = new Set());
+  let groupingSet = spin.hasOwnProperty("groupings") ?
+    new Set(spin.groupings.split(" ")) :
+    (spin.groupings = new Set());
   spin.groupings = groupingSet;
   div = document.createElement("div");
   element.appendChild(div);
@@ -739,9 +742,9 @@ function narrate(title, toldBy, world, spin, names, reps) {
     for (e of world.evSeq) {
       for (alt of e.alterations) {
         let changeTo =
-          world.evSeq.indexOf(e) < world.evSeq.indexOf(current)
-            ? alt.after
-            : alt.before;
+          world.evSeq.indexOf(e) < world.evSeq.indexOf(current) ?
+          alt.after :
+          alt.before;
         if (alt.property === "location") {
           alt.existent.location = changeTo;
         } else {
@@ -761,7 +764,7 @@ function narrate(title, toldBy, world, spin, names, reps) {
     if (
       lastNarratedTag !== "" &&
       world.evSeq.indexOf(current) <
-        world.evSeq.indexOf(world.ev[lastNarratedTag])
+      world.evSeq.indexOf(world.ev[lastNarratedTag])
     ) {
       [spin, oldSpeaking, oldReferring] = shiftBack(spin);
       if (justShiftedBack) {
