@@ -10,7 +10,7 @@
 
 var toldBy = "a picaro";
 
-//spin.i = actor.urashima;
+spin.i = actor.urashima;
 //spin.focalizer = actor.teller;
 
 // spin.eventNumbers = true;
