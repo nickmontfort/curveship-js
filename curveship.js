@@ -244,6 +244,16 @@ var thing = {
   cosmos: new Thing(),
 };
 
+class Group extends Existent {
+  constructor(groupArray) {
+    super();
+    this.location = // how to choose location if different locations in groupArray
+    this.groupArray = groupArray;
+  }
+}
+
+var group = {};
+
 var evSeq = [];
 var lastNarratedTag = "";
 
