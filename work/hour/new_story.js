@@ -48,7 +48,7 @@ thing.door = new Thing(thing.room);
 thing.frontDoor = new Thing(thing.room);
 thing.latchkey = new Thing(actor.brently);
 
-group.doctor = new Group([actor.doctorSmith, actor.doctorJones]);
+group.doctor = new Grouping([actor.doctorSmith, actor.doctorJones]);
 
 // EVENTS
 

@@ -244,6 +244,15 @@ var thing = {
   cosmos: new Thing(),
 };
 
+// Create new Grouping class that takes in an array of Things or Actors to be grouped and creates a grouping from them
+class Grouping extends Existent {
+  constructor(groupArray, location = null) {
+    super();
+    this.location = location;
+    this.grouping = groupArray;
+  }
+}
+
 var evSeq = [];
 var lastNarratedTag = "";
 
@@ -663,7 +672,7 @@ function addTags(object) {
 }
 
 class World {
-  constructor(places, actors, categories, things, events) {
+  constructor(places, actors, categories, things, groupings, events) {
     addTags(places);
     this.place = places;
     addTags(actors);
@@ -672,6 +681,8 @@ class World {
     this.categories = categories;
     addTags(things);
     this.thing = things;
+    addTags(groups);
+    this.groupings = groupings;
     addTags(events);
     this.ev = events;
     this.evSeq = evSeq;
