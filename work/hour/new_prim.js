@@ -119,4 +119,4 @@ vp.die = new VerbPh("die");
 vp.sayCause = new VerbPh("say that");
 vp.arrive = new VerbPh("arrive");
 
-function run() { narrate(title, toldBy, world, spin, names, vp); }
+function run() { narrate(title, toldBy, world, spin, names, gorupings, vp); }

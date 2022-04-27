@@ -253,6 +253,8 @@ class Grouping extends Existent {
   }
 }
 
+var grouping = {};
+
 var evSeq = [];
 var lastNarratedTag = "";
 

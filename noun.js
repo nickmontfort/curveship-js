@@ -224,6 +224,14 @@ class GenericNames extends Names {
   }
 }
 
+class GroupNames extends Names {
+  constructor(pronoun = pronoun.neuter, asOne = false) {
+    super(initial, subsequent);
+    this.pronoun = pronoun;
+    this.asOne = asOne;
+  }
+}
+
 // NOTE that this irregular noun list contains offensive works.
 // Curveship-js does not use offensive nouns (or any other words)
 // for you. But because this list is built from a dictionary that
