@@ -121,6 +121,8 @@ class Names {
       pronounSet = pronoun.masculine;
     } else if (tag in actor && actor[tag].gender === "female") {
       pronounSet = pronoun.feminine;
+    } else if (tag in actor && actor[tag].gender === "nonbinary") {
+      pronounSet = pronoun.nonBinary;
     }
     this.pronouns = pronounSet;
   }
