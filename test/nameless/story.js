@@ -14,8 +14,10 @@ place.room = new Place();
 
 actor.hero = new Actor(place.room, "male");
 actor.heroine = new Actor(place.room, "female");
+actor.heroNB = new Actor(place.room, "nonbinary");
 actor.littleMan = new Actor(place.room, "male", "child");
 actor.littleWoman = new Actor(place.room, "female", "child");
+actor.littlePerson = new Actor(place.room, "nonbinary", "child");
 
 thing.ball = new Thing(place.room);
 thing.apple = new Thing(place.room);
@@ -36,5 +38,6 @@ ev.throw = new Event(actor.littleWoman, thing.ball);
 ev.catch = new Event(actor.littleMan, thing.ball);
 ev.give = new Event(actor.heroine, thing.apple, temporal.to, actor.hero);
 ev.eat = new Event(actor.hero, [thing.cherry, thing.strawberry]);
+ev.help = new Event(actor.heroNB, actor.littlePerson);
 
 var world = new World(place, actor, category, thing, ev);

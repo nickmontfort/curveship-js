@@ -11,5 +11,6 @@ vp.taunt = new VerbPh("pester");
 // vp.catch = new VerbPh("catch");
 // vp.give = new VerbPh("give");
 vp.eat = new VerbPh("eat");
+// vp.help = new VerbPh("help");
 
 function run() { narrate(title, toldBy, world, spin, names, vp); }

@@ -216,6 +216,12 @@ class GenericNames extends Names {
       } else {
         name = "girl";
       }
+    } else if (tag in actor && actor[tag].gender === "nonbinary") {
+      if (actor[tag].age == "adult") {
+        name = "person";
+      } else {
+        name = "child";
+      }
     } else if (tag in thing) {
       name = "thing";
     } else if (tag in place) {

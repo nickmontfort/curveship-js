@@ -603,9 +603,13 @@ class Narrator {
     if (subject instanceof ExistentGroup) {
       return 2;
     }
+    if (!(subject.tag in this.names)) {
+      // subject uses a generic name, and is singular
+      return 1;
+    }
     let isPronoun = this.whatPronoun(subject, spin, "subject", ev);
     let pronouns = this.names[subject.tag].pronouns;
-    // treat the subject as plural if we're using non-binary pronouns for them
+    // subject is plural if we're using non-binary pronouns
     if (isPronoun && pronouns === pronoun.nonBinary) {
       return 2;
     }
