@@ -39,5 +39,6 @@ ev.catch = new Event(actor.littleMan, thing.ball);
 ev.give = new Event(actor.heroine, thing.apple, temporal.to, actor.hero);
 ev.eat = new Event(actor.hero, [thing.cherry, thing.strawberry]);
 ev.help = new Event(actor.heroNB, actor.littlePerson);
+ev.scold = new Event(actor.heroNB, actor.littlePerson);
 
 var world = new World(place, actor, category, thing, ev);
