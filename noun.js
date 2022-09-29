@@ -121,6 +121,8 @@ class Names {
       pronounSet = pronoun.masculine;
     } else if (tag in actor && actor[tag].gender === "female") {
       pronounSet = pronoun.feminine;
+    } else if (tag in actor && actor[tag].gender === "nonbinary") {
+      pronounSet = pronoun.nonBinary;
     }
     this.pronouns = pronounSet;
   }
@@ -213,6 +215,12 @@ class GenericNames extends Names {
         name = "woman";
       } else {
         name = "girl";
+      }
+    } else if (tag in actor && actor[tag].gender === "nonbinary") {
+      if (actor[tag].age == "adult") {
+        name = "person";
+      } else {
+        name = "child";
       }
     } else if (tag in thing) {
       name = "thing";

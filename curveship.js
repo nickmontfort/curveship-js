@@ -598,9 +598,26 @@ class Narrator {
       return "future";
     }
   }
+  determineAgentNumber(ev, spin) {
+    let subject = world.ev[ev.tag].agent;
+    if (subject instanceof ExistentGroup) {
+      return 2;
+    }
+    if (!(subject.tag in this.names)) {
+      // subject uses a generic name, and is singular
+      return 1;
+    }
+    let isPronoun = this.whatPronoun(subject, spin, "subject", ev);
+    let pronouns = this.names[subject.tag].pronouns;
+    // subject is plural if we're using non-binary pronouns
+    if (isPronoun && pronouns === pronoun.nonBinary) {
+      return 2;
+    }
+    return 1;
+  }
   represent(ev, spin, fixOrthography = true) {
     let result = this.representation[ev.tag].template;
-    let number = world.ev[ev.tag].agent instanceof ExistentGroup ? 2 : 1;
+    let number = this.determineAgentNumber(ev, spin);
     let person = 3;
     person = ev.agent === spin.i ? 1 : person;
     person = ev.agent === spin.you ? 2 : person;
