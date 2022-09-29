@@ -26,9 +26,9 @@ names.blueberry = new Names("a blueberry");
 
 vp.dismount = new VerbPh("get off");
 vp.inspect = new VerbPh("examine");
-vp.touch = new VerbPh("palpates");
-vp.ogle = new VerbPh("eye"); // TODO seems like we should only need to
-vp.lick = new VerbPh("lick");       // define the action to VP mapping once
+vp.touch = new VerbPh("palpate");
+vp.ogle = new VerbPh("eye");     // TODO seems like we should only need to
+vp.lick = new VerbPh("lick");    // define the action to VP mapping once
 vp.sniff = new VerbPh("smell");
 vp.eat = new VerbPh("eat");
 
