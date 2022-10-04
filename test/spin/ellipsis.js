@@ -1,4 +1,4 @@
-var toldBy = "a narrator who leaves one thing out";
+var toldBy = "a narrator who leaves two things out";
 
 spin.main = "0;3-5";
 
